@@ -21,7 +21,8 @@ import { z } from "zod";
 import { registerSchema } from "@/lib/zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Link, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { registerAction } from "@/actions/auth";
@@ -40,14 +41,15 @@ export default function Register() {
   const router = useRouter();
   return (
     <div className="flex justify-center items-center h-full">
-      <Card>
-        <CardHeader>
-          <CardTitle>Register</CardTitle>
+      <Card className="min-w-xs md:min-w-sm">
+        <CardHeader className="text-center">
+          <CardTitle className="text-xl">Register</CardTitle>
           <CardDescription>Register to create a new account</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
             <form
+              className="space-y-6"
               onSubmit={form.handleSubmit(
                 async (data: z.infer<typeof registerSchema>) => {
                   const formData = new FormData();
@@ -122,8 +124,8 @@ export default function Register() {
             </form>
           </Form>
         </CardContent>
-        <CardFooter>
-          <p>
+        <CardFooter className="flex justify-center items-center w-full">
+          <p className="text-sm">
             Already have an account?
             <Button size="sm" variant="link" asChild>
               <Link href="/login">Login</Link>
