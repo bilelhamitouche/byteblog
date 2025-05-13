@@ -53,3 +53,35 @@ export async function registerAction(formData: FormData) {
     }
   }
 }
+
+export async function googleLoginAction() {
+  try {
+    auth.api.signInSocial({
+      body: {
+        provider: "google",
+      },
+    });
+  } catch (err) {
+    if (err instanceof APIError) {
+      return {
+        message: err.message,
+      };
+    }
+  }
+}
+
+export async function gitHubLoginAction() {
+  try {
+    auth.api.signInSocial({
+      body: {
+        provider: "github",
+      },
+    });
+  } catch (err) {
+    if (err instanceof APIError) {
+      return {
+        message: err.message,
+      };
+    }
+  }
+}
