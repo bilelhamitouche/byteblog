@@ -20,7 +20,11 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Input } from "@/components/ui/input";
-import { loginAction } from "@/actions/auth";
+import {
+  gitHubLoginAction,
+  googleLoginAction,
+  loginAction,
+} from "@/actions/auth";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
@@ -40,14 +44,25 @@ export default function Login() {
   const router = useRouter();
   return (
     <div className="flex justify-center items-center h-full">
-      <Card className="min-w-sm">
-        <CardHeader>
-          <CardTitle>Login</CardTitle>
+      <Card className="min-w-xs md:min-w-sm">
+        <CardHeader className="text-center">
+          <CardTitle className="text-xl text-center">Login</CardTitle>
           <CardDescription>Login to start writing blogs</CardDescription>
           <CardContent>
+            <form action={googleLoginAction} className="py-2">
+              <Button className="w-full">Login with Google</Button>
+            </form>
+            <form action={gitHubLoginAction} className="py-2">
+              <Button className="w-full">Login with GitHub</Button>
+            </form>
+            <div className="relative text-sm text-center after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
+              <span className="relative z-10 px-2 bg-card text-muted-foreground">
+                Or continue with
+              </span>
+            </div>
             <Form {...form}>
               <form
-                className="space-y-2"
+                className="space-y-6"
                 onSubmit={form.handleSubmit(
                   async (data: z.infer<typeof loginSchema>) => {
                     const formData = new FormData();
@@ -109,9 +124,9 @@ export default function Login() {
             </Form>
           </CardContent>
         </CardHeader>
-        <CardFooter>
-          <p>
-            Don&apos; have an account?
+        <CardFooter className="flex justify-center items-center w-full">
+          <p className="text-sm">
+            Don&apos;t have an account?
             <Button size="sm" variant="link" asChild>
               <Link href="/register">Register</Link>
             </Button>
