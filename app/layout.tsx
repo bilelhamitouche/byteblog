@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import { Merriweather } from "next/font/google";
+import { Outfit } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "@/components/ui/sonner";
 
-const merriweather = Merriweather({
-  variable: "--font-merriweather",
+const outfit = Outfit({
+  variable: "--font-outfit-sans",
   weight: ["400", "700"],
   subsets: ["latin"],
 });
@@ -20,8 +21,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full">
-      <body className={`${merriweather.className} h-full antialiased`}>
+    <html lang="en" className="h-full" suppressHydrationWarning>
+      <body className={`${outfit.className} h-full antialiased`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -29,6 +30,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           {children}
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>
