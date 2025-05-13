@@ -21,7 +21,7 @@ import { z } from "zod";
 import { registerSchema } from "@/lib/zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Link } from "lucide-react";
+import { Link, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { registerAction } from "@/actions/auth";
@@ -109,7 +109,16 @@ export default function Register() {
                   </FormItem>
                 )}
               />
-              <Button className="w-full">Register</Button>
+              <Button className="w-full" disabled={isPending}>
+                {isPending ? (
+                  <div className="flex gap-2 items-center">
+                    <Loader2 className="animate-spin" />
+                    <span>Please wait</span>
+                  </div>
+                ) : (
+                  <span>Register</span>
+                )}
+              </Button>
             </form>
           </Form>
         </CardContent>

@@ -26,6 +26,7 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { Loader2 } from "lucide-react";
 
 export default function Login() {
   const [isPending, setIsPending] = useState<boolean>(false);
@@ -94,7 +95,16 @@ export default function Login() {
                     </FormItem>
                   )}
                 />
-                <Button className="w-full">Login</Button>
+                <Button className="w-full" disabled={isPending}>
+                  {isPending ? (
+                    <div className="flex gap-2 items-center">
+                      <Loader2 className="animate-spin" />
+                      <span>Please wait</span>
+                    </div>
+                  ) : (
+                    <span>Login</span>
+                  )}
+                </Button>
               </form>
             </Form>
           </CardContent>
