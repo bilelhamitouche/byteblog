@@ -5,18 +5,18 @@ import { loginSchema, registerSchema } from "@/lib/zod";
 import { APIError } from "better-auth/api";
 
 export async function loginAction(formData: FormData) {
-  const email = formData.get("email") as string;
+  const username = formData.get("username") as string;
   const password = formData.get("password") as string;
   try {
-    const result = loginSchema.safeParse({ email, password });
+    const result = loginSchema.safeParse({ username, password });
     if (!result.success)
       return {
         errors: result.error.flatten().fieldErrors,
       };
-    await auth.api.signInEmail({
+    await auth.api.signInUsername({
       body: {
-        email,
-        password,
+        username: result.data.username,
+        password: result.data.password,
       },
     });
   } catch (err) {
@@ -30,19 +30,27 @@ export async function loginAction(formData: FormData) {
 
 export async function registerAction(formData: FormData) {
   const name = formData.get("name") as string;
+  const username = formData.get("username") as string;
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
   try {
-    const result = registerSchema.safeParse({ name, email, password });
-    if (!result.success)
+    const result = registerSchema.safeParse({
+      name,
+      username,
+      email,
+      password,
+    });
+    if (!result.success) {
       return {
         errors: result.error.flatten().fieldErrors,
       };
+    }
     await auth.api.signUpEmail({
       body: {
-        name,
-        email,
-        password,
+        name: result.data.name,
+        username: result.data.username,
+        email: result.data.email,
+        password: result.data.password,
       },
     });
   } catch (err) {

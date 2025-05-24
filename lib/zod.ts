@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const loginSchema = z.object({
-  email: z.string().trim().email({ message: "Must be a valid email address" }),
+  username: z.string().trim(),
   password: z
     .string()
     .trim()
@@ -11,6 +11,10 @@ export const loginSchema = z.object({
 
 export const registerSchema = z.object({
   name: z.string().trim().min(1, { message: "Name is required" }),
+  username: z
+    .string()
+    .trim()
+    .min(3, { message: "Name must be more than 3 characters" }),
   email: z.string().trim().email({ message: "Must be a valid email address" }),
   password: z
     .string()
