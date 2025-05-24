@@ -34,6 +34,7 @@ export default function Register() {
     resolver: zodResolver(registerSchema),
     defaultValues: {
       name: "",
+      username: "",
       email: "",
       password: "",
     },
@@ -54,6 +55,7 @@ export default function Register() {
                 async (data: z.infer<typeof registerSchema>) => {
                   const formData = new FormData();
                   formData.append("name", data.name);
+                  formData.append("username", data.username);
                   formData.append("email", data.email);
                   formData.append("password", data.password);
                   setIsPending(true);
@@ -78,6 +80,19 @@ export default function Register() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Name</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                name="username"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Username</FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
