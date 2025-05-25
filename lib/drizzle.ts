@@ -6,8 +6,8 @@ export const db = drizzle(process.env.DATABASE_URL as string);
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),
-  username: text("username").unique().notNull(),
-  displayUsername: text("display_username").notNull(),
+  username: text("username").unique(),
+  displayUsername: text("display_username"),
   email: text("email").notNull().unique(),
   emailVerified: boolean("email_verified").notNull(),
   image: text("image"),
