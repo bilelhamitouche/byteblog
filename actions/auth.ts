@@ -3,6 +3,8 @@ import "server-only";
 import { auth } from "@/lib/auth";
 import { loginSchema, registerSchema } from "@/lib/zod";
 import { APIError } from "better-auth/api";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
 export async function loginAction(formData: FormData) {
   const username = formData.get("username") as string;
@@ -92,4 +94,25 @@ export async function gitHubLoginAction() {
       };
     }
   }
+}
+
+export async function signOutAction() {
+  await auth.api.signOut({
+    headers: await headers(),
+  });
+  redirect("/login");
+}
+
+export async function isAuthenticated() {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  return !!session;
+}
+
+export async function getUserInfo() {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  return session?.user;
 }
