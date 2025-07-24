@@ -1,6 +1,7 @@
 import { BookOpen } from "lucide-react";
 import Link from "next/link";
 import { Button } from "./ui/button";
+import MobileMenu from "./mobile-menu";
 
 export default function Navbar() {
   return (
@@ -25,6 +26,7 @@ export default function Navbar() {
           <Link href="/register">Get Started</Link>
         </Button>
       </div>
+      <MobileMenu />
     </header>
   );
 }
