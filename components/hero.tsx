@@ -11,8 +11,8 @@ export default function Hero() {
           Your Voice, Amplified
         </h2>
         <p className="max-w-xl text-base text-gray-600 sm:text-lg md:text-xl dark:text-gray-400">
-          Join Echo, where thoughtful writers and curious readers come together
-          to share ideas, stories, and insights that matter.
+          Join ByteBlog, where thoughtful writers and curious readers come
+          together to share ideas, stories, and insights that matter.
         </p>
         <div className="space-x-4">
           <Button size="lg" className="text-base">
