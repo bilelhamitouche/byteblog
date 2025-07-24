@@ -9,7 +9,7 @@ export default function WhyChooseByteblog() {
         Why Choose ByteBlog?
       </h2>
       <p className="max-w-2xl text-base text-center text-gray-600 sm:text-lg md:text-xl dark:text-gray-400">
-        We've built the perfect platform for writers and readers who value
+        We&apos;ve built the perfect platform for writers and readers who value
         quality content and meaningful conversations.
       </p>
       <div className="grid grid-cols-1 gap-16 p-8 text-center md:grid-cols-3">
