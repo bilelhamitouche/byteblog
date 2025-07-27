@@ -6,9 +6,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { LogOut, Settings } from "lucide-react";
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
+import { Settings } from "lucide-react";
 import SignOutButton from "./sign-out-button";
 
 interface AvatarDropdownProps {
@@ -22,12 +20,6 @@ export default function AvatarDropdown({
   email,
   image,
 }: AvatarDropdownProps) {
-  async function signOut() {
-    "use server";
-    await auth.api.signOut({
-      headers: await headers(),
-    });
-  }
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
