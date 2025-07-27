@@ -6,7 +6,6 @@ import { headers } from "next/headers";
 
 export default async function Home() {
   const user = await getUserInfo();
-  console.log(user);
   if (!user) return <LandingPage />;
   return (
     <form
