@@ -2,7 +2,7 @@
 
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import { Bold, Italic, Underline } from "lucide-react";
+import { Bold, Italic, Strikethrough, Underline } from "lucide-react";
 import { Toggle } from "./ui/toggle";
 
 export default function Tiptap() {
@@ -13,7 +13,7 @@ export default function Tiptap() {
   });
   return (
     <div className="space-y-2">
-      <div className="flex items-center rounded-md border border-input">
+      <div className="flex items-center rounded-md border border-input max-w-fit">
         <Toggle
           pressed={editor?.isActive("bold")}
           aria-label="Toggle bold"
@@ -36,6 +36,13 @@ export default function Tiptap() {
           }
         >
           <Underline />
+        </Toggle>
+        <Toggle
+          pressed={editor?.isActive("strike")}
+          aria-label="Toggle throughline"
+          onPressedChange={() => editor?.chain().focus().toggleStrike().run()}
+        >
+          <Strikethrough />
         </Toggle>
       </div>
       <EditorContent editor={editor} />
