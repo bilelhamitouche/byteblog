@@ -15,7 +15,7 @@ export default async function Home() {
           headers: await headers(),
         });
       }}
-      className="py-20"
+      className="p-8 py-20"
     >
       <Button variant="destructive">Sign Out</Button>
     </form>
