@@ -23,12 +23,14 @@ export const registerSchema = z.object({
     .max(40, { message: "Must be at most 40 characters long" }),
 });
 
-export const writePostSchema = z.object({
-  title: z
-    .string()
-    .trim()
-    .min(1, { message: "Is required" })
-    .max(50, { message: "Must be at most 50 characters long" }),
-  image: z.string().trim().optional(),
-  content: z.string().trim().min(1, { message: "Is required" }),
-});
+export const writePostSchema = z
+  .object({
+    title: z
+      .string()
+      .trim()
+      .min(1, { message: "Is required" })
+      .max(50, { message: "Must be at most 50 characters long" }),
+    image: z.string().trim(),
+    content: z.string().trim().min(1, { message: "Is required" }),
+  })
+  .strict();
