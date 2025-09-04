@@ -18,13 +18,10 @@ export async function createPost(
   image: string | null,
   content: string,
   authorId: string,
-  categoryId: string,
 ) {
   if (!(await isAuthenticated())) redirect("/login");
   try {
-    await db
-      .insert(post)
-      .values({ title, image, content, categoryId, authorId });
+    await db.insert(post).values({ title, image, content, authorId });
   } catch (err) {
     if (err instanceof DrizzleError) throw new Error("Database Error");
   }
@@ -35,13 +32,10 @@ export async function createDraft(
   image: string | null,
   content: string,
   authorId: string,
-  categoryId: string,
 ) {
   if (!(await isAuthenticated())) redirect("/login");
   try {
-    await db
-      .insert(draft)
-      .values({ title, image, content, categoryId, authorId });
+    await db.insert(draft).values({ title, image, content, authorId });
   } catch (err) {
     if (err instanceof DrizzleError) throw new Error("Database Error");
   }
