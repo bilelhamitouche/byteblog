@@ -1,7 +1,7 @@
 import { drizzle } from "drizzle-orm/node-postgres";
 import {
+  AnyPgColumn,
   boolean,
-  foreignKey,
   pgTable,
   primaryKey,
   text,
@@ -71,12 +71,12 @@ export const profile = pgTable("profile", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
-  bio: text("bio").unique(),
+  bio: text("bio"),
   userId: text("user_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
   createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
 });
 
 export const post = pgTable("post", {
@@ -86,14 +86,26 @@ export const post = pgTable("post", {
   title: text("title").notNull(),
   image: text("image"),
   content: text("content").notNull(),
-  categoryId: text("category_id")
-    .notNull()
-    .references(() => category.id, { onDelete: "cascade" }),
   authorId: text("author_id")
     .notNull()
-    .references(() => user.id, { onDelete: "cascade" }),
+    .references(() => user.id, { onDelete: "cascade", onUpdate: "cascade" }),
+  draftId: text("draft_id").references(() => draft.id),
   createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const postTag = pgTable("post_tag", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  postId: text("post_id")
+    .notNull()
+    .references(() => post.id, { onDelete: "cascade", onUpdate: "cascade" }),
+  tagId: text("tag_id")
+    .notNull()
+    .references(() => tag.id, { onDelete: "cascade", onUpdate: "cascade" }),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
 });
 
 export const draft = pgTable("draft", {
@@ -103,14 +115,11 @@ export const draft = pgTable("draft", {
   title: text("title").notNull(),
   image: text("image"),
   content: text("content").notNull(),
-  categoryId: text("category_id")
-    .notNull()
-    .references(() => category.id, { onDelete: "cascade" }),
   authorId: text("author_id")
     .notNull()
-    .references(() => user.id, { onDelete: "cascade" }),
+    .references(() => user.id, { onDelete: "cascade", onUpdate: "cascade" }),
   createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
 });
 
 export const like = pgTable(
@@ -118,52 +127,39 @@ export const like = pgTable(
   {
     userId: text("user_id")
       .notNull()
-      .references(() => user.id, { onDelete: "cascade" }),
+      .references(() => user.id, { onDelete: "cascade", onUpdate: "cascade" }),
     postId: text("post_id")
       .notNull()
-      .references(() => post.id, { onDelete: "cascade" }),
+      .references(() => post.id, { onDelete: "cascade", onUpdate: "cascade" }),
     createdAt: timestamp("created_at").defaultNow(),
-    updatedAt: timestamp("created_at").defaultNow(),
+    updatedAt: timestamp("updated_at").defaultNow(),
   },
   (table) => [primaryKey({ columns: [table.userId, table.postId] })],
 );
 
-export const comment = pgTable(
-  "comment",
-  {
-    id: text("id")
-      .primaryKey()
-      .$defaultFn(() => crypto.randomUUID()),
-    content: text("content").notNull(),
-    postId: text("post_id")
-      .notNull()
-      .references(() => post.id, { onDelete: "cascade" }),
-    authorId: text("author_id")
-      .notNull()
-      .references(() => user.id, { onDelete: "cascade" }),
-    parentId: text("parent_id").unique(),
-    createdAt: timestamp("created_at").defaultNow(),
-    updatedAt: timestamp("created_at").defaultNow(),
-  },
-  (table) => [
-    foreignKey({ columns: [table.parentId], foreignColumns: [table.id] }),
-  ],
-);
+export const comment = pgTable("comment", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  content: text("content").notNull(),
+  postId: text("post_id").references(() => post.id, { onDelete: "cascade" }),
+  authorId: text("author_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  parentId: text("parent_id").references((): AnyPgColumn => comment.id, {
+    onDelete: "cascade",
+  }),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
 
-export const category = pgTable(
-  "category",
-  {
-    id: text("id")
-      .primaryKey()
-      .$defaultFn(() => crypto.randomUUID()),
-    category: text("category").notNull().unique(),
-    parentId: text("parent_id").unique(),
-    createdAt: timestamp("created_at").defaultNow(),
-    updatedAt: timestamp("created_at").defaultNow(),
-  },
-  (table) => [
-    foreignKey({ columns: [table.parentId], foreignColumns: [table.id] }),
-  ],
-);
+export const tag = pgTable("tag", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  tagName: text("tag_name").notNull().unique(),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
 
 export const schema = { user, session, account, verification };
