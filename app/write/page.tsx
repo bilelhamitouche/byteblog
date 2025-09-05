@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { writePostSchema } from "@/lib/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Editor, EditorContent, useEditor } from "@tiptap/react";
+import Heading from "@tiptap/extension-heading";
 import StarterKit from "@tiptap/starter-kit";
 import {
   Bold,
@@ -28,9 +29,15 @@ import {
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { createDraftAction, createPostAction } from "@/actions/posts";
+import { toast } from "sonner";
+import LoadingButton from "@/components/ui/loading-button";
+import { CustomHeading } from "@/lib/utils";
 
 export default function Write() {
   const [action, setAction] = useState<"posts" | "drafts">("drafts");
+  const [isPostLoading, setIsPostLoading] = useState<boolean>(false);
+  const [isDraftLoading, setIsDraftLoading] = useState<boolean>(false);
   const form = useForm<z.infer<typeof writePostSchema>>({
     resolver: zodResolver(writePostSchema),
     mode: "onSubmit",
@@ -41,9 +48,29 @@ export default function Write() {
     },
   });
   async function onSubmit(data: z.infer<typeof writePostSchema>) {
-    console.log(action);
-    console.log(data);
-    console.log(JSON.parse(data.content));
+    const formData = new FormData();
+    formData.append("title", data.title);
+    formData.append("image", data.image);
+    formData.append("content", data.content);
+    if (action === "posts") {
+      setIsPostLoading(true);
+      try {
+        await createPostAction(formData);
+      } catch (err) {
+        toast.error("Error creating post");
+      } finally {
+        setIsPostLoading(false);
+      }
+    } else if (action === "drafts") {
+      setIsDraftLoading(true);
+      try {
+        await createDraftAction(formData);
+      } catch (err) {
+        toast.error("Error creating draft");
+      } finally {
+        setIsDraftLoading(false);
+      }
+    }
   }
   return (
     <div className="p-8 py-24 space-y-8 w-full h-full">
@@ -97,22 +124,30 @@ export default function Write() {
             )}
           />
           <div className="flex gap-4 items-center">
-            <Button
-              variant="default"
-              name="action"
-              value="posts"
-              onClick={() => setAction("posts")}
-            >
-              Save and publish
-            </Button>
-            <Button
-              variant="outline"
-              name="action"
-              value="drafts"
-              onClick={() => setAction("drafts")}
-            >
-              Save to drafts
-            </Button>
+            {isPostLoading ? (
+              <LoadingButton variant="default" size="default" className="" />
+            ) : (
+              <Button
+                variant="default"
+                name="action"
+                value="posts"
+                onClick={() => setAction("posts")}
+              >
+                Save and publish
+              </Button>
+            )}
+            {isDraftLoading ? (
+              <LoadingButton variant="outline" size="default" className="" />
+            ) : (
+              <Button
+                variant="outline"
+                name="action"
+                value="drafts"
+                onClick={() => setAction("drafts")}
+              >
+                Save to drafts
+              </Button>
+            )}
           </div>
         </form>
       </Form>
@@ -227,7 +262,12 @@ function Tiptap({
   onChange: (content: string) => void;
 }) {
   const editor = useEditor({
-    extensions: [StarterKit.configure()],
+    extensions: [
+      StarterKit.configure({
+        heading: false,
+      }),
+      CustomHeading,
+    ],
     content: content || "<p>Hello World! 🌎️</p>",
     immediatelyRender: false,
     editorProps: {
