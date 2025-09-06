@@ -12,7 +12,6 @@ import { Input } from "@/components/ui/input";
 import { writePostSchema } from "@/lib/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Editor, EditorContent, useEditor } from "@tiptap/react";
-import Heading from "@tiptap/extension-heading";
 import StarterKit from "@tiptap/starter-kit";
 import {
   Bold,
