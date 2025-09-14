@@ -47,9 +47,9 @@ export default function Login() {
           <CardDescription>Login to start writing blogs</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="space-y-2">
+          <div className="flex gap-2 justify-between items-center w-full">
             <Button
-              className="w-full"
+              className="flex-1"
               onClick={async () => {
                 await authClient.signIn.social({
                   provider: "google",
@@ -59,7 +59,7 @@ export default function Login() {
               Login with Google
             </Button>
             <Button
-              className="w-full"
+              className="flex-1"
               onClick={async () => {
                 await authClient.signIn.social({
                   provider: "github",
