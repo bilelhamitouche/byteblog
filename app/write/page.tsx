@@ -18,6 +18,8 @@ import { createDraftAction, createPostAction } from "@/actions/posts";
 import { toast } from "sonner";
 import LoadingButton from "@/components/ui/loading-button";
 import Tiptap from "@/components/Tiptap";
+import Link from "next/link";
+import { lusitana } from "@/lib/fonts";
 
 export default function Write() {
   const [action, setAction] = useState<"posts" | "drafts">("drafts");
@@ -59,7 +61,9 @@ export default function Write() {
   }
   return (
     <div className="p-8 py-24 space-y-8 w-full h-full">
-      <h2 className="text-3xl font-bold">Write new post</h2>
+      <h2 className={`text-3xl font-bold ${lusitana.className}`}>
+        Write new post
+      </h2>
       <Form {...form}>
         <form
           className="space-y-4 h-full"
@@ -133,6 +137,9 @@ export default function Write() {
                 Save to drafts
               </Button>
             )}
+            <Button variant="destructive" asChild>
+              <Link href="/posts">Discard Changes</Link>
+            </Button>
           </div>
         </form>
       </Form>
