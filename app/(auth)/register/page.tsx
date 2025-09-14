@@ -41,7 +41,7 @@ export default function Register() {
   });
   const router = useRouter();
   return (
-    <div className="flex justify-center items-center h-full">
+    <div className="flex justify-center items-center pt-16 h-full">
       <Card className="min-w-xs md:min-w-sm">
         <CardHeader className="text-center">
           <CardTitle className="text-xl">Register</CardTitle>
