@@ -26,11 +26,20 @@ export default function MobileMenu({
           <SheetTitle>ByteBlog</SheetTitle>
         </SheetHeader>
         <nav className="flex flex-col gap-2 px-4">
-          <Link href="/" className="p-2">
+          <Link href="/" className="p-2 transition-colors hover:text-primary">
             Home
           </Link>
-          <Link href="/categories" className="p-2">
-            Categories
+          <Link
+            href="/posts"
+            className="p-2 transition-colors hover:text-primary"
+          >
+            Posts
+          </Link>
+          <Link
+            href="/topics"
+            className="p-2 transition-colors hover:text-primary"
+          >
+            Topics
           </Link>
         </nav>
         {authenticated ? null : (
