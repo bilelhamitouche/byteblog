@@ -94,6 +94,15 @@ export const post = pgTable("post", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+export const tag = pgTable("tag", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  tagName: text("tag_name").notNull().unique(),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 export const postTag = pgTable("post_tag", {
   id: text("id")
     .primaryKey()
@@ -149,15 +158,6 @@ export const comment = pgTable("comment", {
   parentId: text("parent_id").references((): AnyPgColumn => comment.id, {
     onDelete: "cascade",
   }),
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow(),
-});
-
-export const tag = pgTable("tag", {
-  id: text("id")
-    .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
-  tagName: text("tag_name").notNull().unique(),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
