@@ -94,25 +94,28 @@ export const post = pgTable("post", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
-export const tag = pgTable("tag", {
+export const topic = pgTable("topic", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
-  tagName: text("tag_name").notNull().unique(),
+  topicName: text("topic_name").notNull().unique(),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
-export const postTag = pgTable("post_tag", {
+export const postTopic = pgTable("post_topic", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
   postId: text("post_id")
     .notNull()
     .references(() => post.id, { onDelete: "cascade", onUpdate: "cascade" }),
-  tagId: text("tag_id")
+  topicId: text("topic_id")
     .notNull()
-    .references(() => tag.id, { onDelete: "cascade", onUpdate: "cascade" }),
+    .references(() => topic.id, {
+      onDelete: "cascade",
+      onUpdate: "cascade",
+    }),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
