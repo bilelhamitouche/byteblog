@@ -1,11 +1,10 @@
 import "server-only";
 import { db, draft, post, user } from "./drizzle";
 import { DrizzleError, eq } from "drizzle-orm";
-import { isAuthenticated } from "@/actions/auth";
-import { redirect } from "next/navigation";
+import { redirectUnauthenticated } from "@/actions/auth";
 
 export async function getUserByUsername(username: string) {
-  if (!(await isAuthenticated())) redirect("/login");
+  await redirectUnauthenticated();
   const newUser = await db
     .selectDistinct()
     .from(user)
@@ -19,7 +18,7 @@ export async function createPost(
   content: string,
   authorId: string,
 ) {
-  if (!(await isAuthenticated())) redirect("/login");
+  await redirectUnauthenticated();
   try {
     await db.insert(post).values({ title, image, content, authorId });
   } catch (err) {
@@ -55,7 +54,7 @@ export async function createDraft(
   content: string,
   authorId: string,
 ) {
-  if (!(await isAuthenticated())) redirect("/login");
+  await redirectUnauthenticated();
   try {
     await db.insert(draft).values({ title, image, content, authorId });
   } catch (err) {
