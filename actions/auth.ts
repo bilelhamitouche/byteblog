@@ -116,3 +116,10 @@ export async function getUserInfo() {
   });
   return session?.user;
 }
+
+export async function redirectUnauthenticated() {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  !session && redirect("/login");
+}
