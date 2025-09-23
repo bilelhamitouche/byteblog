@@ -27,6 +27,28 @@ export async function createPost(
   }
 }
 
+export async function getPosts() {
+  try {
+    const posts = await db.select().from(post);
+    return posts;
+  } catch (err) {
+    if (err instanceof DrizzleError) throw new Error("Database Error");
+  }
+}
+
+export async function getDraftsByUserId(userId: string) {
+  await redirectUnauthenticated();
+  try {
+    const drafts = await db
+      .select()
+      .from(draft)
+      .where(eq(draft.authorId, userId));
+    return drafts;
+  } catch (err) {
+    if (err instanceof DrizzleError) throw new Error("Database Error");
+  }
+}
+
 export async function createDraft(
   title: string,
   image: string | null,
