@@ -34,6 +34,8 @@ export async function getPosts() {
         image: post.image,
         title: post.title,
         content: post.content,
+        author: user.name,
+        authorImage: user.image,
         createdAt: post.createdAt,
       })
       .from(post)
