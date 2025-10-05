@@ -5,7 +5,6 @@ import { writePostSchema } from "@/lib/zod";
 import { getUserInfo } from "./auth";
 
 export async function createPostAction(formData: FormData) {
-  const userId = (await getUserInfo())?.id;
   const userId = (await getUserInfo())?.id as string;
   const title = formData.get("title");
   const image = formData.get("image");
@@ -25,7 +24,6 @@ export async function createPostAction(formData: FormData) {
 }
 
 export async function createDraftAction(formData: FormData) {
-  const userId = (await getUserInfo())?.id;
   const userId = (await getUserInfo())?.id as string;
   const title = formData.get("title");
   const image = formData.get("image");
