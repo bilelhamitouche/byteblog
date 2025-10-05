@@ -17,10 +17,11 @@ export async function createPost(
   image: string | null,
   content: string,
   authorId: string,
+  draftId: string,
 ) {
   await redirectUnauthenticated();
   try {
-    await db.insert(post).values({ title, image, content, authorId });
+    await db.insert(post).values({ title, image, content, authorId, draftId });
   } catch (err) {
     if (err instanceof DrizzleError) throw new Error("Database Error");
   }
@@ -74,7 +75,8 @@ export async function createDraft(
 ) {
   await redirectUnauthenticated();
   try {
-    await db.insert(draft).values({ title, image, content, authorId });
+    const newDraft = await db.insert(draft).values({ title, image, content, authorId }).returning();
+    return newDraft[0].id;
   } catch (err) {
     if (err instanceof DrizzleError) throw new Error("Database Error");
   }
