@@ -101,3 +101,12 @@ export async function getDraftsByAuthorId(authorId: string) {
     if (err instanceof DrizzleError) throw new Error("Database Error");
   }
 }
+
+export async function updateDraft(id: string, title: string, image: string, content: string) {
+  await redirectUnauthenticated();
+  try {
+    await db.update(draft).set({ title, image, content }).where(eq(draft.id, id))
+  } catch (err) {
+    if (err instanceof DrizzleError) throw new Error("Database Error");
+  }
+}
