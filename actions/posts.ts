@@ -1,6 +1,6 @@
 "use server";
 
-import { createDraft, createPost } from "@/lib/queries";
+import { createDraft, createPost, updateDraft } from "@/lib/queries";
 import { writePostSchema } from "@/lib/zod";
 import { getUserInfo } from "./auth";
 
@@ -33,7 +33,21 @@ export async function createDraftAction(formData: FormData) {
     errors: validationResult.error.flatten().fieldErrors,
   }
   try {
-    await createDraft(validationResult.data.title, validationResult.data.image, validationResult.data.content, userId as string);
+    await createDraft(validationResult.data.title, validationResult.data.image, validationResult.data.content, userId);
+  } catch (err) {
+    return {
+      message: err,
+    }
+  }
+}
+
+export async function editDraftAction(formData: FormData) {
+  const id = formData.get("id") as string;
+  const title = formData.get("title") as string;
+  const image = formData.get("image") as string;
+  const content = formData.get("content") as string;
+  try {
+    await updateDraft(id, title, image, content);
   } catch (err) {
     return {
       message: err,
