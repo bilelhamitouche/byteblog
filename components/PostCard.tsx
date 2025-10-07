@@ -4,7 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 interface PostCardProps {
   title: string;
-  image: string;
+  image: string | null;
   content: string;
   author: string;
   authorImage: string | null;
