@@ -30,7 +30,7 @@ export const writePostSchema = z
       .trim()
       .min(1, { message: "Is required" })
       .max(50, { message: "Must be at most 50 characters long" }),
-    image: z.string().trim(),
+    image: z.string().trim().url({ message: "Must be a valid url" }),
     content: z.string().trim().min(1, { message: "Is required" }),
   })
   .strict();
