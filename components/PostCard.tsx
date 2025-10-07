@@ -7,7 +7,7 @@ interface PostCardProps {
   image: string;
   content: string;
   author: string;
-  authorImage: string;
+  authorImage: string | null;
 }
 
 export default function PostCard({
