@@ -15,7 +15,7 @@ export async function createPostAction(formData: FormData) {
     errors: validationResult.error.flatten().fieldErrors,
   }
   try {
-    await createPost(validationResult.data.image, validationResult.data.image, validationResult.data.content, userId as string, draftId as string);
+    await createPost(validationResult.data.title, validationResult.data.image, validationResult.data.content, userId as string, draftId as string);
   } catch (err) {
     return {
       message: err,
