@@ -1,8 +1,8 @@
 import PostCard from "@/components/PostCard";
-import { getPosts } from "@/lib/queries"
+import { getPublishedPosts } from "@/lib/queries"
 
 export default async function Posts() {
-  const posts = await getPosts();
+  const posts = await getPublishedPosts();
   if (!posts || posts.length === 0) return <div className="h-screen w-full flex justify-center items-center text-3xl font-bold">No posts</div>
   return (
     <div className="py-20 p-4">
