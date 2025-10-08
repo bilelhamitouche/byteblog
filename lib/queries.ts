@@ -1,5 +1,5 @@
 import "server-only";
-import { db, draft, post, user } from "./drizzle";
+import { db, post, user } from "./drizzle";
 import { DrizzleError, eq } from "drizzle-orm";
 import { redirectUnauthenticated } from "@/actions/auth";
 
@@ -16,18 +16,18 @@ export async function createPost(
   title: string,
   image: string | null,
   content: string,
+  published: boolean,
   authorId: string,
-  draftId: string,
 ) {
   await redirectUnauthenticated();
   try {
-    await db.insert(post).values({ title, image, content, authorId, draftId });
+    await db.insert(post).values({ title, image, content, authorId, published });
   } catch (err) {
     if (err instanceof DrizzleError) throw new Error("Database Error");
   }
 }
 
-export async function getPosts() {
+export async function getPublishedPosts() {
   try {
     const posts = await db
       .select({
@@ -40,7 +40,7 @@ export async function getPosts() {
         createdAt: post.createdAt,
       })
       .from(post)
-      .leftJoin(user, eq(post.authorId, user.id));
+      .leftJoin(user, eq(post.authorId, user.id)).where(eq(post.published, true));
     return posts;
   } catch (err) {
     if (err instanceof DrizzleError) throw new Error("Database Error");
@@ -56,56 +56,13 @@ export async function getPostsByAuthorId(authorId: string) {
         image: post.image,
         title: post.title,
         content: post.content,
+        published: post.published,
         createdAt: post.createdAt,
       })
       .from(post)
       .leftJoin(user, eq(post.authorId, user.id))
       .where(eq(post.authorId, authorId));
     return posts;
-  } catch (err) {
-    if (err instanceof DrizzleError) throw new Error("Database Error");
-  }
-}
-
-export async function createDraft(
-  title: string,
-  image: string | null,
-  content: string,
-  authorId: string,
-) {
-  await redirectUnauthenticated();
-  try {
-    const newDraft = await db.insert(draft).values({ title, image, content, authorId }).returning();
-    return newDraft[0].id;
-  } catch (err) {
-    if (err instanceof DrizzleError) throw new Error("Database Error");
-  }
-}
-
-export async function getDraftsByAuthorId(authorId: string) {
-  await redirectUnauthenticated();
-  try {
-    const drafts = await db
-      .select({
-        id: draft.id,
-        image: draft.image,
-        title: draft.title,
-        content: draft.content,
-        createdAt: draft.createdAt,
-      })
-      .from(draft)
-      .leftJoin(user, eq(draft.authorId, user.id))
-      .where(eq(draft.authorId, authorId));
-    return drafts;
-  } catch (err) {
-    if (err instanceof DrizzleError) throw new Error("Database Error");
-  }
-}
-
-export async function updateDraft(id: string, title: string, image: string, content: string) {
-  await redirectUnauthenticated();
-  try {
-    await db.update(draft).set({ title, image, content }).where(eq(draft.id, id))
   } catch (err) {
     if (err instanceof DrizzleError) throw new Error("Database Error");
   }
