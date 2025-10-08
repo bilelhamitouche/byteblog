@@ -14,17 +14,17 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { createDraftAction, createPostAction } from "@/actions/posts";
+import { createPostAction } from "@/actions/posts";
 import { toast } from "sonner";
 import LoadingButton from "@/components/ui/loading-button";
 import Tiptap from "@/components/Tiptap";
-import Link from "next/link";
 import { lusitana } from "@/lib/fonts";
+import Link from "next/link";
 
 export default function Write() {
-  const [action, setAction] = useState<"posts" | "drafts">("drafts");
-  const [isPostLoading, setIsPostLoading] = useState<boolean>(false);
-  const [isDraftLoading, setIsDraftLoading] = useState<boolean>(false);
+  const [action, setAction] = useState<"" | "publish" | "save">("save");
+  const [isPublishing, setIsPublishing] = useState<boolean>(false);
+  const [isSaving, setIsSaving] = useState<boolean>(false);
   const form = useForm<z.infer<typeof writePostSchema>>({
     resolver: zodResolver(writePostSchema),
     mode: "onSubmit",
@@ -39,23 +39,25 @@ export default function Write() {
     formData.append("title", data.title);
     formData.append("image", data.image);
     formData.append("content", data.content);
-    if (action === "posts") {
-      setIsPostLoading(true);
+    if (action === "publish") {
+      setIsPublishing(true);
       try {
+        formData.append("published", JSON.stringify(true))
         await createPostAction(formData);
       } catch (err) {
         toast.error("Error creating post");
       } finally {
-        setIsPostLoading(false);
+        setIsPublishing(false);
       }
-    } else if (action === "drafts") {
-      setIsDraftLoading(true);
+    } else if (action === "save") {
+      setIsSaving(true);
       try {
-        await createDraftAction(formData);
+        formData.append("published", JSON.stringify(false))
+        await createPostAction(formData);
       } catch (err) {
-        toast.error("Error creating draft");
+        toast.error("Error saving");
       } finally {
-        setIsDraftLoading(false);
+        setIsSaving(false);
       }
     }
   }
@@ -113,28 +115,28 @@ export default function Write() {
             )}
           />
           <div className="flex gap-4 items-center">
-            {isPostLoading ? (
+            {isPublishing ? (
               <LoadingButton variant="default" size="default" className="" />
             ) : (
               <Button
                 variant="default"
                 name="action"
-                value="posts"
-                onClick={() => setAction("posts")}
+                value="publish"
+                onClick={() => setAction("publish")}
               >
                 Save and publish
               </Button>
             )}
-            {isDraftLoading ? (
+            {isSaving ? (
               <LoadingButton variant="outline" size="default" className="" />
             ) : (
               <Button
                 variant="outline"
                 name="action"
-                value="drafts"
-                onClick={() => setAction("drafts")}
+                value="save"
+                onClick={() => setAction("save")}
               >
-                Save to drafts
+                Save
               </Button>
             )}
             <Button variant="destructive" asChild>
