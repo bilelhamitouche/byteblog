@@ -86,10 +86,10 @@ export const post = pgTable("post", {
   title: text("title").notNull(),
   image: text("image"),
   content: text("content").notNull(),
+  published: boolean("published").notNull(),
   authorId: text("author_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade", onUpdate: "cascade" }),
-  draftId: text("draft_id").references(() => draft.id),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -116,20 +116,6 @@ export const postTopic = pgTable("post_topic", {
       onDelete: "cascade",
       onUpdate: "cascade",
     }),
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow(),
-});
-
-export const draft = pgTable("draft", {
-  id: text("id")
-    .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
-  title: text("title").notNull(),
-  image: text("image"),
-  content: text("content").notNull(),
-  authorId: text("author_id")
-    .notNull()
-    .references(() => user.id, { onDelete: "cascade", onUpdate: "cascade" }),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
