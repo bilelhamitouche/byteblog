@@ -15,11 +15,8 @@ export async function createPostAction(formData: FormData) {
     errors: validationResult.error.flatten().fieldErrors,
   }
   try {
-    console.log("Posting");
     await createPost(validationResult.data.title, validationResult.data.image, validationResult.data.content, JSON.parse(published as string) as boolean, userId as string);
-    console.log("Posted");
   } catch (err) {
-    console.log(err)
     return {
       message: err,
     }
