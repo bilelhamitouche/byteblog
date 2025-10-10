@@ -30,12 +30,6 @@ export default function MobileMenu({
             Home
           </Link>
           <Link
-            href="/posts"
-            className="p-2 transition-colors hover:text-primary"
-          >
-            Posts
-          </Link>
-          <Link
             href="/topics"
             className="p-2 transition-colors hover:text-primary"
           >
