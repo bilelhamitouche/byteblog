@@ -1,7 +1,10 @@
+"use client";
 import Image from "next/image";
 import { Card, CardDescription, CardTitle } from "./ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { EventHandler, MouseEventHandler } from "react";
 
 interface PostCardProps {
   id: string;
@@ -22,9 +25,17 @@ export default function PostCard({
   authorUsername,
   authorImage,
 }: PostCardProps) {
+  const router = useRouter();
+  function handleClick(e: React.MouseEvent<HTMLDivElement>) {
+    const isLinkClick = e.target instanceof Element && e.target.closest("a");
+    if (isLinkClick) {
+      return;
+    }
+    router.push(`/posts/${id}`);
+  }
   return (
-    <Card className="flex flex-col gap-2 items-start p-4 max-w-xl">
-      <Link href={`/@${authorUsername}`} className="flex items-center gap-2 group">
+    <Card className="flex flex-col gap-2 items-start p-4 max-w-xl" onClick={handleClick}>
+      <Link href={`/authors/@${authorUsername}`} className="flex items-center gap-2 group">
         <Avatar>
           <AvatarImage src={author} alt={`${author} image`} />
           <AvatarFallback>{author[0]}</AvatarFallback>
