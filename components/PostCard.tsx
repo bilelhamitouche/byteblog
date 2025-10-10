@@ -4,7 +4,6 @@ import { Card, CardDescription, CardTitle } from "./ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { EventHandler, MouseEventHandler } from "react";
 
 interface PostCardProps {
   id: string;
