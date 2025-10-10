@@ -34,7 +34,7 @@ export default function PostCard({
     router.push(`/posts/${id}`);
   }
   return (
-    <Card className="flex flex-col gap-2 items-start p-4 max-w-xl" onClick={handleClick}>
+    <Card className="flex flex-col gap-2 items-start p-4 max-w-xl cursor-pointer" onClick={handleClick}>
       <Link href={`/authors/@${authorUsername}`} className="flex items-center gap-2 group">
         <Avatar>
           <AvatarImage src={author} alt={`${author} image`} />
