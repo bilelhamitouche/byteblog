@@ -140,7 +140,7 @@ export default function Write() {
               </Button>
             )}
             <Button variant="destructive" asChild>
-              <Link href="/posts">Discard Changes</Link>
+              <Link href="/">Discard Changes</Link>
             </Button>
           </div>
         </form>
