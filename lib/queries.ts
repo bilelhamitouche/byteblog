@@ -27,6 +27,21 @@ export async function createPost(
   }
 }
 
+export async function editPost(
+  id: string,
+  title: string,
+  image: string | null,
+  content: string,
+  published: boolean,
+) {
+  await redirectUnauthenticated();
+  try {
+    await db.update(post).set({ title, image, content, published }).where(eq(post.id, id));
+  } catch (err) {
+    if (err instanceof DrizzleError) throw new Error("Database Error");
+  }
+}
+
 export async function getPublishedPosts() {
   try {
     const posts = await db
@@ -36,6 +51,7 @@ export async function getPublishedPosts() {
         title: post.title,
         content: post.content,
         author: user.name,
+        authorUsername: user.username,
         authorImage: user.image,
         createdAt: post.createdAt,
       })
@@ -63,6 +79,16 @@ export async function getPostsByAuthorId(authorId: string) {
       .leftJoin(user, eq(post.authorId, user.id))
       .where(eq(post.authorId, authorId));
     return posts;
+  } catch (err) {
+    if (err instanceof DrizzleError) throw new Error("Database Error");
+  }
+}
+
+export async function getPost(id: string) {
+  await redirectUnauthenticated();
+  try {
+    const currentPost = await db.select({ id: post.id, title: post.title, image: post.image, content: post.content, createdAt: post.createdAt, updatedAt: post.updatedAt, author: user.name }).from(post).leftJoin(user, eq(user.id, post.authorId)).where(eq(post.id, id));
+    return currentPost[0];
   } catch (err) {
     if (err instanceof DrizzleError) throw new Error("Database Error");
   }
