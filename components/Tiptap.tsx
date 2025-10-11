@@ -118,7 +118,7 @@ export default function Tiptap({
   content,
   onChange,
 }: {
-  content: string;
+  content: string | object;
   onChange: (content: string) => void;
 }) {
   const editor = useEditor({
