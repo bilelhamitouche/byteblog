@@ -1,3 +1,4 @@
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getPost } from "@/lib/queries";
 import { Heart } from "lucide-react";
 import { notFound } from "next/navigation";
@@ -10,6 +11,15 @@ export default async function Post({ params }: { params: Promise<{ postId: strin
     <div className="max-w-3xl h-full py-28 post mx-auto">
       <div className="p-4 flex flex-col items-start gap-2 w-full">
         <h1 className="text-3xl font-bold">{post.title}</h1>
+        <div className="flex items-center gap-2">
+          <Avatar>
+            <AvatarImage src={post.authorImage as string} alt={`${post.author} image`} />
+            <AvatarFallback>{post.author?.toUpperCase()[0]}</AvatarFallback>
+          </Avatar>
+          <span>{post.author}</span>
+        </div>
+      </div>
+      <hr />
       <div className="w-full flex gap-4 items-center p-2">
         <div className="flex items-center gap-1">
           <span>{post.likesCount}</span>
