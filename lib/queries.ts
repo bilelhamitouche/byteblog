@@ -1,6 +1,6 @@
 import "server-only";
-import { db, post, user } from "./drizzle";
-import { DrizzleError, eq } from "drizzle-orm";
+import { db, like, post, user } from "./drizzle";
+import { count, DrizzleError, eq } from "drizzle-orm";
 import { redirectUnauthenticated } from "@/actions/auth";
 
 export async function getUserByUsername(username: string) {
@@ -87,7 +87,7 @@ export async function getPostsByAuthorId(authorId: string) {
 export async function getPost(id: string) {
   await redirectUnauthenticated();
   try {
-    const currentPost = await db.select({ id: post.id, title: post.title, image: post.image, content: post.content, createdAt: post.createdAt, updatedAt: post.updatedAt, author: user.name }).from(post).leftJoin(user, eq(user.id, post.authorId)).where(eq(post.id, id));
+    const currentPost = await db.select({ id: post.id, title: post.title, image: post.image, content: post.content, createdAt: post.createdAt, updatedAt: post.updatedAt, likesCount: count(like.userId), author: user.name, authorImage: user.image }).from(post).leftJoin(user, eq(user.id, post.authorId)).leftJoin(like, eq(post.id, like.postId)).where(eq(post.id, id)).groupBy(like.postId, post.id, user.name, user.image);
     return currentPost[0];
   } catch (err) {
     if (err instanceof DrizzleError) throw new Error("Database Error");
