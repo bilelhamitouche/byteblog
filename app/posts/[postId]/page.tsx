@@ -1,11 +1,14 @@
+import { getUserInfo } from "@/actions/auth";
+import LikeButton from "@/components/LikeButton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { getPost } from "@/lib/queries";
-import { Heart } from "lucide-react";
+import { getPost, hasUserLikedPost } from "@/lib/queries";
 import { notFound } from "next/navigation";
 
 export default async function Post({ params }: { params: Promise<{ postId: string }> }) {
   const postId = (await params).postId;
   const post = await getPost(postId);
+  const user = await getUserInfo();
+  const hasUserLiked = await hasUserLikedPost(postId, user?.id as string);
   if (!post) notFound();
   return (
     <div className="max-w-3xl h-full py-28 post mx-auto">
@@ -23,7 +26,7 @@ export default async function Post({ params }: { params: Promise<{ postId: strin
       <div className="w-full flex gap-4 items-center p-2">
         <div className="flex items-center gap-1">
           <span>{post.likesCount}</span>
-          <Heart size="15" />
+          <LikeButton postId={postId} hasUserLiked={hasUserLiked as boolean} loggedIn={!!user?.id} />
         </div>
         <p>{post.createdAt?.toLocaleDateString()}</p>
       </div>

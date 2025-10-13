@@ -1,6 +1,6 @@
 import "server-only";
 import { db, like, post, user } from "./drizzle";
-import { count, DrizzleError, eq } from "drizzle-orm";
+import { and, count, DrizzleError, eq } from "drizzle-orm";
 import { redirectUnauthenticated } from "@/actions/auth";
 
 export async function getUserByUsername(username: string) {
@@ -85,10 +85,30 @@ export async function getPostsByAuthorId(authorId: string) {
 }
 
 export async function getPost(id: string) {
-  await redirectUnauthenticated();
   try {
     const currentPost = await db.select({ id: post.id, title: post.title, image: post.image, content: post.content, createdAt: post.createdAt, updatedAt: post.updatedAt, likesCount: count(like.userId), author: user.name, authorImage: user.image }).from(post).leftJoin(user, eq(user.id, post.authorId)).leftJoin(like, eq(post.id, like.postId)).where(eq(post.id, id)).groupBy(like.postId, post.id, user.name, user.image);
     return currentPost[0];
+  } catch (err) {
+    if (err instanceof DrizzleError) throw new Error("Database Error");
+  }
+}
+
+export async function hasUserLikedPost(postId: string, userId: string) {
+  try {
+    const likes = await db.select({ likeCount: count() }).from(like).where(and(eq(like.postId, postId), eq(like.userId, userId)));
+    return likes[0].likeCount > 0;
+  } catch (err) {
+  }
+}
+
+export async function toggleLikePost(postId: string, userId: string) {
+  try {
+    const hasUserLiked = await hasUserLikedPost(postId, userId);
+    if (hasUserLiked) {
+      await db.delete(like).where(and(eq(like.userId, userId), eq(like.postId, postId)));
+    } else {
+      await db.insert(like).values({ userId, postId });
+    }
   } catch (err) {
     if (err instanceof DrizzleError) throw new Error("Database Error");
   }

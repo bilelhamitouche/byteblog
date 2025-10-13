@@ -1,8 +1,9 @@
 "use server";
 
-import { createPost, editPost } from "@/lib/queries";
+import { createPost, editPost, toggleLikePost } from "@/lib/queries";
 import { writePostSchema } from "@/lib/zod";
-import { getUserInfo } from "./auth";
+import { getUserInfo, redirectUnauthenticated } from "./auth";
+import { revalidatePath } from "next/cache";
 
 export async function createPostAction(formData: FormData) {
   const userId = (await getUserInfo())?.id as string;
@@ -40,4 +41,17 @@ export async function editPostAction(formData: FormData) {
       message: err,
     }
   }
+}
+
+export async function toggleLikePostAction(postId: string) {
+  const user = await getUserInfo();
+  try {
+    await toggleLikePost(postId, user?.id as string)
+  } catch (err) {
+    console.log(err);
+    return {
+      message: err,
+    }
+  }
+  revalidatePath(`/posts/${postId}`)
 }
