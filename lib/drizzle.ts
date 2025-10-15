@@ -79,6 +79,21 @@ export const profile = pgTable("profile", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+export const follower = pgTable("follower", {
+  followerId: text("follower_id")
+    .notNull()
+    .references(() => user.id, {
+      onDelete: "cascade",
+      onUpdate: "cascade",
+    }),
+  followedId: text("followed_id")
+    .notNull()
+    .references(() => user.id, {
+      onDelete: "cascade",
+      onUpdate: "cascade",
+    }),
+});
+
 export const post = pgTable("post", {
   id: text("id")
     .primaryKey()
