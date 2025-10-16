@@ -51,8 +51,9 @@ export async function getPublishedPosts() {
         title: post.title,
         content: post.content,
         author: user.name,
-        authorUsername: user.username,
         authorImage: user.image,
+        authorUsername: user.username,
+        authorEmail: user.email,
         createdAt: post.createdAt,
       })
       .from(post)
