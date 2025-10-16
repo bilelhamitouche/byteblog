@@ -8,7 +8,7 @@ export default async function Posts() {
     <div className="py-20 p-4">
       <ul className="flex flex-col gap-4">
         {posts.map((post) => (
-          <PostCard key={post.id} id={post.id} title={post.title} image={post.image} content={post.content} author={post.author as string} authorImage={post.authorImage} />
+          <PostCard key={post.id} id={post.id} title={post.title} image={post.image} content={post.content} author={post.author as string} authorImage={post.authorImage} authorUsername={post.authorUsername || post.authorEmail?.split("@")[0] as string} />
         ))}
       </ul>
     </div>
