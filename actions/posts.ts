@@ -2,7 +2,7 @@
 
 import { createPost, editPost, toggleLikePost } from "@/lib/queries";
 import { writePostSchema } from "@/lib/zod";
-import { getUserInfo, redirectUnauthenticated } from "./auth";
+import { getUserInfo } from "./auth";
 import { revalidatePath } from "next/cache";
 
 export async function createPostAction(formData: FormData) {
