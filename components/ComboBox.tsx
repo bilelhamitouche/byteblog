@@ -6,16 +6,19 @@ import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { ChevronsDown, X } from "lucide-react";
 
-export default function ComboBox({ options }: { options: string[] }) {
+export default function ComboBox({ options, selected, onChange }: { options: string[]; selected: string[]; onChange: (newSelected: string[]) => void }) {
   const [open, setOpen] = useState<boolean>(false);
-  const [selected, setSelected] = useState<string[]>([]);
 
   function toggleSelection(value: string) {
-    setSelected((prev) => (prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]));
+    if (selected.includes(value)) {
+      onChange(selected.filter((v) => v !== value));
+    } else {
+      onChange([...selected, value]);
+    }
   }
 
   function removeSelection(value: string) {
-    setSelected((prev) => prev.filter((v) => v !== value));
+    onChange(selected.filter((v) => v !== value));
   }
   return (
     <div>
@@ -48,7 +51,7 @@ export default function ComboBox({ options }: { options: string[] }) {
                   ) : null;
                 })
               ) : (
-                <span className="px-2.5">Select cities</span>
+                <span className="px-2.5">Select topics</span>
               )}
             </div>
             <ChevronsDown />
@@ -58,7 +61,7 @@ export default function ComboBox({ options }: { options: string[] }) {
           <Command>
             <CommandInput placeholder="Search" />
             <CommandList>
-              <CommandEmpty>No city found.</CommandEmpty>
+              <CommandEmpty>No topics found.</CommandEmpty>
               <CommandGroup>
                 {options.map((option) => (
                   <CommandItem key={option} value={option} onSelect={() => toggleSelection(option)}>
