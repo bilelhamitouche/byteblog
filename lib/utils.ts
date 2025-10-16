@@ -38,3 +38,13 @@ export const CustomHeading = Heading.extend({
     ];
   },
 });
+
+// Get first paragraph
+export function getFirstParagraph(content: string) {
+  const jsonContent = JSON.parse(content);
+}
+
+// Render Post
+export function renderPost(content: string) {
+  const jsonContent = JSON.parse(content);
+}
