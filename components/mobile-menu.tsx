@@ -26,8 +26,11 @@ export default function MobileMenu({
           <SheetTitle>ByteBlog</SheetTitle>
         </SheetHeader>
         <nav className="flex flex-col gap-2 px-4">
-          <Link href="/" className="p-2 transition-colors hover:text-primary">
-            Home
+          <Link
+            href="/authors"
+            className="p-2 transition-colors hover:text-primary"
+          >
+            Authors
           </Link>
           <Link
             href="/topics"
