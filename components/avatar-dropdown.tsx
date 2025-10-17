@@ -6,18 +6,20 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { Settings } from "lucide-react";
+import { Settings, User } from "lucide-react";
 import SignOutButton from "./sign-out-button";
 
 interface AvatarDropdownProps {
   name: string;
   email: string;
+  username: string;
   image: string | undefined;
 }
 
 export default function AvatarDropdown({
   name,
   email,
+  username,
   image,
 }: AvatarDropdownProps) {
   return (
@@ -28,13 +30,19 @@ export default function AvatarDropdown({
           <AvatarFallback>{name.toUpperCase()[0]}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
-      <DropdownMenuContent>
+      <DropdownMenuContent align="end" sideOffset={10}>
         <DropdownMenuItem>
           <Avatar>
             <AvatarImage src={image as string} alt={`${name} image`} />
             <AvatarFallback>{name.toUpperCase()[0]}</AvatarFallback>
           </Avatar>
-          <span>{email}</span>
+          <span>{name}</span>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link href={username ? `/authors/@${username}` : `/authors/@${email.split("@")[0]}`} className="flex gap-2 items-center">
+            <User />
+            <span>View Profile</span>
+          </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <Link href="/settings/account" className="flex gap-2 items-center">

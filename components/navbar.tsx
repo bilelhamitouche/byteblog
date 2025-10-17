@@ -25,6 +25,7 @@ export default async function Navbar() {
           <AvatarDropdown
             name={user?.name as string}
             email={user?.email as string}
+            username={user?.username as string}
             image={user?.image as string}
           />
         </div>
