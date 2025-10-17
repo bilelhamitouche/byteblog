@@ -1,5 +1,5 @@
 import "server-only";
-import { db, like, post, user } from "./drizzle";
+import { db, follow, like, post, profile, user } from "./drizzle";
 import { and, count, DrizzleError, eq } from "drizzle-orm";
 import { redirectUnauthenticated } from "@/actions/auth";
 
@@ -114,3 +114,25 @@ export async function toggleLikePost(postId: string, userId: string) {
     if (err instanceof DrizzleError) throw new Error("Database Error");
   }
 }
+export async function hasUserFollowedAuthor(authorId: string, userId: string) {
+  try {
+    const hasFollowed = await db.select().from(follow).where(and(eq(follow.followerId, userId), eq(follow.followedId, authorId)));
+    return hasFollowed.length > 0;
+  } catch (err) {
+
+  }
+}
+
+export async function toggleFollowAuthor(followerId: string, followedId: string) {
+  try {
+    const hasUserFollowed = await hasUserFollowedAuthor(followedId, followerId);
+    if (hasUserFollowed) {
+      await db.delete(follow).where(and(eq(follow.followerId, followerId), eq(follow.followedId, followedId)));
+    } else {
+      await db.insert(follow).values({ followerId, followedId });
+    }
+  } catch (err) {
+    if (err instanceof DrizzleError) throw new Error("Database Error");
+  }
+}
+
