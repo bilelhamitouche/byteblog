@@ -1,6 +1,6 @@
 import "server-only";
 import { db, follow, like, post, profile, user } from "./drizzle";
-import { and, count, DrizzleError, eq } from "drizzle-orm";
+import { and, count, DrizzleError, eq, ilike, or } from "drizzle-orm";
 import { redirectUnauthenticated } from "@/actions/auth";
 
 export async function getUserByUsername(username: string) {
@@ -114,6 +114,27 @@ export async function toggleLikePost(postId: string, userId: string) {
     if (err instanceof DrizzleError) throw new Error("Database Error");
   }
 }
+export async function hasUserProfile(userId: string) {
+  try {
+    const hasProfile = await db.select().from(profile).where(eq(profile.userId, userId));
+    return hasProfile.length > 0;
+  } catch (err) {
+    if (err instanceof DrizzleError) throw new Error("Database Error");
+  }
+}
+
+export async function getAuthorBio(authorId: string) {
+  try {
+    const hasProfile = await hasUserProfile(authorId);
+    if (hasProfile) {
+      const bio = await db.select({ bio: profile.bio }).from(profile).where(eq(profile.userId, authorId as string));
+      return bio[0];
+    }
+  } catch (err) {
+    if (err instanceof DrizzleError) throw new Error("Database Error");
+  }
+}
+
 export async function hasUserFollowedAuthor(authorId: string, userId: string) {
   try {
     const hasFollowed = await db.select().from(follow).where(and(eq(follow.followerId, userId), eq(follow.followedId, authorId)));
