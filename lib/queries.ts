@@ -87,7 +87,7 @@ export async function getPostsByAuthorId(authorId: string) {
 
 export async function getPost(id: string) {
   try {
-    const currentPost = await db.select({ id: post.id, title: post.title, image: post.image, content: post.content, createdAt: post.createdAt, updatedAt: post.updatedAt, likesCount: count(like.userId), author: user.name, authorImage: user.image }).from(post).leftJoin(user, eq(user.id, post.authorId)).leftJoin(like, eq(post.id, like.postId)).where(eq(post.id, id)).groupBy(like.postId, post.id, user.name, user.image);
+    const currentPost = await db.select({ id: post.id, title: post.title, image: post.image, content: post.content, createdAt: post.createdAt, updatedAt: post.updatedAt, likesCount: count(like.userId), authorId: user.id, author: user.name, authorImage: user.image }).from(post).leftJoin(user, eq(user.id, post.authorId)).leftJoin(like, eq(post.id, like.postId)).where(eq(post.id, id)).groupBy(like.postId, post.id, user.id, user.name, user.image);
     return currentPost[0];
   } catch (err) {
     if (err instanceof DrizzleError) throw new Error("Database Error");
