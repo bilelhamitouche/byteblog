@@ -48,7 +48,6 @@ export async function toggleLikePostAction(postId: string) {
   try {
     await toggleLikePost(postId, user?.id as string)
   } catch (err) {
-    console.log(err);
     return {
       message: err,
     }
