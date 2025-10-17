@@ -12,6 +12,14 @@ export async function getUserByUsername(username: string) {
   return newUser;
 }
 
+export async function getUserByUsernameOrEmail(usernameOrEmail: string) {
+  const newUser = await db
+    .select()
+    .from(user)
+    .where(or(eq(user.username, usernameOrEmail), ilike(user.email, `${usernameOrEmail}@%`)));
+  return newUser[0];
+}
+
 export async function createPost(
   title: string,
   image: string | null,
