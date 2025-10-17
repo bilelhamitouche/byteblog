@@ -79,7 +79,7 @@ export const profile = pgTable("profile", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
-export const follows = pgTable("follows", {
+export const follow = pgTable("follow", {
   followerId: text("follower_id")
     .notNull()
     .references(() => user.id, {
