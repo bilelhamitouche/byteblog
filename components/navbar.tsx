@@ -15,13 +15,9 @@ export default async function Navbar() {
         <BookOpen size="25" />
         <span className={`text-xl font-bold ${lusitana.className}`}>ByteBlog</span>
       </Link>
-      <nav className="hidden gap-4 items-center ml-auto md:flex">
-        <Link href="/" className="transition-colors hover:text-primary">
-          Home
-        </Link>
-        <Link href="/topics" className="transition-colors hover:text-primary">
-          Topics
-        </Link>
+      <nav className="items-center gap-4 hidden md:flex">
+        <Link href="/topics" className="hover:text-green-600">Topics</Link>
+        <Link href="/authors" className="hover:text-green-600">Authors</Link>
       </nav>
       {authenticated ? (
         <div className="hidden gap-4 items-center md:flex">
