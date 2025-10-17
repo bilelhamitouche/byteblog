@@ -1,10 +1,11 @@
-import { BookOpen } from "lucide-react";
+import { BookOpen, Edit } from "lucide-react";
 import Link from "next/link";
 import { Button } from "./ui/button";
 import MobileMenu from "./mobile-menu";
 import { ModeToggle } from "./mode-toggle";
 import { getUserInfo, isAuthenticated } from "@/actions/auth";
 import AvatarDropdown from "./avatar-dropdown";
+import { lusitana } from "@/lib/fonts";
 
 export default async function Navbar() {
   const authenticated = await isAuthenticated();
@@ -19,6 +20,12 @@ export default async function Navbar() {
         <Link href="/topics" className="hover:text-green-600">Topics</Link>
         <Link href="/authors" className="hover:text-green-600">Authors</Link>
       </nav>
+      <Button className="rounded-full ml-auto" asChild>
+        <Link href="/write">
+          <Edit />
+          <span>Write</span>
+        </Link>
+      </Button>
       {authenticated ? (
         <div className="hidden gap-4 items-center md:flex">
           <ModeToggle />
