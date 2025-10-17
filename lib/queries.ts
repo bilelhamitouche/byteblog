@@ -96,8 +96,7 @@ export async function getPost(id: string) {
 
 export async function hasUserLikedPost(postId: string, userId: string) {
   try {
-    const likes = await db.select({ likeCount: count() }).from(like).where(and(eq(like.postId, postId), eq(like.userId, userId)));
-    return likes[0].likeCount > 0;
+    const likes = await db.select().from(like).where(and(eq(like.postId, postId), eq(like.userId, userId)));
   } catch (err) {
   }
 }
