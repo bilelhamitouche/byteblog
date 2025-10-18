@@ -9,8 +9,10 @@ export async function toggleFollowAuthorAction(authorId: string, postId: string)
   try {
     await toggleFollowAuthor(authorId, user?.id as string)
   } catch (err) {
-    return {
-      message: err,
+    if (err instanceof Error) {
+      return {
+        message: err.message,
+      }
     }
   }
   revalidatePath(`/posts/${postId}`)

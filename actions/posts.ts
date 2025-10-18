@@ -17,9 +17,11 @@ export async function createPostAction(formData: FormData) {
   }
   try {
     await createPost(validationResult.data.title, validationResult.data.image, validationResult.data.content, JSON.parse(published as string) as boolean, userId as string);
-  } catch (err) {
-    return {
-      message: err,
+  } catch (err: any) {
+    if (err instanceof Error) {
+      return {
+        message: err.message,
+      }
     }
   }
 }
@@ -37,8 +39,10 @@ export async function editPostAction(formData: FormData) {
   try {
     await editPost(id as string, validationResult.data.title, validationResult.data.image, validationResult.data.content, JSON.parse(published as string) as boolean);
   } catch (err) {
-    return {
-      message: err,
+    if (err instanceof Error) {
+      return {
+        message: err.message,
+      }
     }
   }
 }
@@ -48,8 +52,10 @@ export async function toggleLikePostAction(postId: string) {
   try {
     await toggleLikePost(postId, user?.id as string)
   } catch (err) {
-    return {
-      message: err,
+    if (err instanceof Error) {
+      return {
+        message: err.message,
+      }
     }
   }
   revalidatePath(`/posts/${postId}`)
