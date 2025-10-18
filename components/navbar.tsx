@@ -17,8 +17,8 @@ export default async function Navbar() {
         <span className={`text-xl font-bold ${lusitana.className}`}>ByteBlog</span>
       </Link>
       <nav className="items-center gap-4 hidden md:flex">
-        <Link href="/topics" className="hover:text-green-600">Topics</Link>
-        <Link href="/authors" className="hover:text-green-600">Authors</Link>
+        <Link href="/topics" className="hover:text-primary">Topics</Link>
+        <Link href="/authors" className="hover:text-primary">Authors</Link>
       </nav>
       <Button className="rounded-full ml-auto" asChild>
         <Link href="/write">
