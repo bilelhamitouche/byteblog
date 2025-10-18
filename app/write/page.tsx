@@ -20,11 +20,13 @@ import LoadingButton from "@/components/ui/loading-button";
 import Tiptap from "@/components/Tiptap";
 import { lusitana } from "@/lib/fonts";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function Write() {
   const [action, setAction] = useState<"" | "publish" | "save">("save");
   const [isPublishing, setIsPublishing] = useState<boolean>(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
+  const router = useRouter();
   const form = useForm<z.infer<typeof writePostSchema>>({
     resolver: zodResolver(writePostSchema),
     mode: "onSubmit",
@@ -43,7 +45,11 @@ export default function Write() {
       setIsPublishing(true);
       try {
         formData.append("published", JSON.stringify(true))
-        await createPostAction(formData);
+        const result = await createPostAction(formData);
+        result?.message && toast.error(result.message);
+        if (!result?.message && !result?.errors) {
+          router.push("/");
+        }
       } catch (err) {
         toast.error("Error creating post");
       } finally {
