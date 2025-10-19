@@ -1,6 +1,9 @@
 import { getFollowedAuthors } from "@/lib/queries";
+import { Users } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { Avatar, AvatarImage } from "./ui/avatar";
+import { Button } from "./ui/button";
 
 interface ProfileSidebarProps {
   authorId: string;
@@ -13,10 +16,12 @@ export default async function ProfileSidebar({ authorId, authorName, authorImage
   const followedAuthors = await getFollowedAuthors(authorId);
   if (!followedAuthors) return null;
   return (
-    <aside className="border-r py-28 min-w-xs hidden md:flex flex-col items-center gap-2">
-      <Image src={authorImage as string} alt={`${authorName} image`} width="100" height="100" className="rounded-full" />
-      <span className="text-lg font-medium">{authorName}</span>
-      <Link href={`/authors/${authorUsername}/edit`} className="text-primary text-base">Edit Profile</Link>
+    <aside className="border-r py-28 min-w-xs hidden md:flex flex-col items-start gap-6">
+      <div className="mx-auto flex flex-col items-center justify-center gap-2">
+        <Image src={authorImage as string} alt={`${authorName} image`} width="100" height="100" className="rounded-full" />
+        <span className="text-lg font-medium">{authorName}</span>
+        <Link href={`/authors/${authorUsername}/edit`} className="text-primary text-base">Edit Profile</Link>
+      </div>
       <div className="p-4">
         <h3 className="text-lg flex items-center gap-2 font-medium">
           <Users size="17" />
