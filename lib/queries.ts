@@ -165,3 +165,12 @@ export async function toggleFollowAuthor(followerId: string, followedId: string)
   }
 }
 
+export async function getFollowedAuthors(authorId: string) {
+  try {
+    const followedAuthors = await db.select({ id: user.id, name: user.name, image: user.image }).from(follow).leftJoin(user, eq(user.id, follow.followedId)).where(eq(follow.followerId, authorId));
+    return followedAuthors;
+  } catch (err) {
+    if (err instanceof DrizzleError) throw new Error("Database Error");
+  }
+}
+
