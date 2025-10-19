@@ -24,7 +24,7 @@ export default function AvatarDropdown({
 }: AvatarDropdownProps) {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger>
+      <DropdownMenuTrigger className="cursor-pointer">
         <Avatar>
           <AvatarImage src={image as string} alt={`${name} image`} />
           <AvatarFallback>{name.toUpperCase()[0]}</AvatarFallback>
