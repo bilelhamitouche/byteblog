@@ -122,6 +122,18 @@ export async function toggleLikePost(postId: string, userId: string) {
     if (err instanceof DrizzleError) throw new Error("Database Error");
   }
 }
+
+export async function createOrEditProfile(userId: string, bio: string) {
+  await redirectUnauthenticated();
+  try {
+    await db.insert(profile)
+      .values({ userId, bio })
+      .onConflictDoUpdate({ target: profile.userId, set: { bio } });
+  } catch (err) {
+    if (err instanceof DrizzleError) throw new Error("Database Error");
+  }
+}
+
 export async function hasUserProfile(userId: string) {
   try {
     const hasProfile = await db.select().from(profile).where(eq(profile.userId, userId));
