@@ -8,7 +8,7 @@ import LoadingButton from "@/components/ui/loading-button";
 import { lusitana } from "@/lib/fonts";
 import { writePostSchema } from "@/lib/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -140,7 +140,7 @@ export default function EditPost({ id, title, image, content }: EditPostFormProp
                 Save
               </Button>
             )}
-            <Button variant="destructive" asChild>
+            <Button variant="destructive">
               <Link href="/">Discard Changes</Link>
             </Button>
           </div>
