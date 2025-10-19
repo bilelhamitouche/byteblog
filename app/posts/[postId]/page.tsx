@@ -24,6 +24,7 @@ export default async function Post({ params }: { params: Promise<{ postId: strin
             <span>{post.author}</span>
           </div>
           {post.author === user?.name ? null : <FollowButton postId={post.id} followedId={post.authorId as string} hasUserFollowed={hasUserFollowed as boolean} loggedIn={!!user} />}
+          <p className="text-gray-500 dark:text-gray-300">{post.createdAt?.toLocaleDateString()}</p>
         </div>
       </div>
       <hr />
