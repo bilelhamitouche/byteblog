@@ -12,9 +12,9 @@ export default async function Post({ params }: { params: Promise<{ postId: strin
   const hasUserLiked = await hasUserLikedPost(postId, user?.id as string);
   const hasUserFollowed = await hasUserFollowedAuthor(post.authorId as string, user?.id as string);
   return (
-    <div className="max-w-3xl h-full py-28 px-4 md:px-8 post mx-auto">
-      <div className="p-4 flex flex-col items-start gap-2 w-full">
-        <h1 className="text-3xl font-bold">{post.title}</h1>
+    <div className="max-w-3xl h-full py-28 px-8 post mx-auto">
+      <div className="p-4 flex flex-col items-start gap-4 w-full">
+        <h1 className="text-3xl sm:text-4xl font-bold">{post.title}</h1>
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
             <Avatar>
