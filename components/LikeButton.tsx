@@ -2,11 +2,18 @@
 import { toggleLikePostAction } from "@/actions/posts";
 import { Heart } from "lucide-react";
 import { toast } from "sonner";
-import { Button } from "./ui/button";
+import { Button, ButtonProps } from "./ui/button";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function LikeButton({ postId, hasUserLiked, loggedIn }: { postId: string; hasUserLiked: boolean, loggedIn: boolean }) {
+interface LikeButtonProps extends ButtonProps {
+  postId: string;
+  hasUserLiked: boolean;
+  loggedIn: boolean;
+  isDisabled: boolean;
+}
+
+export default function LikeButton({ postId, hasUserLiked, loggedIn, isDisabled }: LikeButtonProps) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [userLiked, setUserLiked] = useState<boolean>(hasUserLiked);
   const [clickedLikeButton, setClickedLikeButton] = useState<boolean>(false);
@@ -27,7 +34,7 @@ export default function LikeButton({ postId, hasUserLiked, loggedIn }: { postId:
     }
   }
   return (
-    <Button variant="ghost" size="smallIcon" onClick={toggleLike} disabled={isLoading}>
+    <Button variant="ghost" size="smallIcon" onClick={toggleLike} disabled={isLoading || isDisabled} >
       <Heart size="15" className={`${userLiked ? "text-primary" : "text-foreground"} transition-colors duration-300`} />
     </Button>
   )

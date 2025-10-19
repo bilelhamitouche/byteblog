@@ -31,7 +31,7 @@ export default async function Post({ params }: { params: Promise<{ postId: strin
       <div className="w-full flex gap-4 items-center p-2">
         <div className="flex items-center gap-1">
           <span>{post.likesCount}</span>
-          <LikeButton postId={postId} hasUserLiked={hasUserLiked as boolean} loggedIn={!!user?.id} />
+          <LikeButton postId={postId} hasUserLiked={hasUserLiked as boolean} loggedIn={!!user?.id} isDisabled={post.authorId === user?.id} />
         </div>
         <p>{post.createdAt?.toLocaleDateString()}</p>
       </div>
