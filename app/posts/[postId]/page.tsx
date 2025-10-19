@@ -33,7 +33,6 @@ export default async function Post({ params }: { params: Promise<{ postId: strin
           <span>{post.likesCount}</span>
           <LikeButton postId={postId} hasUserLiked={hasUserLiked as boolean} loggedIn={!!user?.id} isDisabled={post.authorId === user?.id} />
         </div>
-        <p>{post.createdAt?.toLocaleDateString()}</p>
       </div>
       <hr />
       <p className="p-2 py-8 leading-7">{post.content}</p>
