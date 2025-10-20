@@ -130,7 +130,7 @@ export default function Write() {
                 value="publish"
                 onClick={() => setAction("publish")}
               >
-                Save and publish
+                Publish
               </Button>
             )}
             {isSaving ? (
