@@ -29,7 +29,8 @@ export async function createPost(
 ) {
   await redirectUnauthenticated();
   try {
-    await db.insert(post).values({ title, image, content, authorId, published });
+    const newPost = await db.insert(post).values({ title, image, content, authorId, published }).returning();
+    return newPost[0];
   } catch (err) {
     if (err instanceof DrizzleError) throw new Error("Database Error");
   }
