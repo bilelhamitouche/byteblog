@@ -16,7 +16,10 @@ export async function createPostAction(formData: FormData) {
     errors: validationResult.error.flatten().fieldErrors,
   }
   try {
-    await createPost(validationResult.data.title, validationResult.data.image, validationResult.data.content, JSON.parse(published as string) as boolean, userId as string);
+    const newPost = await createPost(validationResult.data.title, validationResult.data.image, validationResult.data.content, JSON.parse(published as string) as boolean, userId as string);
+    return {
+      newPost,
+    };
   } catch (err: any) {
     if (err instanceof Error) {
       return {
