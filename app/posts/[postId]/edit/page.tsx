@@ -6,5 +6,5 @@ export default async function EditPost({ params }: { params: Promise<{ postId: s
   const postId = (await params).postId;
   const post = await getPost(postId);
   if (!post) notFound();
-  return <EditPostForm id={post.id} title={post.title} image={post.image} content={post.content} />
+  return <EditPostForm initialPost={post} />
 }
