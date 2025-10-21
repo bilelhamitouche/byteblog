@@ -1,6 +1,6 @@
 "use server";
 
-import { createPost, editPost, toggleLikePost } from "@/lib/queries";
+import { createPost, editPost, toggleLikePost, toggleSavePost } from "@/lib/queries";
 import { writePostSchema } from "@/lib/zod";
 import { getUserInfo } from "./auth";
 import { revalidatePath } from "next/cache";
@@ -54,6 +54,20 @@ export async function toggleLikePostAction(postId: string) {
   const user = await getUserInfo();
   try {
     await toggleLikePost(postId, user?.id as string)
+  } catch (err) {
+    if (err instanceof Error) {
+      return {
+        message: err.message,
+      }
+    }
+  }
+  revalidatePath(`/posts/${postId}`)
+}
+
+export async function toggleSavePostAction(postId: string) {
+  const user = await getUserInfo();
+  try {
+    await toggleSavePost(postId, user?.id as string);
   } catch (err) {
     if (err instanceof Error) {
       return {

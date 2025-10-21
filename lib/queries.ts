@@ -1,5 +1,5 @@
 import "server-only";
-import { db, follow, like, post, profile, topic, user } from "./drizzle";
+import { db, follow, like, post, profile, topic, user, userSavesPost } from "./drizzle";
 import { and, count, DrizzleError, eq, ilike, or } from "drizzle-orm";
 import { redirectUnauthenticated } from "@/actions/auth";
 
@@ -108,6 +108,16 @@ export async function hasUserLikedPost(postId: string, userId: string) {
     const likes = await db.select().from(like).where(and(eq(like.postId, postId), eq(like.userId, userId)));
     return likes.length > 0;
   } catch (err) {
+    if (err instanceof DrizzleError) throw new Error("Database Error");
+  }
+}
+
+export async function hasUserSavedPost(postId: string, userId: string) {
+  try {
+    const savedPosts = await db.select().from(userSavesPost).where(and(eq(like.postId, postId), eq(like.userId, userId)));
+    return savedPosts.length > 0;
+  } catch (err) {
+    if (err instanceof DrizzleError) throw new Error("Database Error");
   }
 }
 
@@ -118,6 +128,19 @@ export async function toggleLikePost(postId: string, userId: string) {
       await db.delete(like).where(and(eq(like.userId, userId), eq(like.postId, postId)));
     } else {
       await db.insert(like).values({ userId, postId });
+    }
+  } catch (err) {
+    if (err instanceof DrizzleError) throw new Error("Database Error");
+  }
+}
+
+export async function toggleSavePost(postId: string, userId: string) {
+  try {
+    const hasUserSaved = await hasUserSavedPost(postId, userId);
+    if (hasUserSaved) {
+      await db.delete(userSavesPost).where(and(eq(like.userId, userId), eq(like.postId, postId)));
+    } else {
+      await db.insert(userSavesPost).values({ postId, userId });
     }
   } catch (err) {
     if (err instanceof DrizzleError) throw new Error("Database Error");
