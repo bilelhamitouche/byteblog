@@ -1,5 +1,5 @@
 import "server-only";
-import { db, follow, like, post, profile, user } from "./drizzle";
+import { db, follow, like, post, profile, topic, user } from "./drizzle";
 import { and, count, DrizzleError, eq, ilike, or } from "drizzle-orm";
 import { redirectUnauthenticated } from "@/actions/auth";
 
@@ -124,6 +124,32 @@ export async function toggleLikePost(postId: string, userId: string) {
   }
 }
 
+export async function getTopics() {
+  try {
+    const topics = await db.select().from(topic);
+    return topics;
+  } catch (err) {
+    if (err instanceof DrizzleError) throw new Error("Database Error");
+  }
+}
+
+export async function createTopic(topicName: string) {
+  try {
+    const newTopic = await db.insert(topic).values({ topicName }).returning();
+    return newTopic[0];
+  } catch (err) {
+    if (err instanceof DrizzleError) throw new Error("Database Error");
+  }
+}
+
+export async function deleteTopic(id: string) {
+  try {
+    await db.delete(topic).where(eq(topic.id, id));
+  } catch (err) {
+    if (err instanceof DrizzleError) throw new Error("Database Error");
+  }
+}
+
 export async function createOrEditProfile(userId: string, bio: string) {
   await redirectUnauthenticated();
   try {
@@ -186,4 +212,3 @@ export async function getFollowedAuthors(authorId: string) {
     if (err instanceof DrizzleError) throw new Error("Database Error");
   }
 }
-
