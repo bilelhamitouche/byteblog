@@ -2,7 +2,9 @@
 import { toast } from "sonner";
 import { Button } from "./ui/button";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogTitle, DialogTrigger } from "./ui/dialog";
-import { createPostAction } from "@/actions/posts";
+import { createPostAction, editPostAction } from "@/actions/posts";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 interface PublishPostDialogProps {
   id?: string;
@@ -12,6 +14,8 @@ interface PublishPostDialogProps {
 }
 
 export default function PublishPostDialog(postData: PublishPostDialogProps) {
+  const [isPublishing, setIsPublishing] = useState<boolean>(false);
+  const router = useRouter();
   async function publishPost() {
     const formData = new FormData();
     if (postData.id) {
@@ -20,11 +24,20 @@ export default function PublishPostDialog(postData: PublishPostDialogProps) {
     formData.append("title", postData.title);
     formData.append("image", postData.image as string);
     formData.append("content", postData.content);
+    formData.append("published", JSON.stringify(true));
+    setIsPublishing(true);
     try {
-      console.log(formData);
-      // const result = await createPostAction(formData);
+      if (postData.id) {
+        const result = await editPostAction(formData);
+        if (!result?.message && !result?.errors) router.push(`/posts/${postData.id}`);
+      } else {
+        const result = await createPostAction(formData);
+        if (!result?.message && !result?.errors) router.push(`/posts/${result?.newPost?.id}`);
+      }
     } catch (err) {
       toast.error("Error publishing post");
+    } finally {
+      setIsPublishing(false);
     }
   }
   return (
@@ -38,12 +51,12 @@ export default function PublishPostDialog(postData: PublishPostDialogProps) {
         <form>
           <DialogFooter className="flex items-center gap-2">
             <DialogClose asChild>
-              <Button onClick={publishPost}>
+              <Button onClick={publishPost} disabled={isPublishing}>
                 Publish
               </Button>
             </DialogClose>
             <DialogClose asChild>
-              <Button variant="destructive">Cancel</Button>
+              <Button variant="destructive" disabled={isPublishing}>Cancel</Button>
             </DialogClose>
           </DialogFooter>
         </form>

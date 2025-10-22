@@ -13,7 +13,6 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import { DialogTrigger } from "./ui/dialog";
 import PublishPostDialog from "./PublishPostDialog";
 
 interface EditPostFormProps {
@@ -26,16 +25,8 @@ interface EditPostFormProps {
   };
 }
 
-interface PublishingDataType {
-  id?: string;
-  title: string;
-  image: string | null;
-  content: string;
-}
-
 export default function EditPost({ initialPost }: EditPostFormProps) {
   const [action, setAction] = useState<"" | "publish" | "save">("save");
-  const [publishingData, setPublishingData] = useState<PublishingDataType>({ title: initialPost.title, image: initialPost.image, content: initialPost.content });
   const [isPublishing, setIsPublishing] = useState<boolean>(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const form = useForm<z.infer<typeof writePostSchema>>({
@@ -47,6 +38,7 @@ export default function EditPost({ initialPost }: EditPostFormProps) {
       content: initialPost.content,
     },
   });
+  const formValues = form.watch();
   async function onSubmit(data: z.infer<typeof writePostSchema>) {
     const formData = new FormData();
     formData.append("id", initialPost.id);
@@ -55,17 +47,7 @@ export default function EditPost({ initialPost }: EditPostFormProps) {
     formData.append("content", data.content);
     if (action === "publish") {
       setIsPublishing(true);
-      try {
-        if (initialPost.id) {
-          setPublishingData({ id: initialPost.id, title: data.title, image: data.image, content: data.content });
-        } else {
-          setPublishingData({ title: data.title, image: data.image, content: data.content });
-        }
-      } catch (err) {
-        toast.error("Error editing post");
-      } finally {
-        setIsPublishing(false);
-      }
+      formData.append("published", JSON.stringify(true));
     } else if (action === "save") {
       setIsSaving(true);
       formData.append("published", JSON.stringify(initialPost.published))
@@ -139,7 +121,7 @@ export default function EditPost({ initialPost }: EditPostFormProps) {
             {isPublishing ? (
               <LoadingButton variant="default" size="default" className="" />
             ) : (
-              <PublishPostDialog {...(publishingData.id ? { id: publishingData.id } : {})} title={publishingData.title} image={publishingData.image} content={publishingData.content} />
+              <PublishPostDialog {...(initialPost.id ? { id: initialPost.id } : {})} title={formValues.title} image={formValues.image} content={formValues.content} />
             )}
             {isSaving ? (
               <LoadingButton variant="outline" size="default" className="" />
