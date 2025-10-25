@@ -1,6 +1,7 @@
 import { getUserInfo } from "@/actions/auth";
 import FollowButton from "@/components/FollowButton";
 import LikeButton from "@/components/LikeButton";
+import PostActionsDropdown from "@/components/PostActionsDropdown";
 import SavePostButton from "@/components/SavePostButton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getPost, hasUserFollowedAuthor, hasUserLikedPost, hasUserSavedPost } from "@/lib/queries";
@@ -35,7 +36,12 @@ export default async function Post({ params }: { params: Promise<{ postId: strin
           <span>{post.likesCount}</span>
           <LikeButton postId={postId} hasUserLiked={hasUserLiked as boolean} loggedIn={!!user?.id} isDisabled={post.authorId === user?.id} />
         </div>
-        <SavePostButton postId={postId} hasUserSaved={hasUserSaved as boolean} loggedIn={!!user?.id} isDisabled={post.authorId === user?.id} />
+        <div className="flex items-center gap-2">
+          <SavePostButton postId={postId} hasUserSaved={hasUserSaved as boolean} loggedIn={!!user?.id} isDisabled={post.authorId === user?.id} />
+          {post.authorId === user?.id ?
+            <PostActionsDropdown postId={postId} />
+            : null}
+        </div>
       </div>
       <hr />
       <p className="p-2 py-8 leading-7">{post.content}</p>
