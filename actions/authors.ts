@@ -10,7 +10,7 @@ export async function toggleFollowAuthorAction(
 ) {
   const user = await getUserInfo();
   try {
-    await toggleFollowAuthor(authorId, user?.id as string);
+    await toggleFollowAuthor(user?.id as string, authorId);
   } catch (err) {
     if (err instanceof Error) {
       return {
