@@ -278,7 +278,9 @@ export async function hasUserFollowedAuthor(authorId: string, userId: string) {
         and(eq(follow.followerId, userId), eq(follow.followedId, authorId)),
       );
     return hasFollowed.length > 0;
-  } catch (err) {}
+  } catch (err) {
+    if (err instanceof DrizzleError) throw new Error("Database Error");
+  }
 }
 
 export async function toggleFollowAuthor(
