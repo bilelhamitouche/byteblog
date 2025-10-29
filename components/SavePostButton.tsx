@@ -1,10 +1,11 @@
 "use client";
 import { toggleSavePostAction } from "@/actions/posts";
-import { Bookmark, BookmarkCheck, SaveIcon } from "lucide-react";
 import { toast } from "sonner";
 import { Button, ButtonProps } from "./ui/button";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { BookmarkIcon } from "@heroicons/react/16/solid";
+import { Bookmark } from "lucide-react";
 
 interface SavePostButtonProps extends ButtonProps {
   postId: string;
@@ -45,7 +46,7 @@ export default function SavePostButton({
       onClick={toggleSave}
       disabled={isLoading || isDisabled}
     >
-      {userSaved ? <BookmarkCheck size="15" /> : <Bookmark size="15" />}
+      {userSaved ? <BookmarkIcon /> : <Bookmark size="16" />}
     </Button>
   );
 }

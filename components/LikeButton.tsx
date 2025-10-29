@@ -1,6 +1,7 @@
 "use client";
 import { toggleLikePostAction } from "@/actions/posts";
 import { Heart } from "lucide-react";
+import { HeartIcon } from "@heroicons/react/20/solid";
 import { toast } from "sonner";
 import { Button, ButtonProps } from "./ui/button";
 import { useEffect, useState } from "react";
@@ -45,10 +46,7 @@ export default function LikeButton({
       onClick={toggleLike}
       disabled={isLoading || isDisabled}
     >
-      <Heart
-        size="15"
-        className={`${userLiked ? "text-primary" : "text-foreground"} transition-colors duration-300`}
-      />
+      {userLiked ? <HeartIcon /> : <Heart size="16" />}
     </Button>
   );
 }
