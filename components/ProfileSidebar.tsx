@@ -45,7 +45,7 @@ export default async function ProfileSidebar({
         </h3>
         <ul className="flex flex-col gap-2 p-2">
           {followedAuthors.map((followed) => (
-            <li className="flex gap-2 items-center">
+            <li key={followed.id} className="flex gap-2 items-center">
               <Avatar>
                 <AvatarImage
                   src={followed.image as string}
