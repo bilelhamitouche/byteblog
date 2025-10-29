@@ -2,15 +2,15 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Loading() {
   return (
-    <div className="h-full w-full py-28">
-      <div className="max-w-3xl mx-auto flex flex-col gap-4">
-        <Skeleton className="h-10 w-full" />
-        <Skeleton className="h-6 w-full" />
+    <div className="py-28 w-full h-full">
+      <div className="flex flex-col gap-4 mx-auto max-w-3xl">
+        <Skeleton className="w-full h-10" />
+        <Skeleton className="w-full h-6" />
         <hr />
-        <Skeleton className="h-6 w-full" />
+        <Skeleton className="w-full h-6" />
         <hr />
-        <Skeleton className="h-50 w-full" />
+        <Skeleton className="w-full h-50" />
       </div>
     </div>
-  )
+  );
 }

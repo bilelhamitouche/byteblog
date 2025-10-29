@@ -14,13 +14,19 @@ export default async function Navbar() {
     <header className="flex fixed z-10 gap-8 justify-between items-center p-4 px-8 mx-auto w-full border-b-1 backdrop-blur-lg bg-background/60">
       <Link href="/" className="flex gap-2 items-center">
         <BookOpen size="25" />
-        <span className={`text-xl font-bold ${lusitana.className}`}>ByteBlog</span>
+        <span className={`text-xl font-bold ${lusitana.className}`}>
+          ByteBlog
+        </span>
       </Link>
-      <nav className="items-center gap-4 hidden md:flex">
-        <Link href="/topics" className="hover:text-primary">Topics</Link>
-        <Link href="/authors" className="hover:text-primary">Authors</Link>
+      <nav className="hidden gap-4 items-center md:flex">
+        <Link href="/topics" className="hover:text-primary">
+          Topics
+        </Link>
+        <Link href="/authors" className="hover:text-primary">
+          Authors
+        </Link>
       </nav>
-      <Button className="rounded-full ml-auto" asChild>
+      <Button className="ml-auto rounded-full" asChild>
         <Link href="/write">
           <Edit />
           <span>Write</span>

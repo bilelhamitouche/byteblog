@@ -2,7 +2,12 @@
 
 import { Edit, EllipsisVertical, Trash } from "lucide-react";
 import { Button } from "./ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
 import Link from "next/link";
 import { deletePostAction } from "@/actions/posts";
 import { toast } from "sonner";
@@ -11,7 +16,9 @@ import { useRouter } from "next/navigation";
 interface PostActionsDropdownProps {
   postId: string;
 }
-export default function PostActionsDropdown({ postId }: PostActionsDropdownProps) {
+export default function PostActionsDropdown({
+  postId,
+}: PostActionsDropdownProps) {
   const router = useRouter();
   async function deletePost() {
     const formData = new FormData();
@@ -35,7 +42,10 @@ export default function PostActionsDropdown({ postId }: PostActionsDropdownProps
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuItem asChild>
-          <Link href={`/posts/${postId}/edit`} className="flex items-center gap-3">
+          <Link
+            href={`/posts/${postId}/edit`}
+            className="flex gap-3 items-center"
+          >
             <Edit />
             <span>Edit Post</span>
           </Link>
@@ -46,5 +56,5 @@ export default function PostActionsDropdown({ postId }: PostActionsDropdownProps
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }

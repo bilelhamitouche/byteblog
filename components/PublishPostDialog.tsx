@@ -1,7 +1,15 @@
 "use client";
 import { toast } from "sonner";
 import { Button } from "./ui/button";
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogTitle, DialogTrigger } from "./ui/dialog";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogTitle,
+  DialogTrigger,
+} from "./ui/dialog";
 import { createPostAction, editPostAction } from "@/actions/posts";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -29,10 +37,12 @@ export default function PublishPostDialog(postData: PublishPostDialogProps) {
     try {
       if (postData.id) {
         const result = await editPostAction(formData);
-        if (!result?.message && !result?.errors) router.push(`/posts/${postData.id}`);
+        if (!result?.message && !result?.errors)
+          router.push(`/posts/${postData.id}`);
       } else {
         const result = await createPostAction(formData);
-        if (!result?.message && !result?.errors) router.push(`/posts/${result?.newPost?.id}`);
+        if (!result?.message && !result?.errors)
+          router.push(`/posts/${result?.newPost?.id}`);
       }
     } catch (err) {
       toast.error("Error publishing post");
@@ -49,18 +59,20 @@ export default function PublishPostDialog(postData: PublishPostDialogProps) {
         <DialogTitle>Publish Post</DialogTitle>
         <DialogDescription>Select post topics</DialogDescription>
         <form>
-          <DialogFooter className="flex items-center gap-2">
+          <DialogFooter className="flex gap-2 items-center">
             <DialogClose asChild>
               <Button onClick={publishPost} disabled={isPublishing}>
                 Publish
               </Button>
             </DialogClose>
             <DialogClose asChild>
-              <Button variant="destructive" disabled={isPublishing}>Cancel</Button>
+              <Button variant="destructive" disabled={isPublishing}>
+                Cancel
+              </Button>
             </DialogClose>
           </DialogFooter>
         </form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

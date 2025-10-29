@@ -33,15 +33,23 @@ export default function PostCard({
     router.push(`/posts/${id}`);
   }
   return (
-    <Card className="flex flex-col gap-2 items-start p-4 max-w-xl cursor-pointer" onClick={handleClick}>
-      <Link href={`/authors/@${authorUsername}`} className="flex items-center gap-2 group">
+    <Card
+      className="flex flex-col gap-2 items-start p-4 max-w-xl cursor-pointer"
+      onClick={handleClick}
+    >
+      <Link
+        href={`/authors/@${authorUsername}`}
+        className="flex gap-2 items-center group"
+      >
         <Avatar>
           <AvatarImage src={author} alt={`${author} image`} />
           <AvatarFallback>{author[0]}</AvatarFallback>
         </Avatar>
-        <CardDescription className="group-hover:underline">{author}</CardDescription>
+        <CardDescription className="group-hover:underline">
+          {author}
+        </CardDescription>
       </Link>
-      <div className="flex items-center gap-4">
+      <div className="flex gap-4 items-center">
         {authorImage ? (
           <Image
             src={image as string}
@@ -51,7 +59,7 @@ export default function PostCard({
             className="rounded-md"
           />
         ) : null}
-        <div className="flex flex-col items-start gap-2">
+        <div className="flex flex-col gap-2 items-start">
           <Link href={`/posts/${id}`}>
             <CardTitle className="text-xl font-bold">{title}</CardTitle>
           </Link>

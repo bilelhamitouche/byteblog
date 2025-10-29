@@ -12,34 +12,54 @@ interface ProfileSidebarProps {
   authorUsername: string;
 }
 
-export default async function ProfileSidebar({ authorId, authorName, authorImage, authorUsername }: ProfileSidebarProps) {
+export default async function ProfileSidebar({
+  authorId,
+  authorName,
+  authorImage,
+  authorUsername,
+}: ProfileSidebarProps) {
   const followedAuthors = await getFollowedAuthors(authorId);
   if (!followedAuthors) return null;
   return (
-    <aside className="border-r py-28 min-w-xs hidden md:flex flex-col items-start gap-6">
-      <div className="mx-auto flex flex-col items-center justify-center gap-2">
-        <Image src={authorImage as string} alt={`${authorName} image`} width="100" height="100" className="rounded-full" />
+    <aside className="hidden flex-col gap-6 items-start py-28 border-r md:flex min-w-xs">
+      <div className="flex flex-col gap-2 justify-center items-center mx-auto">
+        <Image
+          src={authorImage as string}
+          alt={`${authorName} image`}
+          width="100"
+          height="100"
+          className="rounded-full"
+        />
         <span className="text-lg font-medium">{authorName}</span>
-        <Link href={`/authors/${authorUsername}/edit`} className="text-primary text-base">Edit Profile</Link>
+        <Link
+          href={`/authors/${authorUsername}/edit`}
+          className="text-base text-primary"
+        >
+          Edit Profile
+        </Link>
       </div>
       <div className="p-4">
-        <h3 className="text-lg flex items-center gap-2 font-medium">
+        <h3 className="flex gap-2 items-center text-lg font-medium">
           <Users size="17" />
           <span>Following</span>
         </h3>
-        <ul className="flex flex-col gap-2 p-2">{followedAuthors.map((followed) => (
-          <li className="gap-2 flex items-center">
-            <Avatar>
-              <AvatarImage src={followed.image as string} alt={`${followed.name} avatar image`} />
-            </Avatar>
-            <span key={followed.id}>{followed.name}</span>
-          </li>
-        ))}
+        <ul className="flex flex-col gap-2 p-2">
+          {followedAuthors.map((followed) => (
+            <li className="flex gap-2 items-center">
+              <Avatar>
+                <AvatarImage
+                  src={followed.image as string}
+                  alt={`${followed.name} avatar image`}
+                />
+              </Avatar>
+              <span key={followed.id}>{followed.name}</span>
+            </li>
+          ))}
           <Button variant="link" size="sm" className="flex-start" asChild>
             <Link href={`/authors/@${authorUsername}/following`}>See All</Link>
           </Button>
         </ul>
       </div>
     </aside>
-  )
+  );
 }

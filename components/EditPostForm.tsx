@@ -2,7 +2,14 @@
 import { createPostAction, editPostAction } from "@/actions/posts";
 import Tiptap from "@/components/Tiptap";
 import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import LoadingButton from "@/components/ui/loading-button";
 import { lusitana } from "@/lib/fonts";
@@ -50,7 +57,7 @@ export default function EditPost({ initialPost }: EditPostFormProps) {
       formData.append("published", JSON.stringify(true));
     } else if (action === "save") {
       setIsSaving(true);
-      formData.append("published", JSON.stringify(initialPost.published))
+      formData.append("published", JSON.stringify(initialPost.published));
       try {
         if (initialPost.id) {
           await editPostAction(formData);
@@ -110,7 +117,10 @@ export default function EditPost({ initialPost }: EditPostFormProps) {
                 <FormLabel className="text-base">Content</FormLabel>
                 <FormControl>
                   <div className="h-full">
-                    <Tiptap content={JSON.parse(field.value)} onChange={field.onChange} />
+                    <Tiptap
+                      content={JSON.parse(field.value)}
+                      onChange={field.onChange}
+                    />
                   </div>
                 </FormControl>
                 <FormMessage />
@@ -121,7 +131,12 @@ export default function EditPost({ initialPost }: EditPostFormProps) {
             {isPublishing ? (
               <LoadingButton variant="default" size="default" className="" />
             ) : (
-              <PublishPostDialog {...(initialPost.id ? { id: initialPost.id } : {})} title={formValues.title} image={formValues.image} content={formValues.content} />
+              <PublishPostDialog
+                {...(initialPost.id ? { id: initialPost.id } : {})}
+                title={formValues.title}
+                image={formValues.image}
+                content={formValues.content}
+              />
             )}
             {isSaving ? (
               <LoadingButton variant="outline" size="default" className="" />

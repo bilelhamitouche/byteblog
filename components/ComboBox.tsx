@@ -1,12 +1,27 @@
 "use client";
-import { useState } from "react"
+import { useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "./ui/command";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "./ui/command";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { ChevronsDown, X } from "lucide-react";
 
-export default function ComboBox({ options, selected, onChange }: { options: string[]; selected: string[]; onChange: (newSelected: string[]) => void }) {
+export default function ComboBox({
+  options,
+  selected,
+  onChange,
+}: {
+  options: string[];
+  selected: string[];
+  onChange: (newSelected: string[]) => void;
+}) {
   const [open, setOpen] = useState<boolean>(false);
 
   function toggleSelection(value: string) {
@@ -28,9 +43,9 @@ export default function ComboBox({ options, selected, onChange }: { options: str
             variant="outline"
             role="combobox"
             aria-expanded={open}
-            className="w-full p-1 relative"
+            className="relative p-1 w-full"
           >
-            <div className="flex flex-wrap items-center gap-1 pe-2.5">
+            <div className="flex flex-wrap gap-1 items-center pe-2.5">
               {selected.length > 0 ? (
                 selected.map((val) => {
                   const option = options.find((c) => c === val);
@@ -64,7 +79,11 @@ export default function ComboBox({ options, selected, onChange }: { options: str
               <CommandEmpty>No topics found.</CommandEmpty>
               <CommandGroup>
                 {options.map((option) => (
-                  <CommandItem key={option} value={option} onSelect={() => toggleSelection(option)}>
+                  <CommandItem
+                    key={option}
+                    value={option}
+                    onSelect={() => toggleSelection(option)}
+                  >
                     <span className="truncate">{option}</span>
                   </CommandItem>
                 ))}
@@ -74,5 +93,5 @@ export default function ComboBox({ options, selected, onChange }: { options: str
         </PopoverContent>
       </Popover>
     </div>
-  )
+  );
 }

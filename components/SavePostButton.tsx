@@ -13,14 +13,19 @@ interface SavePostButtonProps extends ButtonProps {
   isDisabled: boolean;
 }
 
-export default function SavePostButton({ postId, hasUserSaved, loggedIn, isDisabled }: SavePostButtonProps) {
+export default function SavePostButton({
+  postId,
+  hasUserSaved,
+  loggedIn,
+  isDisabled,
+}: SavePostButtonProps) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [userSaved, setUserSaved] = useState<boolean>(hasUserSaved);
   const [clickedSaveButton, setClickedSaveButton] = useState<boolean>(false);
   const router = useRouter();
   useEffect(() => {
-    if (!loggedIn && clickedSaveButton) router.push('/login');
-  }, [loggedIn, clickedSaveButton])
+    if (!loggedIn && clickedSaveButton) router.push("/login");
+  }, [loggedIn, clickedSaveButton]);
   async function toggleSave() {
     setClickedSaveButton(true);
     try {
@@ -34,8 +39,13 @@ export default function SavePostButton({ postId, hasUserSaved, loggedIn, isDisab
     }
   }
   return (
-    <Button variant="ghost" size="smallIcon" onClick={toggleSave} disabled={isLoading || isDisabled} >
+    <Button
+      variant="ghost"
+      size="smallIcon"
+      onClick={toggleSave}
+      disabled={isLoading || isDisabled}
+    >
       {userSaved ? <BookmarkCheck size="15" /> : <Bookmark size="15" />}
     </Button>
-  )
+  );
 }

@@ -5,7 +5,8 @@ export default function Write() {
     id: "",
     title: "",
     image: "",
-    content: '{"type":"doc","content":[{"type":"heading","attrs":{"level":2},"content":[{"type":"text","text":"Hello World! 🌎️"}]},{"type":"paragraph"}]}',
+    content:
+      '{"type":"doc","content":[{"type":"heading","attrs":{"level":2},"content":[{"type":"text","text":"Hello World! 🌎️"}]},{"type":"paragraph"}]}',
   };
-  return <EditPost initialPost={initialPost} />
+  return <EditPost initialPost={initialPost} />;
 }

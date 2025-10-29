@@ -39,7 +39,14 @@ export default function AvatarDropdown({
           <span>{name}</span>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link href={username ? `/authors/@${username}` : `/authors/@${email.split("@")[0]}`} className="flex gap-2 items-center">
+          <Link
+            href={
+              username
+                ? `/authors/@${username}`
+                : `/authors/@${email.split("@")[0]}`
+            }
+            className="flex gap-2 items-center"
+          >
             <User />
             <span>View Profile</span>
           </Link>

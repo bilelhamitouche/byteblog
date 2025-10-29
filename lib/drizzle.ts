@@ -79,21 +79,24 @@ export const profile = pgTable("profile", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
-export const follow = pgTable("follow", {
-  followerId: text("follower_id")
-    .notNull()
-    .references(() => user.id, {
-      onDelete: "cascade",
-      onUpdate: "cascade",
-    }),
-  followedId: text("followed_id")
-    .notNull()
-    .references(() => user.id, {
-      onDelete: "cascade",
-      onUpdate: "cascade",
-    }),
-  followedAt: timestamp("followed_at").defaultNow(),
-}, (table) => [primaryKey({ columns: [table.followerId, table.followedId] })],
+export const follow = pgTable(
+  "follow",
+  {
+    followerId: text("follower_id")
+      .notNull()
+      .references(() => user.id, {
+        onDelete: "cascade",
+        onUpdate: "cascade",
+      }),
+    followedId: text("followed_id")
+      .notNull()
+      .references(() => user.id, {
+        onDelete: "cascade",
+        onUpdate: "cascade",
+      }),
+    followedAt: timestamp("followed_at").defaultNow(),
+  },
+  (table) => [primaryKey({ columns: [table.followerId, table.followedId] })],
 );
 
 export const post = pgTable("post", {
@@ -111,10 +114,20 @@ export const post = pgTable("post", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
-export const userSavesPost = pgTable("user_saves_post", {
-  userId: text("user_id").references(() => user.id, { onDelete: "cascade", onUpdate: "cascade" }),
-  postId: text("post_id").references(() => post.id, { onDelete: "cascade", onUpdate: "cascade" }),
-}, (table) => [primaryKey({ columns: [table.userId, table.postId] })],);
+export const userSavesPost = pgTable(
+  "user_saves_post",
+  {
+    userId: text("user_id").references(() => user.id, {
+      onDelete: "cascade",
+      onUpdate: "cascade",
+    }),
+    postId: text("post_id").references(() => post.id, {
+      onDelete: "cascade",
+      onUpdate: "cascade",
+    }),
+  },
+  (table) => [primaryKey({ columns: [table.userId, table.postId] })],
+);
 
 export const topic = pgTable("topic", {
   id: text("id")
