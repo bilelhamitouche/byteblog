@@ -1,6 +1,6 @@
 import { Skeleton } from "./ui/skeleton";
 
-export default async function ProfileSidebar() {
+export default async function ProfileSidebarSkeleton() {
   return (
     <aside className="hidden flex-col gap-4 items-center py-28 border-r md:flex min-w-xs">
       <Skeleton className="rounded-full size-25" />
