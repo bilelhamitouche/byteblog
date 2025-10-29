@@ -1,6 +1,6 @@
 "use client";
 
-import { Edit, EllipsisVertical, Trash } from "lucide-react";
+import { EllipsisVertical } from "lucide-react";
 import { Button } from "./ui/button";
 import {
   DropdownMenu,
@@ -12,6 +12,7 @@ import Link from "next/link";
 import { deletePostAction } from "@/actions/posts";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { PencilSquareIcon, TrashIcon } from "@heroicons/react/20/solid";
 
 interface PostActionsDropdownProps {
   postId: string;
@@ -46,13 +47,13 @@ export default function PostActionsDropdown({
             href={`/posts/${postId}/edit`}
             className="flex gap-3 items-center"
           >
-            <Edit />
+            <PencilSquareIcon />
             <span>Edit Post</span>
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem onClick={deletePost}>
-          <Trash className="text-red-500" />
-          <span className="text-red-500">Delete Post</span>
+          <TrashIcon className="text-red-500 dark:text-red-600" />
+          <span className="text-red-500 dark:text-red-600">Delete Post</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
