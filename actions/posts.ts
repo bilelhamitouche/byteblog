@@ -1,6 +1,7 @@
 "use server";
 
 import {
+  addTopicsToPost,
   createPost,
   deletePost,
   editPost,
@@ -109,4 +110,18 @@ export async function toggleSavePostAction(postId: string) {
     }
   }
   revalidatePath(`/posts/${postId}`);
+}
+
+export async function addTopicsToPostAction(formData: FormData) {
+  const topics = JSON.parse(formData.get("topics") as string);
+  const id = formData.get("id") as string;
+  try {
+    await addTopicsToPost(topics, id);
+  } catch (err) {
+    if (err instanceof Error) {
+      return {
+        message: err.message,
+      };
+    }
+  }
 }

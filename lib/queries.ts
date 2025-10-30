@@ -4,6 +4,7 @@ import {
   follow,
   like,
   post,
+  postTopic,
   profile,
   topic,
   user,
@@ -175,6 +176,7 @@ export async function hasUserSavedPost(postId: string, userId: string) {
 }
 
 export async function toggleLikePost(postId: string, userId: string) {
+  await redirectUnauthenticated();
   try {
     const hasUserLiked = await hasUserLikedPost(postId, userId);
     if (hasUserLiked) {
@@ -190,6 +192,7 @@ export async function toggleLikePost(postId: string, userId: string) {
 }
 
 export async function toggleSavePost(postId: string, userId: string) {
+  await redirectUnauthenticated();
   try {
     const hasUserSaved = await hasUserSavedPost(postId, userId);
     if (hasUserSaved) {
@@ -214,6 +217,7 @@ export async function getTopics() {
 }
 
 export async function createTopic(topicName: string) {
+  await redirectUnauthenticated();
   try {
     const newTopic = await db.insert(topic).values({ topicName }).returning();
     return newTopic[0];
@@ -223,8 +227,26 @@ export async function createTopic(topicName: string) {
 }
 
 export async function deleteTopic(id: string) {
+  await redirectUnauthenticated();
   try {
     await db.delete(topic).where(eq(topic.id, id));
+  } catch (err) {
+    if (err instanceof DrizzleError) throw new Error("Database Error");
+  }
+}
+
+export async function addTopicsToPost(topics: string[], postId: string) {
+  await redirectUnauthenticated();
+  try {
+    topics.forEach(async (topic) => {
+      await db
+        .insert(postTopic)
+        .values({ postId, topicId: topic })
+        .onConflictDoUpdate({
+          target: [postTopic.postId, postTopic.topicId],
+          set: { topicId: topic },
+        });
+    });
   } catch (err) {
     if (err instanceof DrizzleError) throw new Error("Database Error");
   }
