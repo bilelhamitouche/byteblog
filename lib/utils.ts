@@ -1,6 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { avatarColors } from "./constants";
+import { AVATAR_COLORS } from "./constants";
 import Heading from "@tiptap/extension-heading";
 
 // Tailwind merge function
@@ -10,8 +10,8 @@ export function cn(...inputs: ClassValue[]) {
 
 // Avatar colors
 export function generateAvatarColors(name: string) {
-  const colorIndex = name.charCodeAt(0) % avatarColors.length;
-  return avatarColors[colorIndex];
+  const colorIndex = name.charCodeAt(0) % AVATAR_COLORS.length;
+  return AVATAR_COLORS[colorIndex];
 }
 
 // Custom heading for TipTap
