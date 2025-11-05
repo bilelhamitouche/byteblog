@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import Navbar from "@/components/navbar";
+import QueryClientProvider from "@/components/QueryClientProvider";
 
 const outfit = Outfit({
   variable: "--font-outfit-sans",
@@ -31,7 +32,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Navbar />
-          {children}
+          <QueryClientProvider>{children}</QueryClientProvider>
           <Toaster />
         </ThemeProvider>
       </body>
