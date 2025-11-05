@@ -21,6 +21,7 @@ interface PublishPostDialogProps {
   title: string;
   image: string | null;
   content: string;
+  published: boolean;
 }
 
 interface Tag {
@@ -66,7 +67,7 @@ export default function PublishPostDialog(postData: PublishPostDialogProps) {
     formData.append("title", postData.title);
     formData.append("image", postData.image as string);
     formData.append("content", postData.content);
-    formData.append("published", JSON.stringify(true));
+    formData.append("published", JSON.stringify(postData.published));
     setIsPublishing(true);
     try {
       if (postData.id) {

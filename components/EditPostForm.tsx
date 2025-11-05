@@ -136,6 +136,7 @@ export default function EditPost({ initialPost }: EditPostFormProps) {
                 title={formValues.title}
                 image={formValues.image}
                 content={formValues.content}
+                published={initialPost.published}
               />
             )}
             {isSaving ? (
