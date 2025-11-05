@@ -10,7 +10,7 @@ import {
 import { Newspaper } from "lucide-react";
 import Link from "next/link";
 
-export function NoPosts() {
+export default function NoPosts() {
   return (
     <Empty className="p-28 h-full border border-dashed">
       <EmptyHeader>
