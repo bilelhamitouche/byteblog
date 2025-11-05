@@ -10,3 +10,5 @@ export const AVATAR_COLORS = [
   "bg-pink-700 text-white",
   "bg-gray-200 text-black",
 ];
+
+export const TAG_LIMIT = 5;
