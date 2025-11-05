@@ -33,12 +33,17 @@ interface Tag {
 
 export default function PublishPostDialog(postData: PublishPostDialogProps) {
   const [isPublishing, setIsPublishing] = useState<boolean>(false);
+  const [selected, setSelected] = useState<Option[]>([]);
   const queryClient = useQueryClient();
   const router = useRouter();
   async function getTags(value: string) {
     const res = await fetch(`/api/tags?search=${value}&limit=5`);
     if (!res.ok) toast.error("Failed to fetch tags");
     return res.json();
+  }
+  async function onChange(options: Option[]) {
+    setSelected(options);
+    console.log(selected);
   }
   const onSearch = useCallback(
     async function (value: string) {
@@ -67,6 +72,7 @@ export default function PublishPostDialog(postData: PublishPostDialogProps) {
     formData.append("image", postData.image as string);
     formData.append("content", postData.content);
     formData.append("published", JSON.stringify(true));
+    formData.append("tags", JSON.stringify(selected));
     setIsPublishing(true);
     try {
       if (postData.id) {
@@ -100,6 +106,7 @@ export default function PublishPostDialog(postData: PublishPostDialogProps) {
             delay={500}
             creatable
             onSearch={onSearch}
+            onChange={onChange}
           />
           <DialogFooter className="flex gap-2 items-center">
             <DialogClose asChild>
