@@ -4,6 +4,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { Settings, User } from "lucide-react";
@@ -36,8 +37,14 @@ export default function AvatarDropdown({
             <AvatarImage src={image as string} alt={`${name} image`} />
             <AvatarFallback>{name.toUpperCase()[0]}</AvatarFallback>
           </Avatar>
-          <span>{name}</span>
+          <div className="flex flex-col gap-1 items-start">
+            <span>{name}</span>
+            <span className="text-xs text-gray-500 dark:text-gray-200">
+              {email}
+            </span>
+          </div>
         </DropdownMenuItem>
+        <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
           <Link
             href={
