@@ -4,11 +4,12 @@ import {
   follow,
   like,
   post,
-  postTopic,
   profile,
   topic,
+  tag,
   user,
   userSavesPost,
+  postTag,
 } from "./drizzle";
 import { and, count, DrizzleError, eq, ilike, or } from "drizzle-orm";
 import { redirectUnauthenticated } from "@/actions/auth";
@@ -235,16 +236,30 @@ export async function deleteTopic(id: string) {
   }
 }
 
-export async function addTopicsToPost(topics: string[], postId: string) {
+export async function searchTags(search: string, limit: number) {
   await redirectUnauthenticated();
   try {
-    topics.forEach(async (topic) => {
+    const tags = await db
+      .select()
+      .from(tag)
+      .where(ilike(tag.tagName, `%${search}%`))
+      .limit(limit);
+    return tags;
+  } catch (err) {
+    if (err instanceof DrizzleError) throw new Error("Database Error");
+  }
+}
+
+export async function addTagsToPost(tags: string[], postId: string) {
+  await redirectUnauthenticated();
+  try {
+    tags.forEach(async (tag) => {
       await db
-        .insert(postTopic)
-        .values({ postId, topicId: topic })
+        .insert(postTag)
+        .values({ postId, tagId: tag })
         .onConflictDoUpdate({
-          target: [postTopic.postId, postTopic.topicId],
-          set: { topicId: topic },
+          target: [postTag.postId, postTag.tagId],
+          set: { tagId: tag },
         });
     });
   } catch (err) {
