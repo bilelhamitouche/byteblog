@@ -12,8 +12,9 @@ import {
 } from "./ui/dialog";
 import { createPostAction, editPostAction } from "@/actions/posts";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import MultipleSelector from "./ui/multiple-selector";
+import { useCallback, useState } from "react";
+import MultipleSelector, { Option } from "./ui/multiple-selector";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface PublishPostDialogProps {
   id?: string;
@@ -22,9 +23,41 @@ interface PublishPostDialogProps {
   content: string;
 }
 
+interface Tag {
+  id: string;
+  tagName: string;
+  topicId: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export default function PublishPostDialog(postData: PublishPostDialogProps) {
   const [isPublishing, setIsPublishing] = useState<boolean>(false);
+  const queryClient = useQueryClient();
   const router = useRouter();
+  async function getTags(value: string) {
+    const res = await fetch(`/api/tags?search=${value}&limit=5`);
+    if (!res.ok) toast.error("Failed to fetch tags");
+    return res.json();
+  }
+  const onSearch = useCallback(
+    async function (value: string) {
+      const data = await queryClient.fetchQuery({
+        queryKey: ["autocomplete", value],
+        queryFn: () => getTags(value),
+        staleTime: 5 * 60 * 1000,
+      });
+      if (data) {
+        const newData: Option[] = [];
+        data.forEach((item: Tag) => {
+          newData.push({ value: item.tagName, label: item.tagName });
+        });
+        return newData;
+      }
+      return [];
+    },
+    [queryClient],
+  );
   async function publishPost() {
     const formData = new FormData();
     if (postData.id) {
@@ -64,15 +97,9 @@ export default function PublishPostDialog(postData: PublishPostDialogProps) {
             placeholder="Select topics"
             maxSelected={5}
             hidePlaceholderWhenSelected
-            defaultOptions={[
-              { value: "javascript", label: "Javascript" },
-              { value: "typescript", label: "Typescript" },
-              { value: "ruby", label: "Ruby" },
-              { value: "python", label: "Python" },
-              { value: "c", label: "C" },
-              { value: "cpp", label: "C++" },
-              { value: "cs", label: "C#" },
-            ]}
+            delay={500}
+            creatable
+            onSearch={onSearch}
           />
           <DialogFooter className="flex gap-2 items-center">
             <DialogClose asChild>
