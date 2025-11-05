@@ -2,6 +2,7 @@ import { getUserInfo } from "@/actions/auth";
 import FollowButton from "@/components/FollowButton";
 import LikeButton from "@/components/LikeButton";
 import PostActionsDropdown from "@/components/PostActionsDropdown";
+import PostContent from "@/components/PostContent";
 import SavePostButton from "@/components/SavePostButton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -78,7 +79,7 @@ export default async function Post({
         </div>
       </div>
       <hr />
-      <p className="p-2 py-8 leading-7">{post.content}</p>
+      <PostContent content={post.content} />
     </div>
   );
 }
