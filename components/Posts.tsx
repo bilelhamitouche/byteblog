@@ -1,6 +1,6 @@
 import PostCard from "@/components/PostCard";
 import { getPublishedPosts } from "@/lib/queries";
-import { NoPosts } from "./NoPosts";
+import NoPosts from "./NoPosts";
 
 export default async function Posts() {
   const posts = await getPublishedPosts();
