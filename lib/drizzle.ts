@@ -151,22 +151,23 @@ export const tag = pgTable("tag", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
-export const postTag = pgTable("post_tag", {
-  id: text("id")
-    .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
-  postId: text("post_id")
-    .notNull()
-    .references(() => post.id, { onDelete: "cascade", onUpdate: "cascade" }),
-  tagId: text("tag_id")
-    .notNull()
-    .references(() => tag.id, {
-      onDelete: "cascade",
-      onUpdate: "cascade",
-    }),
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow(),
-});
+export const postTag = pgTable(
+  "post_tag",
+  {
+    postId: text("post_id")
+      .notNull()
+      .references(() => post.id, { onDelete: "cascade", onUpdate: "cascade" }),
+    tagId: text("tag_id")
+      .notNull()
+      .references(() => tag.id, {
+        onDelete: "cascade",
+        onUpdate: "cascade",
+      }),
+    createdAt: timestamp("created_at").defaultNow(),
+    updatedAt: timestamp("updated_at").defaultNow(),
+  },
+  (table) => [primaryKey({ columns: [table.postId, table.tagId] })],
+);
 
 export const like = pgTable(
   "like",
