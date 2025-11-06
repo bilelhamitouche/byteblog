@@ -129,24 +129,11 @@ export const userSavesPost = pgTable(
   (table) => [primaryKey({ columns: [table.userId, table.postId] })],
 );
 
-export const topic = pgTable("topic", {
-  id: text("id")
-    .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
-  topicName: text("topic_name").notNull().unique(),
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow(),
-});
-
 export const tag = pgTable("tag", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
   tagName: text("tag_name").notNull().unique(),
-  topicId: text("topic_id").references(() => topic.id, {
-    onDelete: "cascade",
-    onUpdate: "cascade",
-  }),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });

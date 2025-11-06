@@ -19,8 +19,8 @@ export default async function Navbar() {
         </span>
       </Link>
       <nav className="hidden gap-4 items-center md:flex">
-        <Link href="/topics" className="hover:text-primary">
-          Topics
+        <Link href="/tags" className="hover:text-primary">
+          Tags
         </Link>
         <Link href="/authors" className="hover:text-primary">
           Authors

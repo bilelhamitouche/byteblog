@@ -33,10 +33,10 @@ export default function MobileMenu({
             Authors
           </Link>
           <Link
-            href="/topics"
+            href="/tags"
             className="p-2 transition-colors hover:text-primary"
           >
-            Topics
+            Tags
           </Link>
         </nav>
         {authenticated ? null : (
