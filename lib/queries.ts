@@ -5,7 +5,6 @@ import {
   like,
   post,
   profile,
-  topic,
   tag,
   user,
   userSavesPost,
