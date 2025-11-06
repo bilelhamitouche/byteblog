@@ -3,6 +3,7 @@
 import {
   addTagsToPost,
   createPost,
+  createTags,
   deletePost,
   editPost,
   toggleLikePost,
@@ -11,6 +12,7 @@ import {
 import { writePostSchema } from "@/lib/zod";
 import { getUserInfo } from "./auth";
 import { revalidatePath } from "next/cache";
+import { Option } from "@/components/ui/multiple-selector";
 
 export async function createPostAction(formData: FormData) {
   const userId = (await getUserInfo())?.id as string;
@@ -18,6 +20,10 @@ export async function createPostAction(formData: FormData) {
   const image = formData.get("image");
   const content = formData.get("content");
   const published = formData.get("published");
+  const tags = JSON.parse(formData.get("tags") as string) as Option[];
+  const existingTags = tags
+    .filter((tag) => tag.value !== tag.label)
+    .map((tag) => tag.value);
   const validationResult = writePostSchema.safeParse({ title, image, content });
   if (!validationResult.success)
     return {
@@ -31,6 +37,17 @@ export async function createPostAction(formData: FormData) {
       JSON.parse(published as string) as boolean,
       userId as string,
     );
+    if (newPost) {
+      const newTags = tags
+        .filter((tag: Option) => tag.value === tag.label)
+        .map((tag) => tag.value);
+      const createdTags = await createTags(newTags);
+      let allTags: string[] = [];
+      if (createdTags) {
+        allTags = [...createdTags.map((tag) => tag.id), ...existingTags];
+      }
+      await addTagsToPost(existingTags, newPost?.id);
+    }
     return {
       newPost,
     };
@@ -110,18 +127,4 @@ export async function toggleSavePostAction(postId: string) {
     }
   }
   revalidatePath(`/posts/${postId}`);
-}
-
-export async function addTagsToPostAction(formData: FormData) {
-  const tags = JSON.parse(formData.get("tags") as string);
-  const id = formData.get("id") as string;
-  try {
-    await addTagsToPost(tags, id);
-  } catch (err) {
-    if (err instanceof Error) {
-      return {
-        message: err.message,
-      };
-    }
-  }
 }

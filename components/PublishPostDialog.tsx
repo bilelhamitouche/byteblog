@@ -12,7 +12,7 @@ import {
 } from "./ui/dialog";
 import { createPostAction, editPostAction } from "@/actions/posts";
 import { useRouter } from "next/navigation";
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import MultipleSelector, { Option } from "./ui/multiple-selector";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -33,7 +33,7 @@ interface Tag {
 
 export default function PublishPostDialog(postData: PublishPostDialogProps) {
   const [isPublishing, setIsPublishing] = useState<boolean>(false);
-  const [selected, setSelected] = useState<Option[]>([]);
+  const selectedRef = useRef<Option[]>([]);
   const queryClient = useQueryClient();
   const router = useRouter();
   async function getTags(value: string) {
@@ -41,9 +41,9 @@ export default function PublishPostDialog(postData: PublishPostDialogProps) {
     if (!res.ok) toast.error("Failed to fetch tags");
     return res.json();
   }
-  async function onChange(options: Option[]) {
-    setSelected(options);
-    console.log(selected);
+  function onChange(options: Option[]) {
+    selectedRef.current = options;
+    console.log(selectedRef.current);
   }
   const onSearch = useCallback(
     async function (value: string) {
@@ -55,7 +55,7 @@ export default function PublishPostDialog(postData: PublishPostDialogProps) {
       if (data) {
         const newData: Option[] = [];
         data.forEach((item: Tag) => {
-          newData.push({ value: item.tagName, label: item.tagName });
+          newData.push({ value: item.id, label: item.tagName });
         });
         return newData;
       }
@@ -72,7 +72,7 @@ export default function PublishPostDialog(postData: PublishPostDialogProps) {
     formData.append("image", postData.image as string);
     formData.append("content", postData.content);
     formData.append("published", JSON.stringify(true));
-    formData.append("tags", JSON.stringify(selected));
+    formData.append("tags", JSON.stringify(selectedRef.current));
     setIsPublishing(true);
     try {
       if (postData.id) {

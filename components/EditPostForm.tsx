@@ -21,6 +21,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import PublishPostDialog from "./PublishPostDialog";
+import { useRouter } from "next/navigation";
 
 interface EditPostFormProps {
   initialPost: {
@@ -33,9 +34,12 @@ interface EditPostFormProps {
 }
 
 export default function EditPost({ initialPost }: EditPostFormProps) {
-  const [action, setAction] = useState<"" | "publish" | "save">("save");
+  const [action, setAction] = useState<
+    "" | "publish" | "save" | "saveAndPublish"
+  >("save");
   const [isPublishing, setIsPublishing] = useState<boolean>(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
+  const router = useRouter();
   const form = useForm<z.infer<typeof writePostSchema>>({
     resolver: zodResolver(writePostSchema),
     mode: "onSubmit",
@@ -55,6 +59,11 @@ export default function EditPost({ initialPost }: EditPostFormProps) {
     if (action === "publish") {
       setIsPublishing(true);
       formData.append("published", JSON.stringify(true));
+    } else if (action === "saveAndPublish") {
+      setIsPublishing(true);
+      formData.append("published", JSON.stringify(true));
+      const result = await editPostAction(formData);
+      if (!result?.message && !result?.errors) router.push("/");
     } else if (action === "save") {
       setIsSaving(true);
       formData.append("published", JSON.stringify(initialPost.published));
@@ -70,6 +79,7 @@ export default function EditPost({ initialPost }: EditPostFormProps) {
         setIsSaving(false);
       }
     }
+    setIsPublishing(false);
   }
   return (
     <div className="p-8 py-24 space-y-8 w-full h-full">
@@ -130,6 +140,16 @@ export default function EditPost({ initialPost }: EditPostFormProps) {
           <div className="flex gap-4 items-center">
             {isPublishing ? (
               <LoadingButton variant="default" size="default" className="" />
+            ) : initialPost.id ? (
+              <Button
+                variant="default"
+                name="action"
+                value="saveAndPublish"
+                type="submit"
+                onClick={() => setAction("saveAndPublish")}
+              >
+                Save And Publish
+              </Button>
             ) : (
               <PublishPostDialog
                 {...(initialPost.id ? { id: initialPost.id } : {})}
