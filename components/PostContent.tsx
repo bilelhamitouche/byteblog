@@ -2,7 +2,6 @@ import { JSONContent } from "@tiptap/react";
 import { ReactNode } from "react";
 
 export default function PostContent({ content }: { content: JSONContent }) {
-  console.log(JSON.stringify(content));
   return <>{renderPost(content)}</>;
 }
 
