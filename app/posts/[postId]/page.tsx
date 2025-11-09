@@ -11,6 +11,7 @@ import {
   hasUserLikedPost,
   hasUserSavedPost,
 } from "@/lib/queries";
+import { JSONContent } from "@tiptap/react";
 import { notFound } from "next/navigation";
 
 export default async function Post({
@@ -79,7 +80,7 @@ export default async function Post({
         </div>
       </div>
       <hr />
-      <PostContent content={post.content} />
+      <PostContent content={JSON.parse(post.content) as JSONContent} />
     </div>
   );
 }

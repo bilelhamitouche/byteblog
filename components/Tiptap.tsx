@@ -1,4 +1,9 @@
-import { CustomHeading } from "@/lib/utils";
+import {
+  CustomBulletList,
+  CustomHeading,
+  CustomListItem,
+  CustomOrderedList,
+} from "@/lib/utils";
 import { Editor, EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import {
@@ -12,6 +17,8 @@ import {
   Heading4,
   Heading5,
   Heading6,
+  List,
+  ListOrdered,
 } from "lucide-react";
 import { Button } from "./ui/button";
 
@@ -110,6 +117,22 @@ function MenuBar({ editor }: { editor: Editor | null }) {
       >
         <Heading6 />
       </Button>
+      <Button
+        type="button"
+        variant="ghost"
+        aria-label="Toggle ordered list"
+        onClick={() => editor?.chain().focus().toggleOrderedList().run()}
+      >
+        <ListOrdered />
+      </Button>
+      <Button
+        type="button"
+        variant="ghost"
+        aria-label="Toggle bullet list"
+        onClick={() => editor?.chain().focus().toggleBulletList().run()}
+      >
+        <List />
+      </Button>
     </div>
   );
 }
@@ -125,10 +148,16 @@ export default function Tiptap({
     extensions: [
       StarterKit.configure({
         heading: false,
+        bulletList: false,
+        orderedList: false,
+        listItem: false,
       }),
       CustomHeading,
+      CustomBulletList,
+      CustomOrderedList,
+      CustomListItem,
     ],
-    content: content || "<p>Hello World! 🌎️</p>",
+    content: content || "<h1>Hello World! 🌎️</h1>",
     immediatelyRender: false,
     editorProps: {
       attributes: {

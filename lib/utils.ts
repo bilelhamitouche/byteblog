@@ -2,6 +2,9 @@ import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { AVATAR_COLORS } from "./constants";
 import Heading from "@tiptap/extension-heading";
+import BulletList from "@tiptap/extension-bullet-list";
+import OrderedList from "@tiptap/extension-ordered-list";
+import ListItem from "@tiptap/extension-list-item";
 
 // Tailwind merge function
 export function cn(...inputs: ClassValue[]) {
@@ -39,7 +42,44 @@ export const CustomHeading = Heading.extend({
   },
 });
 
-// Get first paragraph
-export function getFirstParagraph(content: string) {
-  const jsonContent = JSON.parse(content);
-}
+// Custom bullet list for TipTap
+export const CustomBulletList = BulletList.extend({
+  renderHTML({ HTMLAttributes }) {
+    return [
+      "ul",
+      {
+        ...HTMLAttributes,
+        class: "list-disc list-inside ml-6 space-y-1",
+      },
+      0,
+    ];
+  },
+});
+
+// Custom ordered list for TipTap
+export const CustomOrderedList = OrderedList.extend({
+  renderHTML({ HTMLAttributes }) {
+    return [
+      "ol",
+      {
+        ...HTMLAttributes,
+        class: "list-decimal list-inside ml-6 space-y-1",
+      },
+      0,
+    ];
+  },
+});
+
+// Custom List item for TipTap
+export const CustomListItem = ListItem.extend({
+  renderHTML({ HTMLAttributes }) {
+    return [
+      "li",
+      {
+        ...HTMLAttributes,
+        class: "leading-relaxed",
+      },
+      0,
+    ];
+  },
+});
