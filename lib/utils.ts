@@ -5,6 +5,8 @@ import Heading from "@tiptap/extension-heading";
 import BulletList from "@tiptap/extension-bullet-list";
 import OrderedList from "@tiptap/extension-ordered-list";
 import ListItem from "@tiptap/extension-list-item";
+import { CodeBlockLowlight } from "@tiptap/extension-code-block-lowlight";
+import { all, createLowlight } from "lowlight";
 
 // Tailwind merge function
 export function cn(...inputs: ClassValue[]) {
@@ -83,3 +85,26 @@ export const CustomListItem = ListItem.extend({
     ];
   },
 });
+
+const lowlight = createLowlight(all);
+
+// Custom code block for TipTap
+export const CustomCodeBlock = CodeBlockLowlight.extend({
+  renderHTML({ node, HTMLAttributes }) {
+    return [
+      "pre",
+      {
+        ...HTMLAttributes,
+        class:
+          "hljs my-4 p-4 rounded-lg overflow-x-auto font-mono text-base",
+      },
+      [
+        "code",
+        {
+          class: `language-${node.attrs.language || ""}`,
+        },
+        0,
+      ],
+    ];
+  },
+}).configure({ lowlight });

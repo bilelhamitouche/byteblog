@@ -1,5 +1,6 @@
 import {
   CustomBulletList,
+  CustomCodeBlock,
   CustomHeading,
   CustomListItem,
   CustomOrderedList,
@@ -19,6 +20,7 @@ import {
   Heading6,
   List,
   ListOrdered,
+  Code,
 } from "lucide-react";
 import { Button } from "./ui/button";
 
@@ -133,6 +135,14 @@ function MenuBar({ editor }: { editor: Editor | null }) {
       >
         <List />
       </Button>
+      <Button
+        type="button"
+        variant="ghost"
+        aria-label="Toggle code block"
+        onClick={() => editor?.chain().focus().toggleCodeBlock().run()}
+      >
+        <Code />
+      </Button>
     </div>
   );
 }
@@ -156,13 +166,14 @@ export default function Tiptap({
       CustomBulletList,
       CustomOrderedList,
       CustomListItem,
+      CustomCodeBlock,
     ],
     content: content || "<h1>Hello World! 🌎️</h1>",
     immediatelyRender: false,
     editorProps: {
       attributes: {
         class:
-          "min-h-[150px] rounded-md selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input py-1 px-3 text-base shadow-xs transition-[color,box-shadow] outline-none disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
+          "min-h-[150px] rounded-md selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input py-1 px-3 text-base sm:text-lg shadow-xs transition-[color,box-shadow] outline-none disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
       },
     },
     onUpdate: ({ editor }) => {

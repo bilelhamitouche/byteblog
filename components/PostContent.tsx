@@ -1,7 +1,10 @@
 import { JSONContent } from "@tiptap/react";
 import { ReactNode } from "react";
+import CodeBlock from "./CodeBlock";
 
 export default function PostContent({ content }: { content: JSONContent }) {
+  console.log(content);
+  console.log(JSON.stringify(content));
   return <>{renderPost(content)}</>;
 }
 
@@ -34,6 +37,14 @@ function renderPost(postContent: JSONContent): ReactNode {
       } else {
         return null;
       }
+    case "codeBlock":
+      if (postContent.content && postContent.content.length > 0) {
+        const codeText = postContent.content
+          .map((child) => child.text ?? "")
+          .join("\n");
+        return <CodeBlock code={codeText} />;
+      }
+      return null;
     case "bulletList":
       if (postContent.content) {
         return (
@@ -143,9 +154,9 @@ function renderPost(postContent: JSONContent): ReactNode {
 function getClassNameFromMarks(
   marks:
     | {
-        type: string;
-        attrs?: { [key: string]: any };
-      }[]
+      type: string;
+      attrs?: { [key: string]: any };
+    }[]
     | undefined,
 ) {
   if (marks) {
