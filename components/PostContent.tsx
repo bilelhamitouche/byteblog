@@ -3,8 +3,6 @@ import { ReactNode } from "react";
 import CodeBlock from "./CodeBlock";
 
 export default function PostContent({ content }: { content: JSONContent }) {
-  console.log(content);
-  console.log(JSON.stringify(content));
   return <>{renderPost(content)}</>;
 }
 

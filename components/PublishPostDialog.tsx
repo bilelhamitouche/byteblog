@@ -43,7 +43,6 @@ export default function PublishPostDialog(postData: PublishPostDialogProps) {
   }
   function onChange(options: Option[]) {
     selectedRef.current = options;
-    console.log(selectedRef.current);
   }
   const onSearch = useCallback(
     async function (value: string) {
