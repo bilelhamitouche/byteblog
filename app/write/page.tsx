@@ -7,6 +7,7 @@ export default function Write() {
     image: "",
     content:
       '{"type":"doc","content":[{"type":"heading","attrs":{"level":2},"content":[{"type":"text","text":"Hello World! 🌎️"}]},{"type":"paragraph"}]}',
+    published: false,
   };
   return <EditPost initialPost={initialPost} />;
 }
