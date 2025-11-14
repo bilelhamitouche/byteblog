@@ -18,7 +18,7 @@ export default function NoPosts() {
           <Newspaper />
         </EmptyMedia>
         <EmptyTitle>No Posts</EmptyTitle>
-        <EmptyDescription>No posts were posted.</EmptyDescription>
+        <EmptyDescription>No posts were published.</EmptyDescription>
       </EmptyHeader>
       <EmptyContent>
         <Button variant="outline" size="sm">
