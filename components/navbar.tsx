@@ -6,6 +6,7 @@ import { ModeToggle } from "./mode-toggle";
 import { getUserInfo, isAuthenticated } from "@/actions/auth";
 import AvatarDropdown from "./avatar-dropdown";
 import { lusitana } from "@/lib/fonts";
+import SearchPosts from "./SearchPosts";
 
 export default async function Navbar() {
   const authenticated = await isAuthenticated();
@@ -34,6 +35,7 @@ export default async function Navbar() {
       </Button>
       {authenticated ? (
         <div className="hidden gap-4 items-center md:flex">
+          <SearchPosts />
           <ModeToggle />
           <AvatarDropdown
             name={user?.name as string}
@@ -51,6 +53,7 @@ export default async function Navbar() {
             <Link href="/register">Get Started</Link>
           </Button>
           <ModeToggle />
+          <SearchPosts />
         </div>
       )}
       <MobileMenu authenticated={authenticated} />

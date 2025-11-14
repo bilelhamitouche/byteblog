@@ -125,6 +125,29 @@ export async function getPostsByAuthorId(authorId: string) {
   }
 }
 
+export async function searchPosts(search: string) {
+  try {
+    const posts = await db
+      .select({
+        id: post.id,
+        image: post.image,
+        title: post.title,
+        content: post.content,
+        author: user.name,
+        authorImage: user.image,
+        authorUsername: user.username,
+        authorEmail: user.email,
+        createdAt: post.createdAt,
+      })
+      .from(post)
+      .leftJoin(user, eq(post.authorId, user.id))
+      .where(and(eq(post.published, true), ilike(post.title, `%${search}%`)));
+    return posts;
+  } catch (err) {
+    if (err instanceof DrizzleError) throw new Error("Database Error");
+  }
+}
+
 export async function getPost(id: string) {
   try {
     const currentPost = await db
