@@ -20,6 +20,7 @@ export default async function Navbar() {
         </span>
       </Link>
       <nav className="hidden gap-4 items-center md:flex">
+        <SearchPosts isAuthenticated={authenticated} />
         <Link href="/tags" className="hover:text-primary">
           Tags
         </Link>
@@ -35,7 +36,6 @@ export default async function Navbar() {
       </Button>
       {authenticated ? (
         <div className="hidden gap-4 items-center md:flex">
-          <SearchPosts />
           <ModeToggle />
           <AvatarDropdown
             name={user?.name as string}
@@ -53,7 +53,6 @@ export default async function Navbar() {
             <Link href="/register">Get Started</Link>
           </Button>
           <ModeToggle />
-          <SearchPosts />
         </div>
       )}
       <MobileMenu authenticated={authenticated} />
