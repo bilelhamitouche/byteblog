@@ -4,7 +4,9 @@ import NoPosts from "./NoPosts";
 
 export default async function Posts() {
   const posts = await getPublishedPosts();
-  if (!posts || posts.length === 0) return <NoPosts />;
+  if (!posts || posts.length === 0) {
+    return <NoPosts />;
+  }
   return (
     <div className="p-4 py-20">
       <ul className="flex flex-col gap-4">
