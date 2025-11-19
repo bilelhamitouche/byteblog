@@ -7,9 +7,5 @@ export default async function Home() {
   if (!user) {
     return <LandingPage />;
   }
-  return (
-    <>
-      <Posts />
-    </>
-  );
+  return <Posts />;
 }
