@@ -81,7 +81,11 @@ export async function deletePost(id: string) {
   }
 }
 
-export async function getPublishedPosts() {
+export async function getPublishedPosts(
+  search: string,
+  skip: number,
+  limit: number,
+) {
   try {
     const posts = await db
       .select({
@@ -97,8 +101,22 @@ export async function getPublishedPosts() {
       })
       .from(post)
       .leftJoin(user, eq(post.authorId, user.id))
-      .where(eq(post.published, true));
+      .where(and(eq(post.published, true), ilike(post.title, `%${search}%`)))
+      .offset(skip)
+      .limit(limit);
     return posts;
+  } catch (err) {
+    if (err instanceof DrizzleError) throw new Error("Database Error");
+  }
+}
+
+export async function getPostsCount() {
+  try {
+    const [{ count: postCount }] = await db
+      .select({ count: count() })
+      .from(post);
+    console.log(postCount);
+    return postCount;
   } catch (err) {
     if (err instanceof DrizzleError) throw new Error("Database Error");
   }

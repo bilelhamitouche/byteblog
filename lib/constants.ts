@@ -12,3 +12,5 @@ export const AVATAR_COLORS = [
 ];
 
 export const TAG_LIMIT = 5;
+
+export const POST_LIMIT = 5;
