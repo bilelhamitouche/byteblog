@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation";
 import { useCallback, useRef, useState } from "react";
 import MultipleSelector, { Option } from "./ui/multiple-selector";
 import { useQueryClient } from "@tanstack/react-query";
+import { Loader2 } from "lucide-react";
 
 interface PublishPostDialogProps {
   id?: string;
@@ -104,6 +105,18 @@ export default function PublishPostDialog(postData: PublishPostDialogProps) {
             hidePlaceholderWhenSelected
             delay={500}
             creatable
+            loadingIndicator={
+              <div className="p-4">
+                <Loader2 size="25" className="mx-auto animate-spin" />
+              </div>
+            }
+            emptyIndicator={
+              <div className="p-4">
+                <span className="text-gray-500 dark:text-gray-300">
+                  No results
+                </span>
+              </div>
+            }
             onSearch={onSearch}
             onChange={onChange}
           />
