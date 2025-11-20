@@ -42,7 +42,7 @@ export default function SavePostButton({
   return (
     <Button
       variant="ghost"
-      size="smallIcon"
+      size="icon-xs"
       onClick={toggleSave}
       disabled={isLoading || isDisabled}
     >
