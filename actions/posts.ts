@@ -46,7 +46,9 @@ export async function createPostAction(formData: FormData) {
       if (createdTags) {
         allTags = [...createdTags.map((tag) => tag.id), ...existingTags];
       }
-      await addTagsToPost(existingTags, newPost?.id);
+      if (tags.length > 0) {
+        await addTagsToPost(existingTags, newPost?.id);
+      }
     }
     return {
       newPost,
