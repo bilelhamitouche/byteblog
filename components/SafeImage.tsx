@@ -16,7 +16,7 @@ export default function SafeImage({ src, alt, fallback }: SafeImageProps) {
       <Image
         src={src}
         alt={alt}
-        layout="fill"
+        fill
         unoptimized={true}
         className={`absolute inset-0 object-cover transition-opacity duration-300 ${
           hasFailed ? "opacity-0" : "opacity-100"
