@@ -4,6 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { Avatar, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
+import { getUserInfo } from "@/actions/auth";
+import { lusitana } from "@/lib/fonts";
 
 interface ProfileSidebarProps {
   authorId: string;
@@ -19,7 +21,10 @@ export default async function ProfileSidebar({
   authorUsername,
 }: ProfileSidebarProps) {
   const followedAuthors = await getFollowedAuthors(authorId);
-  if (!followedAuthors) return null;
+  if (!followedAuthors) {
+    return null;
+  }
+  const user = await getUserInfo();
   return (
     <aside className="hidden flex-col gap-6 items-start py-28 border-r md:flex min-w-xs">
       <div className="flex flex-col gap-2 justify-center items-center mx-auto">
@@ -30,13 +35,17 @@ export default async function ProfileSidebar({
           height="100"
           className="rounded-full"
         />
-        <span className="text-lg font-medium">{authorName}</span>
-        <Link
-          href={`/authors/${authorUsername}/edit`}
-          className="text-base text-primary"
-        >
-          Edit Profile
-        </Link>
+        <span className={`text-lg font-medium ${lusitana.className}`}>
+          {authorName}
+        </span>
+        {user?.id === authorId && (
+          <Link
+            href={`/authors/${authorUsername}/edit`}
+            className="text-base text-primary"
+          >
+            Edit Profile
+          </Link>
+        )}
       </div>
       <div className="p-4">
         <h3 className="flex gap-2 items-center text-lg font-medium">
