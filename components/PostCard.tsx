@@ -1,9 +1,8 @@
-"use client";
-import { Card, CardDescription, CardTitle } from "./ui/card";
+import { Card, CardDescription, CardFooter, CardTitle } from "./ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import SafeImage from "./SafeImage";
+import { Button } from "./ui/button";
 
 interface PostCardProps {
   id: string;
@@ -24,44 +23,38 @@ export default function PostCard({
   authorUsername,
   authorImage,
 }: PostCardProps) {
-  const router = useRouter();
-  function handleClick(e: React.MouseEvent<HTMLDivElement>) {
-    const isLinkClick = e.target instanceof Element && e.target.closest("a");
-    if (isLinkClick) {
-      return;
-    }
-    router.push(`/posts/${id}`);
-  }
   return (
-    <Card
-      className="flex flex-col gap-2 items-start p-4 max-w-xl cursor-pointer"
-      onClick={handleClick}
-    >
-      <Link
-        href={`/authors/@${authorUsername}`}
-        className="flex gap-2 items-center group"
-      >
-        <Avatar>
-          <AvatarImage src={authorImage as string} alt={`${author} image`} />
-          <AvatarFallback>{author[0]}</AvatarFallback>
-        </Avatar>
-        <CardDescription className="group-hover:underline">
-          {author}
-        </CardDescription>
-      </Link>
-      <div className="flex gap-4 items-center">
-        <SafeImage
-          src={image as string}
-          alt="image"
-          fallback="/placeholder.svg"
-        />
-        <div className="flex flex-col gap-2 items-start">
-          <Link href={`/posts/${id}`}>
-            <CardTitle className="text-xl font-bold">{title}</CardTitle>
-          </Link>
-          <p className="text-sm text-gray-500 dark:text-gray-300">{content}</p>
-        </div>
+    <Card className="grid grid-cols-1 gap-4 p-4 max-w-xl grid-rows-[200px_1fr_1fr_auto] min-h-[28rem]">
+      <SafeImage
+        src={image as string}
+        alt="image"
+        fallback="/placeholder.svg"
+      />
+      <div className="flex flex-col gap-2 items-start">
+        <Link
+          href={`/authors/@${authorUsername}`}
+          className="flex gap-2 items-center group"
+        >
+          <Avatar>
+            <AvatarImage src={authorImage as string} alt={`${author} image`} />
+            <AvatarFallback>{author[0]}</AvatarFallback>
+          </Avatar>
+          <CardDescription className="group-hover:underline">
+            {author}
+          </CardDescription>
+        </Link>
+        <CardTitle className="text-xl font-bold">{title}</CardTitle>
       </div>
+      <div className="flex flex-col gap-2 items-start">
+        <p className="overflow-hidden text-sm text-gray-500 dark:text-gray-300 text-ellipsis [display:-webkit-box] [-webkit-line-clamp:3] [-webkit-box-orient:vertical]">
+          {content}
+        </p>
+      </div>
+      <CardFooter className="flex justify-between items-center p-0 w-full">
+        <Button variant="outline" asChild>
+          <Link href={`/posts/${id}`}>Read Post</Link>
+        </Button>
+      </CardFooter>
     </Card>
   );
 }
