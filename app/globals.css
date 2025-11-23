@@ -187,6 +187,6 @@ body {
   }
 }
 
-li>p {
+li > p {
   @apply inline m-0;
 }
