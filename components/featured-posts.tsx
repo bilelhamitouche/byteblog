@@ -12,7 +12,7 @@ export default async function FeaturedPosts() {
       </p>
       <div className="gap-8 p-8"></div>
       <Button variant="outline" size="lg" asChild>
-        <Link href={user && user.id ? "/" : "/login"}>View All Posts</Link>
+        <Link href={user && user.id ? "/posts" : "/login"}>View All Posts</Link>
       </Button>
     </section>
   );
