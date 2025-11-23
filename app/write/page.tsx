@@ -1,6 +1,10 @@
+import { getUserInfo } from "@/actions/auth";
 import EditPost from "@/components/EditPostForm";
+import { redirect } from "next/navigation";
 
-export default function Write() {
+export default async function Write() {
+  const user = await getUserInfo();
+  if (!user) redirect("/login");
   const initialPost = {
     id: "",
     title: "",
