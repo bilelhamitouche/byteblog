@@ -48,23 +48,21 @@ export default function InfiniteScrolling({
 
   const next = useCallback(async () => {
     setLoading(true);
-    setTimeout(async () => {
-      const data = await queryClient.fetchQuery({
-        queryKey: ["posts", "infinite-scroll"],
-        queryFn: () => getPosts(page),
-      });
-      setPosts((prev) => [...prev, ...data.posts]);
-      setPage((prev) => prev + 1);
+    const data = await queryClient.fetchQuery({
+      queryKey: ["posts", "infinite-scroll"],
+      queryFn: () => getPosts(page),
+    });
+    setPosts((prev) => [...prev, ...data.posts]);
+    setPage((prev) => prev + 1);
 
-      if (data.posts.length < POST_LIMIT) {
-        setHasMore(false);
-      }
-      setLoading(false);
-    }, 800);
+    if (data.posts.length < POST_LIMIT) {
+      setHasMore(false);
+    }
+    setLoading(false);
   }, [queryClient]);
   return (
-    <div className="overflow-y-auto px-8 mx-auto w-full min-h-full py-26">
-      <div className="flex flex-col gap-8 items-center w-full">
+    <div className="overflow-y-auto p-8 mx-auto w-full min-h-full">
+      <div className="grid grid-cols-1 gap-8 place-items-center w-full sm:grid-cols-2 md:grid-cols-3">
         {posts.map((post) => (
           <PostCard
             key={post.id}
