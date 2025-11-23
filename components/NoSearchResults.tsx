@@ -12,7 +12,7 @@ import Link from "next/link";
 
 export default function NoSearchResults() {
   return (
-    <Empty className="p-28 h-full border border-dashed">
+    <Empty className="p-28 h-full">
       <EmptyHeader>
         <EmptyMedia variant="icon">
           <Newspaper />
@@ -22,7 +22,7 @@ export default function NoSearchResults() {
       </EmptyHeader>
       <EmptyContent>
         <Button variant="outline" size="sm">
-          <Link href="/">Browse posts</Link>
+          <Link href="/posts">Browse posts</Link>
         </Button>
       </EmptyContent>
     </Empty>
