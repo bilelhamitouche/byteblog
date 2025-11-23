@@ -12,7 +12,7 @@ import Link from "next/link";
 
 export default function NoPosts() {
   return (
-    <Empty className="p-28 h-full border border-dashed">
+    <Empty className="p-28 h-full">
       <EmptyHeader>
         <EmptyMedia variant="icon">
           <Newspaper />
