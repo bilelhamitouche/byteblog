@@ -12,7 +12,7 @@ export default function SafeImage({ src, alt, fallback }: SafeImageProps) {
   const [hasFailed, setHasFailed] = useState(false);
 
   return (
-    <div className="overflow-hidden relative rounded-md min-w-[120px] min-h-[90px]">
+    <div className="overflow-hidden relative min-w-full rounded-md h-[200px]">
       <Image
         src={src}
         alt={alt}
@@ -29,7 +29,7 @@ export default function SafeImage({ src, alt, fallback }: SafeImageProps) {
       <Image
         src={fallback}
         alt={alt}
-        layout="fill"
+        fill
         unoptimized={true}
         className="object-cover absolute inset-0"
       />
