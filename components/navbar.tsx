@@ -28,7 +28,7 @@ export default async function Navbar() {
           Authors
         </Link>
       </nav>
-      <Button className="ml-auto rounded-full" asChild>
+      <Button className="ml-auto -mr-4 rounded-full sm:mr-0" asChild>
         <Link href="/write">
           <Edit />
           <span>Write</span>
