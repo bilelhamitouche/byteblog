@@ -24,6 +24,7 @@ export default function SearchPosts({
     <form onSubmit={onSubmit}>
       <ButtonGroup>
         <Input
+          placeholder="Search Posts"
           onChange={(e) => {
             setSearch(e.target.value);
           }}
