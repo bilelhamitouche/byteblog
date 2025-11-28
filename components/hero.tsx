@@ -14,7 +14,7 @@ export default function Hero() {
           Join ByteBlog, where thoughtful writers and curious readers come
           together to share ideas, stories, and insights that matter.
         </p>
-        <div className="space-x-4">
+        <div className="flex gap-4 items-center">
           <Button size="lg" className="text-base">
             <Link href="/register">Start Writing</Link>
           </Button>
