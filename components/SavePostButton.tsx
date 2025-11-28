@@ -26,7 +26,7 @@ export default function SavePostButton({
   const router = useRouter();
   useEffect(() => {
     if (!loggedIn && clickedSaveButton) router.push("/login");
-  }, [loggedIn, clickedSaveButton]);
+  }, [loggedIn, clickedSaveButton, router]);
   async function toggleSave() {
     setClickedSaveButton(true);
     try {
@@ -34,7 +34,9 @@ export default function SavePostButton({
       await toggleSavePostAction(postId);
       setUserSaved(!userSaved);
     } catch (err) {
-      toast.error("Error liking post");
+      if (err instanceof Error) {
+        toast.error("Error liking post");
+      }
     } finally {
       setIsLoading(false);
     }

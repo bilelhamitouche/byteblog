@@ -85,7 +85,9 @@ export default function PublishPostDialog(postData: PublishPostDialogProps) {
           router.push(`/posts/${result?.newPost?.id}`);
       }
     } catch (err) {
-      toast.error("Error publishing post");
+      if (err instanceof Error) {
+        toast.error("Error publishing post");
+      }
     } finally {
       setIsPublishing(false);
     }

@@ -31,7 +31,9 @@ export default function FollowButton({
       await toggleFollowAuthorAction(followedId, postId);
       setUserFollowed(!userFollowed);
     } catch (err) {
-      toast.error("Error liking post");
+      if (err instanceof Error) {
+        toast.error("Error liking post");
+      }
     } finally {
       setIsLoading(false);
     }

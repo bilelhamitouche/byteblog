@@ -74,7 +74,9 @@ export default function EditPost({ initialPost }: EditPostFormProps) {
           await createPostAction(formData);
         }
       } catch (err) {
-        toast.error("Error saving");
+        if (err instanceof Error) {
+          toast.error("Error saving");
+        }
       } finally {
         setIsSaving(false);
       }

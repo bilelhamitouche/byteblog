@@ -31,7 +31,9 @@ export default function PostActionsDropdown({
       }
       router.push("/");
     } catch (err) {
-      toast.error("Error deleting post");
+      if (err instanceof Error) {
+        toast.error("Error deleting post");
+      }
     }
   }
   return (

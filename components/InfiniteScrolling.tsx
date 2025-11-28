@@ -59,7 +59,7 @@ export default function InfiniteScrolling({
       setHasMore(false);
     }
     setLoading(false);
-  }, [queryClient]);
+  }, [queryClient, page]);
   return (
     <div className="overflow-y-auto p-8 mx-auto w-full min-h-full">
       <InfiniteScroll
