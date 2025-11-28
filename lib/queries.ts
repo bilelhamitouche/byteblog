@@ -174,6 +174,7 @@ export async function getPost(id: string) {
         title: post.title,
         image: post.image,
         content: post.content,
+        published: post.published,
         createdAt: post.createdAt,
         updatedAt: post.updatedAt,
         likesCount: count(like.userId),
