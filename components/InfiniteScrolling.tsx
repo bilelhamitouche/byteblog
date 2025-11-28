@@ -62,30 +62,32 @@ export default function InfiniteScrolling({
   }, [queryClient]);
   return (
     <div className="overflow-y-auto p-8 mx-auto w-full min-h-full">
-      <div className="grid grid-cols-1 gap-8 place-items-center w-full sm:grid-cols-2 md:grid-cols-3">
-        {posts.map((post) => (
-          <PostCard
-            key={post.id}
-            id={post.id}
-            title={post.title}
-            image={post.image}
-            content={post.content}
-            author={post.author as string}
-            authorImage={post.authorImage}
-            authorUsername={post.authorUsername as string}
-          />
-        ))}
-        <InfiniteScroll
-          hasMore={hasMore}
-          isLoading={loading}
-          next={next}
-          threshold={1}
-        >
-          {hasMore && page > 0 && (
-            <Loader2 className="my-4 mx-auto w-8 h-8 animate-spin" />
-          )}
-        </InfiniteScroll>
-      </div>
+      <InfiniteScroll
+        hasMore={hasMore}
+        isLoading={loading}
+        next={next}
+        threshold={1}
+      >
+        <div className="grid grid-cols-1 gap-8 place-items-center w-full sm:grid-cols-2 md:grid-cols-3">
+          {posts.map((post) => (
+            <PostCard
+              key={post.id}
+              id={post.id}
+              title={post.title}
+              image={post.image}
+              content={post.content}
+              author={post.author as string}
+              authorImage={post.authorImage}
+              authorUsername={post.authorUsername as string}
+            />
+          ))}
+        </div>
+        {hasMore && page > 0 && (
+          <div className="flex justify-center my-8">
+            <Loader2 className="w-8 h-8 animate-spin" />
+          </div>
+        )}
+      </InfiniteScroll>
     </div>
   );
 }

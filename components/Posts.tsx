@@ -11,8 +11,10 @@ export default async function Posts() {
     return <NoPosts />;
   }
   return (
-    <Suspense fallback={<PostsSkeleton />}>
-      <InfiniteScrolling initialPosts={posts} />
-    </Suspense>
+    <div className="py-24 w-full h-full">
+      <Suspense fallback={<PostsSkeleton />}>
+        <InfiniteScrolling initialPosts={posts} />
+      </Suspense>
+    </div>
   );
 }

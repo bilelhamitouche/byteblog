@@ -17,7 +17,7 @@ export default function InfiniteScroll({
   next,
   threshold = 1,
   root = null,
-  rootMargin = "0px",
+  rootMargin = "1000px",
   reverse,
   children,
 }: InfiniteScrollProps) {
@@ -79,4 +79,3 @@ export default function InfiniteScroll({
     </>
   );
 }
-
