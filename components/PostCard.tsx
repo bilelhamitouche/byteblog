@@ -3,6 +3,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import Link from "next/link";
 import SafeImage from "./SafeImage";
 import { Button } from "./ui/button";
+import PreviewContent from "./PreviewContent";
 
 interface PostCardProps {
   id: string;
@@ -24,7 +25,7 @@ export default function PostCard({
   authorImage,
 }: PostCardProps) {
   return (
-    <Card className="grid grid-cols-1 gap-4 p-4 max-w-xl grid-rows-[200px_1fr_1fr_auto] min-h-[28rem]">
+    <Card className="grid grid-cols-1 gap-4 p-4 min-w-full max-w-xl grid-rows-[200px_1fr_1fr_auto] min-h-[28rem]">
       <SafeImage
         src={image as string}
         alt="image"
@@ -47,7 +48,7 @@ export default function PostCard({
       </div>
       <div className="flex flex-col gap-2 items-start">
         <p className="overflow-hidden text-sm text-gray-500 dark:text-gray-300 text-ellipsis [display:-webkit-box] [-webkit-line-clamp:3] [-webkit-box-orient:vertical]">
-          {content}
+          <PreviewContent content={JSON.parse(content).content} />
         </p>
       </div>
       <CardFooter className="flex justify-between items-center p-0 w-full">
