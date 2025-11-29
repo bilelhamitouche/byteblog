@@ -49,7 +49,7 @@ export default function InfiniteScrolling({
   const next = useCallback(async () => {
     setLoading(true);
     const data = await queryClient.fetchQuery({
-      queryKey: ["posts", "infinite-scroll", "page"],
+      queryKey: ["posts", "infinite-scroll", page],
       queryFn: () => getPosts(page),
     });
     setPosts((prev) => [...prev, ...data.posts]);
