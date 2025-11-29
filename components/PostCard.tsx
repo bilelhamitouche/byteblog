@@ -90,12 +90,15 @@ export default function PostCard({
         <Button variant="outline" asChild>
           <Link href={`/posts/${id}`}>Read Post</Link>
         </Button>
-        <LikeButton
-          hasUserLiked={likeInfo.hasUserLiked}
-          postId={id}
-          isDisabled={likeInfo.isDisabled}
-          loggedIn={!!sessionData?.session}
-        />
+        <div className="flex gap-1 items-center">
+          <span>{likeInfo.likeCount}</span>
+          <LikeButton
+            hasUserLiked={likeInfo.hasUserLiked}
+            postId={id}
+            isDisabled={likeInfo.isDisabled}
+            loggedIn={!!sessionData?.session}
+          />
+        </div>
       </CardFooter>
     </Card>
   );

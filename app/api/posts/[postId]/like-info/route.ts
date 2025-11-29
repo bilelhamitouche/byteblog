@@ -1,5 +1,5 @@
 import { getUserInfo } from "@/actions/auth";
-import { getPost, hasUserLikedPost } from "@/lib/queries";
+import { getLikeCount, getPost, hasUserLikedPost } from "@/lib/queries";
 import { NextResponse } from "next/server";
 
 export async function GET(
@@ -8,12 +8,14 @@ export async function GET(
 ) {
   const { postId } = await params;
   const user = await getUserInfo();
-  const [hasUserLiked, post] = await Promise.all([
+  const [hasUserLiked, post, likeCount] = await Promise.all([
     hasUserLikedPost(postId as string, user?.id as string),
     getPost(postId as string),
+    getLikeCount(postId as string),
   ]);
   return NextResponse.json({
     hasUserLiked,
     isDisabled: user?.id === post?.authorId,
+    likeCount,
   });
 }

@@ -249,6 +249,18 @@ export async function toggleSavePost(postId: string, userId: string) {
   }
 }
 
+export async function getLikeCount(postId: string) {
+  try {
+    const [{ likeCount }] = await db
+      .select({ likeCount: count(like.userId) })
+      .from(like)
+      .where(eq(like.postId, postId));
+    return likeCount;
+  } catch (err) {
+    if (err instanceof DrizzleError) throw new Error("Database Error");
+  }
+}
+
 export async function searchTags(search: string, limit: number) {
   await redirectUnauthenticated();
   try {

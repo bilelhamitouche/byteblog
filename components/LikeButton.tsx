@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { Button, ButtonProps } from "./ui/button";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface LikeButtonProps extends ButtonProps {
   postId: string;
@@ -24,6 +25,7 @@ export default function LikeButton({
   const [userLiked, setUserLiked] = useState<boolean>(hasUserLiked);
   const [clickedLikeButton, setClickedLikeButton] = useState<boolean>(false);
   const router = useRouter();
+  const queryClient = useQueryClient();
   useEffect(() => {
     if (!loggedIn && clickedLikeButton) router.push("/login");
   }, [loggedIn, clickedLikeButton, router]);
@@ -33,6 +35,7 @@ export default function LikeButton({
       setIsLoading(true);
       await toggleLikePostAction(postId);
       setUserLiked(!userLiked);
+      queryClient.invalidateQueries(["hasUserLiked", postId]);
     } catch (err) {
       if (err instanceof Error) {
         toast.error("Error liking post");
