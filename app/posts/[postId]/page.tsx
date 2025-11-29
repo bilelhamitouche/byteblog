@@ -22,12 +22,11 @@ export default async function Post({
   const postId = (await params).postId;
   const [post, user] = await Promise.all([getPost(postId), getUserInfo()]);
   if (!post) notFound();
-  const hasUserLiked = await hasUserLikedPost(postId, user?.id as string);
-  const hasUserSaved = await hasUserSavedPost(postId, user?.id as string);
-  const hasUserFollowed = await hasUserFollowedAuthor(
-    post.authorId as string,
-    user?.id as string,
-  );
+  const [hasUserLiked, hasUserSaved, hasUserFollowed] = await Promise.all([
+    hasUserLikedPost(postId, user?.id as string),
+    hasUserSavedPost(postId, user?.id as string),
+    hasUserFollowedAuthor(post.authorId as string, user?.id as string),
+  ]);
   return (
     <div className="py-28 px-8 mx-auto max-w-3xl h-full post">
       <div className="flex flex-col gap-4 items-start p-4 w-full">

@@ -1,9 +1,15 @@
+"use client";
 import { Card, CardDescription, CardFooter, CardTitle } from "./ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import Link from "next/link";
 import SafeImage from "./SafeImage";
 import { Button } from "./ui/button";
 import PreviewContent from "./PreviewContent";
+import LikeButton from "./LikeButton";
+import PostSkeleton from "./PostSkeleton";
+import { useQuery } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { authClient } from "@/lib/auth-client";
 
 interface PostCardProps {
   id: string;
@@ -24,6 +30,35 @@ export default function PostCard({
   authorUsername,
   authorImage,
 }: PostCardProps) {
+  async function getPostLikeInfo() {
+    const res = await fetch(`/api/posts/${id}/like-info`);
+    if (!res.ok) {
+      throw new Error("Failed to fetch post info");
+    }
+    const data = await res.json();
+    return data;
+  }
+  const {
+    data: sessionData,
+    isPending: isSessionPending,
+    error: sessionError,
+  } = authClient.useSession();
+  const {
+    data: likeInfo,
+    isPending,
+    error,
+  } = useQuery({
+    queryKey: ["hasUserLiked", id],
+    queryFn: async () => await getPostLikeInfo(),
+  });
+  if (isPending || isSessionPending) {
+    return <PostSkeleton />;
+  }
+  if (error) {
+    toast.error(error?.message);
+  } else if (sessionError) {
+    toast.error(sessionError?.message);
+  }
   return (
     <Card className="grid grid-cols-1 gap-4 p-4 min-w-full max-w-xl grid-rows-[200px_1fr_1fr_auto] min-h-[28rem]">
       <SafeImage
@@ -55,6 +90,12 @@ export default function PostCard({
         <Button variant="outline" asChild>
           <Link href={`/posts/${id}`}>Read Post</Link>
         </Button>
+        <LikeButton
+          hasUserLiked={likeInfo.hasUserLiked}
+          postId={id}
+          isDisabled={likeInfo.isDisabled}
+          loggedIn={!!sessionData?.session}
+        />
       </CardFooter>
     </Card>
   );
