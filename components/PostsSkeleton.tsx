@@ -2,7 +2,7 @@ import { POST_LIMIT } from "@/lib/constants";
 import { Skeleton } from "./ui/skeleton";
 import { Card } from "./ui/card";
 
-export default async function PostsSkeleton() {
+export default function PostsSkeleton() {
   return (
     <ul className="flex flex-col gap-8 mx-auto max-w-xl">
       {Array.from({ length: POST_LIMIT }).map((_, index) => (
