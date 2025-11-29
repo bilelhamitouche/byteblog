@@ -39,7 +39,7 @@ export default function PostActionsDropdown({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="smallIcon">
+        <Button variant="ghost" size="icon-xs">
           <EllipsisVertical />
         </Button>
       </DropdownMenuTrigger>
