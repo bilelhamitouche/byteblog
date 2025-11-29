@@ -25,6 +25,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="h-full" suppressHydrationWarning>
+      <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
       <body className={`${outfit.className} h-full antialiased`}>
         <ThemeProvider
           attribute="class"
