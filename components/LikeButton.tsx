@@ -26,7 +26,7 @@ export default function LikeButton({
   const router = useRouter();
   useEffect(() => {
     if (!loggedIn && clickedLikeButton) router.push("/login");
-  }, [loggedIn, clickedLikeButton]);
+  }, [loggedIn, clickedLikeButton, router]);
   async function toggleLike() {
     setClickedLikeButton(true);
     try {
@@ -34,7 +34,9 @@ export default function LikeButton({
       await toggleLikePostAction(postId);
       setUserLiked(!userLiked);
     } catch (err) {
-      toast.error("Error liking post");
+      if (err instanceof Error) {
+        toast.error("Error liking post");
+      }
     } finally {
       setIsLoading(false);
     }

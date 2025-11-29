@@ -23,7 +23,7 @@ export default function FollowButton({
   const router = useRouter();
   useEffect(() => {
     if (!loggedIn && clickedFollowButton) router.push("/login");
-  }, [loggedIn, clickedFollowButton]);
+  }, [loggedIn, clickedFollowButton, router]);
   async function toggleFollow() {
     setClickedFollowButton(true);
     try {
