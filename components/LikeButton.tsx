@@ -44,7 +44,7 @@ export default function LikeButton({
   return (
     <Button
       variant="ghost"
-      size="smallIcon"
+      size="icon-xs"
       onClick={toggleLike}
       disabled={isLoading || isDisabled}
     >
