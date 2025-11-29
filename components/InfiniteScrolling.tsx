@@ -49,7 +49,7 @@ export default function InfiniteScrolling({
   const next = useCallback(async () => {
     setLoading(true);
     const data = await queryClient.fetchQuery({
-      queryKey: ["posts", "infinite-scroll"],
+      queryKey: ["posts", "infinite-scroll", "page"],
       queryFn: () => getPosts(page),
     });
     setPosts((prev) => [...prev, ...data.posts]);
@@ -59,7 +59,7 @@ export default function InfiniteScrolling({
       setHasMore(false);
     }
     setLoading(false);
-  }, [queryClient, page]);
+  }, [queryClient]);
   return (
     <div className="overflow-y-auto p-8 mx-auto w-full min-h-full">
       <InfiniteScroll
