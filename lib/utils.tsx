@@ -1,6 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { AVATAR_COLORS } from "./constants";
+import { AVATAR_COLORS, WPM } from "./constants";
 import Heading from "@tiptap/extension-heading";
 import BulletList from "@tiptap/extension-bullet-list";
 import OrderedList from "@tiptap/extension-ordered-list";
@@ -275,61 +275,30 @@ function getClassNameFromMarks(marks: JSONContent["marks"]) {
   }
 }
 
-export function renderFirstContent(
-  content: JSONContent | JSONContent[],
-): ReactNode {
-  const firstParagraph = findFirstParagraph(content);
-  if (firstParagraph) return renderPost(firstParagraph);
+export function extractAllText(node: JSONContent): string {
+  let result = "";
 
-  const firstNode = findFirstNode(content);
-  if (firstNode) return renderPost(firstNode);
+  function walk(n: JSONContent) {
+    if (!n) return;
 
-  return null;
+    if (n.type === "text" && n.text) {
+      result += n.text + " ";
+    }
+
+    if (Array.isArray(n.content)) {
+      for (const child of n.content) {
+        walk(child);
+      }
+    }
+  }
+
+  walk(node);
+
+  return result.trim().replace(/\s+/g, " ");
 }
 
-// Recursively find the first paragraph with text
-function findFirstParagraph(
-  node: JSONContent | JSONContent[],
-): JSONContent | null {
-  if (!node) return null;
-
-  if (Array.isArray(node)) {
-    for (const child of node) {
-      const found = findFirstParagraph(child);
-      if (found) return found;
-    }
-    return null;
-  }
-
-  if (
-    node.type === "paragraph" &&
-    node.content?.some((c) => c.type === "text")
-  ) {
-    return node;
-  }
-
-  if (node.content) {
-    for (const child of node.content) {
-      const found = findFirstParagraph(child);
-      if (found) return found;
-    }
-  }
-
-  return null;
-}
-
-// Recursively find the first node of any type
-function findFirstNode(node: JSONContent | JSONContent[]): JSONContent | null {
-  if (!node) return null;
-
-  if (Array.isArray(node)) {
-    for (const child of node) {
-      const found = findFirstNode(child);
-      if (found) return found;
-    }
-    return null;
-  }
-
-  // Return the node itself
-  return node;
+export function getContentReadTime(content: string) {
+  const words = content.trim().split(/\s+/).length;
+  const minutes = Math.ceil(words / WPM);
+  return minutes;
 }

@@ -154,20 +154,21 @@ export default function Tiptap({
   content: string | object;
   onChange: (content: string) => void;
 }) {
+  const extensions = [
+    StarterKit.configure({
+      heading: false,
+      bulletList: false,
+      orderedList: false,
+      listItem: false,
+    }),
+    CustomHeading,
+    CustomBulletList,
+    CustomOrderedList,
+    CustomListItem,
+    CustomCodeBlock,
+  ];
   const editor = useEditor({
-    extensions: [
-      StarterKit.configure({
-        heading: false,
-        bulletList: false,
-        orderedList: false,
-        listItem: false,
-      }),
-      CustomHeading,
-      CustomBulletList,
-      CustomOrderedList,
-      CustomListItem,
-      CustomCodeBlock,
-    ],
+    extensions: extensions,
     content: content || "<h1>Hello World! 🌎️</h1>",
     immediatelyRender: false,
     editorProps: {
