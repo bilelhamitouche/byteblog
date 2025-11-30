@@ -275,8 +275,24 @@ function getClassNameFromMarks(marks: JSONContent["marks"]) {
   }
 }
 
-export function findFirstParagraph(node: JSONContent): JSONContent | null {
-  // If the node is an array, iterate through it
+export function renderFirstContent(
+  content: JSONContent | JSONContent[],
+): ReactNode {
+  const firstParagraph = findFirstParagraph(content);
+  if (firstParagraph) return renderPost(firstParagraph);
+
+  const firstNode = findFirstNode(content);
+  if (firstNode) return renderPost(firstNode);
+
+  return null;
+}
+
+// Recursively find the first paragraph with text
+function findFirstParagraph(
+  node: JSONContent | JSONContent[],
+): JSONContent | null {
+  if (!node) return null;
+
   if (Array.isArray(node)) {
     for (const child of node) {
       const found = findFirstParagraph(child);
@@ -285,10 +301,12 @@ export function findFirstParagraph(node: JSONContent): JSONContent | null {
     return null;
   }
 
-  // Now node is a single JSONContent object
-  if (!node) return null;
-
-  if (node.type === "paragraph") return node;
+  if (
+    node.type === "paragraph" &&
+    node.content?.some((c) => c.type === "text")
+  ) {
+    return node;
+  }
 
   if (node.content) {
     for (const child of node.content) {
@@ -300,99 +318,18 @@ export function findFirstParagraph(node: JSONContent): JSONContent | null {
   return null;
 }
 
-export function findFirstText(node: JSONContent): JSONContent | null {
+// Recursively find the first node of any type
+function findFirstNode(node: JSONContent | JSONContent[]): JSONContent | null {
   if (!node) return null;
 
-  // Handle array of nodes at the top level
   if (Array.isArray(node)) {
     for (const child of node) {
-      const found = findFirstText(child);
+      const found = findFirstNode(child);
       if (found) return found;
     }
     return null;
   }
 
-  // If this is a paragraph, return it
-  if (node.type === "paragraph") return node;
-
-  // If this is a text node, return it
-  if (node.type === "text") return node;
-
-  // Recurse into children if present
-  if (node.content) {
-    for (const child of node.content) {
-      const found = findFirstText(child);
-      if (found) return found;
-    }
-  }
-
-  return null;
-}
-
-export function FirstContent({ content }: { content: JSONContent }) {
-  // Recursive function to find first paragraph with text or first text node
-  function findFirstRenderableNode(node: JSONContent): JSONContent | null {
-    if (!node) return null;
-
-    if (Array.isArray(node)) {
-      for (const child of node) {
-        const found = findFirstRenderableNode(child);
-        if (found) return found;
-      }
-      return null;
-    }
-
-    // If paragraph has text inside
-    if (
-      node.type === "paragraph" &&
-      node.content?.some((c) => c.type === "text")
-    ) {
-      return node;
-    }
-
-    // If this is a standalone text node
-    if (node.type === "text") return node;
-
-    // Recurse into children
-    if (node.content) {
-      for (const child of node.content) {
-        const found = findFirstRenderableNode(child);
-        if (found) return found;
-      }
-    }
-
-    return null;
-  }
-
-  const firstNode = findFirstRenderableNode(content);
-
-  if (!firstNode) return null;
-
-  // Render JSX inline
-  if (firstNode.type === "paragraph") {
-    return (
-      <p>
-        {firstNode.content
-          ?.filter((c) => c.type === "text")
-          .map((child, index) => (
-            <span
-              key={index}
-              className={child.marks?.map((m) => m.type).join(" ")}
-            >
-              {child.text}
-            </span>
-          ))}
-      </p>
-    );
-  }
-
-  if (firstNode.type === "text") {
-    return (
-      <span className={firstNode.marks?.map((m) => m.type).join(" ")}>
-        {firstNode.text}
-      </span>
-    );
-  }
-
-  return null;
+  // Return the node itself
+  return node;
 }
