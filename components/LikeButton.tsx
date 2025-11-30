@@ -35,7 +35,9 @@ export default function LikeButton({
       setIsLoading(true);
       await toggleLikePostAction(postId);
       setUserLiked(!userLiked);
-      queryClient.invalidateQueries(["hasUserLiked", postId]);
+      queryClient.invalidateQueries({
+        queryKey: ["hasUserLiked", postId],
+      });
     } catch (err) {
       if (err instanceof Error) {
         toast.error("Error liking post");
