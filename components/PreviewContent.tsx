@@ -5,7 +5,7 @@ export default function PreviewContent({ content }: { content: JSONContent }) {
   if (!firstNode) return null;
 
   const text = extractText(firstNode);
-  return <p>{text}</p>;
+  return <span>{text}</span>;
 }
 
 function findFirstRenderableNode(node: JSONContent): JSONContent | null {
