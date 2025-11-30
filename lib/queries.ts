@@ -322,6 +322,19 @@ export async function addTagsToPost(tags: string[], postId: string) {
   }
 }
 
+export async function getPostTags(postId: string) {
+  try {
+    const tags = await db
+      .select({ id: tag.id, name: tag.tagName })
+      .from(tag)
+      .leftJoin(postTag, eq(postTag.tagId, tag.id))
+      .where(eq(postTag.postId, postId));
+    return tags;
+  } catch (err) {
+    if (err instanceof DrizzleError) throw new Error("Database Error");
+  }
+}
+
 export async function createOrEditProfile(userId: string, bio: string) {
   await redirectUnauthenticated();
   try {

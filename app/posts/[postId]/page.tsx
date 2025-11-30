@@ -5,13 +5,17 @@ import PostActionsDropdown from "@/components/PostActionsDropdown";
 import PostContent from "@/components/PostContent";
 import SavePostButton from "@/components/SavePostButton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import {
   getPost,
+  getPostTags,
   hasUserFollowedAuthor,
   hasUserLikedPost,
   hasUserSavedPost,
 } from "@/lib/queries";
+import { extractAllText, getContentReadTime } from "@/lib/utils";
 import { JSONContent } from "@tiptap/react";
+import { Dot } from "lucide-react";
 import { notFound } from "next/navigation";
 
 export default async function Post({
@@ -22,11 +26,14 @@ export default async function Post({
   const postId = (await params).postId;
   const [post, user] = await Promise.all([getPost(postId), getUserInfo()]);
   if (!post) notFound();
-  const [hasUserLiked, hasUserSaved, hasUserFollowed] = await Promise.all([
-    hasUserLikedPost(postId, user?.id as string),
-    hasUserSavedPost(postId, user?.id as string),
-    hasUserFollowedAuthor(post.authorId as string, user?.id as string),
-  ]);
+  const [hasUserLiked, hasUserSaved, hasUserFollowed, tags] = await Promise.all(
+    [
+      hasUserLikedPost(postId, user?.id as string),
+      hasUserSavedPost(postId, user?.id as string),
+      hasUserFollowedAuthor(post.authorId as string, user?.id as string),
+      getPostTags(postId),
+    ],
+  );
   return (
     <div className="py-28 px-8 mx-auto max-w-3xl h-full post">
       <div className="flex flex-col gap-4 items-start p-4 w-full">
@@ -50,9 +57,14 @@ export default async function Post({
               loggedIn={!!user}
             />
           )}
-          <p className="text-gray-500 dark:text-gray-300">
-            {post.createdAt?.toLocaleDateString()}
-          </p>
+          <div className="flex gap-1 items-center text-gray-500 dark:text-gray-300">
+            <p>
+              {getContentReadTime(extractAllText(JSON.parse(post.content)))} min
+              read
+            </p>
+            <Dot />
+            <p>{post.createdAt?.toLocaleDateString()}</p>
+          </div>
         </div>
       </div>
       <hr />
@@ -80,6 +92,23 @@ export default async function Post({
       </div>
       <hr />
       <PostContent content={JSON.parse(post.content) as JSONContent} />
+      <ul className="flex gap-4 items-center">
+        {tags ? (
+          tags?.map((tag) => (
+            <Badge
+              key={tag.id}
+              variant="secondary"
+              className="py-2 px-3 text-base rounded-full"
+            >
+              {tag.name}
+            </Badge>
+          ))
+        ) : (
+          <div className="text-gray-500 dark:text-gray-300">
+            Error fetching tags
+          </div>
+        )}
+      </ul>
     </div>
   );
 }
