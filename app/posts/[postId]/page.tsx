@@ -1,4 +1,5 @@
 import { getUserInfo } from "@/actions/auth";
+import CommentsSection from "@/components/CommentsSection";
 import FollowButton from "@/components/FollowButton";
 import LikeButton from "@/components/LikeButton";
 import PostActionsDropdown from "@/components/PostActionsDropdown";
@@ -109,6 +110,7 @@ export default async function Post({
           </div>
         )}
       </ul>
+      <CommentsSection postId={post.id} />
     </div>
   );
 }

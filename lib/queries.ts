@@ -9,6 +9,7 @@ import {
   user,
   userSavesPost,
   postTag,
+  comment,
 } from "./drizzle";
 import { and, count, DrizzleError, eq, ilike, or } from "drizzle-orm";
 import { redirectUnauthenticated } from "@/actions/auth";
@@ -419,6 +420,55 @@ export async function getFollowedAuthors(authorId: string) {
       .leftJoin(user, eq(user.id, follow.followedId))
       .where(eq(follow.followerId, authorId));
     return followedAuthors;
+  } catch (err) {
+    if (err instanceof DrizzleError) throw new Error("Database Error");
+  }
+}
+
+export async function getCommentsByPostId(
+  postId: string,
+  skip: number,
+  limit: number,
+) {
+  try {
+    const comments = await db.select().from(comment);
+    // .limit(limit)
+    // .offset(skip);
+    return comments;
+  } catch (err) {
+    if (err instanceof DrizzleError) throw new Error("Database Error");
+  }
+}
+
+export async function getCommentReplies(commentId: string) {
+  try {
+    const replies = await db
+      .select()
+      .from(comment)
+      .where(eq(comment.parentId, commentId));
+    return replies;
+  } catch (err) {
+    if (err instanceof Error) throw new Error("Database Error");
+  }
+}
+
+export async function createComment(
+  content: string,
+  authorId: string,
+  postId: string,
+) {
+  await redirectUnauthenticated();
+  try {
+    await db.insert(comment).values({ content, postId, authorId });
+  } catch (err) {
+    if (err instanceof DrizzleError) throw new Error("Database Error");
+  }
+}
+
+export async function deleteComment(id: string) {
+  await redirectUnauthenticated();
+  try {
+    await db.delete(comment).where(eq(comment.id, id));
   } catch (err) {
     if (err instanceof DrizzleError) throw new Error("Database Error");
   }

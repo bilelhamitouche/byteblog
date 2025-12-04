@@ -35,6 +35,10 @@ export const writePostSchema = z
   })
   .strict();
 
+export const commentSchema = z.object({
+  content: z.string().trim().min(1, { message: "Is required" }),
+});
+
 export const passwordChangeSchema = z.object({
   password: z
     .string()
