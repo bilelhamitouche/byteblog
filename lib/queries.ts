@@ -431,9 +431,12 @@ export async function getCommentsByPostId(
   limit: number,
 ) {
   try {
-    const comments = await db.select().from(comment);
-    // .limit(limit)
-    // .offset(skip);
+    const comments = await db
+      .select()
+      .from(comment)
+      .where(eq(comment.postId, postId))
+      .limit(limit)
+      .offset(skip);
     return comments;
   } catch (err) {
     if (err instanceof DrizzleError) throw new Error("Database Error");
