@@ -111,9 +111,7 @@ export default function EditPost({ initialPost }: EditPostFormProps) {
             control={form.control}
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-base">
-                  Image Url (*optional)
-                </FormLabel>
+                <FormLabel className="text-base">Image Url</FormLabel>
                 <FormControl>
                   <Input {...field} />
                 </FormControl>
