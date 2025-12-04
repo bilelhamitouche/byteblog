@@ -15,4 +15,4 @@ export const TAG_LIMIT = 5;
 
 export const POST_LIMIT = 9;
 
-export const WPM = 250;
+export const WORDS_PER_MINUTE = 250;

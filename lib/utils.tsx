@@ -1,6 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { AVATAR_COLORS, WPM } from "./constants";
+import { AVATAR_COLORS, WORDS_PER_MINUTE } from "./constants";
 import Heading from "@tiptap/extension-heading";
 import BulletList from "@tiptap/extension-bullet-list";
 import OrderedList from "@tiptap/extension-ordered-list";
@@ -299,6 +299,6 @@ export function extractAllText(node: JSONContent): string {
 
 export function getContentReadTime(content: string) {
   const words = content.trim().split(/\s+/).length;
-  const minutes = Math.ceil(words / WPM);
+  const minutes = Math.ceil(words / WORDS_PER_MINUTE);
   return minutes;
 }
