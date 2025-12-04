@@ -37,7 +37,6 @@ export default function InfiniteScrolling({
   const queryClient = useQueryClient();
 
   async function getPosts(page: number) {
-    new Promise((resolve) => setTimeout(resolve, 1000));
     const res = await fetch(
       `/api/posts?skip=${POST_LIMIT * page}&limit=${POST_LIMIT}`,
     );
