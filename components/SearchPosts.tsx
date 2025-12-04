@@ -25,6 +25,7 @@ export default function SearchPosts({
       <ButtonGroup>
         <Input
           placeholder="Search Posts"
+          className="max-w-48"
           onChange={(e) => {
             setSearch(e.target.value);
           }}
