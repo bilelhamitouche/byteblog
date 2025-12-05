@@ -1,5 +1,4 @@
 "use client";
-
 import { useEffect, useRef } from "react";
 import hljs from "highlight.js";
 
@@ -17,7 +16,7 @@ export default function CodeBlock({ code }: CodeBlockProps) {
   }, [code]);
 
   return (
-    <pre className="rounded-lg my-4 overflow-x-auto font-mono text-base bg-black">
+    <pre className="overflow-x-auto my-4 font-mono text-base bg-black rounded-lg">
       <code ref={codeRef} className="hljs">
         {code.trim()}
       </code>
