@@ -17,5 +17,6 @@ export async function GET(
     hasUserLiked,
     isDisabled: user?.id === post?.authorId,
     likeCount,
+    isLoggedIn: !!user,
   });
 }
