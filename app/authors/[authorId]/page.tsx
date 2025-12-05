@@ -8,8 +8,8 @@ export default async function Author({
 }: {
   params: Promise<{ authorId: string }>;
 }) {
-  const parameters = await params;
-  const authorUsername = decodeURIComponent(parameters.authorId);
+  const { authorId } = await params;
+  const authorUsername = decodeURIComponent(authorId);
   const user = await getUserByUsernameOrEmail(authorUsername.split("@")[1]);
   const authorProfile = await getAuthorBio(user.id);
   return (
