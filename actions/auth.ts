@@ -13,7 +13,7 @@ export async function loginAction(formData: FormData) {
     const result = loginSchema.safeParse({ username, password });
     if (!result.success)
       return {
-        errors: result.error.flatten().fieldErrors,
+        errors: result.error,
       };
     await auth.api.signInUsername({
       body: {
@@ -44,7 +44,7 @@ export async function registerAction(formData: FormData) {
     });
     if (!result.success) {
       return {
-        errors: result.error.flatten().fieldErrors,
+        errors: result.error,
       };
     }
     await auth.api.signUpEmail({

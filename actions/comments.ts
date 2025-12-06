@@ -11,7 +11,7 @@ export async function createCommentAction(formData: FormData) {
   const validationResult = commentSchema.safeParse({ content });
   if (!validationResult.success) {
     return {
-      errors: validationResult.error.flatten().fieldErrors,
+      errors: validationResult.error,
     };
   }
   try {

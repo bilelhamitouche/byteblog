@@ -27,7 +27,7 @@ export async function createPostAction(formData: FormData) {
   const validationResult = writePostSchema.safeParse({ title, image, content });
   if (!validationResult.success)
     return {
-      errors: validationResult.error.flatten().fieldErrors,
+      errors: validationResult.error,
     };
   try {
     const newPost = await createPost(
@@ -71,7 +71,7 @@ export async function editPostAction(formData: FormData) {
   const validationResult = writePostSchema.safeParse({ title, image, content });
   if (!validationResult.success)
     return {
-      errors: validationResult.error.flatten().fieldErrors,
+      errors: validationResult.error,
     };
   try {
     await editPost(
