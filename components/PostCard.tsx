@@ -17,7 +17,8 @@ interface PostCardProps {
   image: string | null;
   content: string;
   author: string;
-  authorUsername: string;
+  authorEmail: string | null;
+  authorUsername: string | null;
   authorImage: string | null;
 }
 
@@ -27,6 +28,7 @@ export default function PostCard({
   image,
   content,
   author,
+  authorEmail,
   authorUsername,
   authorImage,
 }: PostCardProps) {
@@ -60,7 +62,7 @@ export default function PostCard({
     toast.error(sessionError?.message);
   }
   return (
-    <Card className="grid grid-cols-1 gap-4 p-4 min-w-full max-w-xl grid-rows-[200px_1fr_1fr_auto] min-h-[28rem]">
+    <Card className="grid grid-cols-1 gap-4 p-4 min-w-full max-w-xl grid-rows-[200px_1fr_1fr_auto] min-h-112">
       <SafeImage
         src={image as string}
         alt="image"
@@ -68,7 +70,7 @@ export default function PostCard({
       />
       <div className="flex flex-col gap-2 items-start">
         <Link
-          href={`/authors/@${authorUsername}`}
+          href={`/authors/@${authorUsername ? authorUsername : authorEmail?.split("@")[0]}`}
           className="flex gap-2 items-center group"
         >
           <Avatar>
