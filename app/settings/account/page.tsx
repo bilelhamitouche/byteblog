@@ -58,7 +58,7 @@ function Account() {
                   if (!result?.errors && !result?.message)
                     toast.success("Account settings changed successfully");
                 } catch (err) {
-                  console.log(err);
+                  toast.success("Cannot change account settings");
                 } finally {
                   setIsPending(false);
                 }
