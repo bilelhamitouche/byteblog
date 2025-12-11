@@ -12,7 +12,7 @@ export default async function Navbar() {
   const authenticated = await isAuthenticated();
   const user = await getUserInfo();
   return (
-    <header className="flex fixed z-10 gap-8 justify-between items-center p-4 px-8 mx-auto w-full border-b-1 backdrop-blur-lg bg-background/60">
+    <header className="flex fixed z-10 gap-8 justify-between items-center p-4 px-8 mx-auto w-full border-b backdrop-blur-lg bg-background/60">
       <Link href="/" className="flex gap-2 items-center">
         <BookOpen size="25" />
         <span className={`text-xl font-bold ${lusitana.className}`}>
