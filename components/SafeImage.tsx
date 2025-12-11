@@ -30,6 +30,7 @@ export default function SafeImage({ src, alt, fallback }: SafeImageProps) {
         src={fallback}
         alt={alt}
         fill
+        loading="eager"
         unoptimized={true}
         className="object-cover absolute inset-0"
       />
