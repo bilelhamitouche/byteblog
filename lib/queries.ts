@@ -12,7 +12,7 @@ import {
   comment,
 } from "./drizzle";
 import { and, count, DrizzleError, eq, ilike, or } from "drizzle-orm";
-import { redirectUnauthenticated } from "@/actions/auth";
+import { getUserInfo, redirectUnauthenticated } from "@/actions/auth";
 
 export async function getUserByUsername(username: string) {
   await redirectUnauthenticated();
@@ -88,26 +88,43 @@ export async function getPublishedPosts(
   limit: number,
 ) {
   try {
-    const posts = await db
+    const currentUser = await getUserInfo();
+    const rows = await db
       .select({
-        id: post.id,
-        image: post.image,
-        title: post.title,
-        content: post.content,
-        author: user.name,
-        authorImage: user.image,
-        authorUsername: user.username,
-        authorEmail: user.email,
-        createdAt: post.createdAt,
+        post: {
+          ...post,
+          authorId: user.id,
+          author: user.name,
+          authorImage: user.image,
+          authorUsername: user.username,
+          authorEmail: user.email,
+          likeCount: count(like.userId),
+        },
+        like: {
+          userId: like.userId,
+          postId: like.postId,
+        },
       })
       .from(post)
       .leftJoin(user, eq(post.authorId, user.id))
+      .leftJoin(
+        like,
+        and(eq(like.postId, post.id), eq(like.userId, currentUser?.id ?? "")),
+      )
       .where(and(eq(post.published, true), ilike(post.title, `%${search}%`)))
+      .groupBy(post.id, user.id, like.userId, like.postId)
       .offset(skip)
       .limit(limit);
+    const posts = rows.map((row) => ({
+      ...row.post,
+      likedByCurrentUser: !!row.like?.userId,
+    }));
     return posts;
   } catch (err) {
-    if (err instanceof DrizzleError) throw new Error("Database Error");
+    if (err instanceof DrizzleError) {
+      throw new Error("Database Error");
+    }
+    throw err;
   }
 }
 
@@ -116,7 +133,6 @@ export async function getPostsCount() {
     const [{ count: postCount }] = await db
       .select({ count: count() })
       .from(post);
-    console.log(postCount);
     return postCount;
   } catch (err) {
     if (err instanceof DrizzleError) throw new Error("Database Error");

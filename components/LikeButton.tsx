@@ -38,6 +38,10 @@ export default function LikeButton({
       queryClient.invalidateQueries({
         queryKey: ["hasUserLiked", postId],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["posts"],
+        exact: false,
+      });
     } catch (err) {
       if (err instanceof Error) {
         toast.error("Error liking post");
