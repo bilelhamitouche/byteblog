@@ -11,7 +11,7 @@ import {
   postTag,
   comment,
 } from "./drizzle";
-import { and, count, DrizzleError, eq, ilike, or } from "drizzle-orm";
+import { and, count, desc, DrizzleError, eq, ilike, or } from "drizzle-orm";
 import { getUserInfo, redirectUnauthenticated } from "@/actions/auth";
 
 export async function getUserByUsername(username: string) {
@@ -113,6 +113,7 @@ export async function getPublishedPosts(
       )
       .where(and(eq(post.published, true), ilike(post.title, `%${search}%`)))
       .groupBy(post.id, user.id, like.userId, like.postId)
+      .orderBy(desc(post.createdAt))
       .offset(skip)
       .limit(limit);
     const posts = rows.map((row) => ({
@@ -448,9 +449,17 @@ export async function getCommentsByPostId(
 ) {
   try {
     const comments = await db
-      .select()
+      .select({
+        comment: comment,
+        authorName: user.name,
+        authorEmail: user.email,
+        authorUsername: user.username,
+        authorImage: user.image,
+      })
       .from(comment)
+      .leftJoin(user, eq(comment.authorId, user.id))
       .where(eq(comment.postId, postId))
+      .orderBy(desc(comment.createdAt))
       .limit(limit)
       .offset(skip);
     return comments;
