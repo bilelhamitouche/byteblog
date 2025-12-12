@@ -90,6 +90,10 @@ export default function PublishPostDialog(postData: PublishPostDialogProps) {
       }
     } finally {
       setIsPublishing(false);
+      queryClient.invalidateQueries({
+        queryKey: ["posts"],
+        refetchType: "all",
+      });
     }
   }
   return (
