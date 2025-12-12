@@ -22,6 +22,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 import PublishPostDialog from "./PublishPostDialog";
 import { useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface EditPostFormProps {
   initialPost: {
@@ -40,6 +41,7 @@ export default function EditPost({ initialPost }: EditPostFormProps) {
   const [isPublishing, setIsPublishing] = useState<boolean>(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const router = useRouter();
+  const queryClient = useQueryClient();
   const form = useForm<z.infer<typeof writePostSchema>>({
     resolver: zodResolver(writePostSchema),
     mode: "onSubmit",
@@ -79,6 +81,10 @@ export default function EditPost({ initialPost }: EditPostFormProps) {
         }
       } finally {
         setIsSaving(false);
+        queryClient.invalidateQueries({
+          queryKey: ["posts"],
+          refetchType: "all",
+        });
       }
     }
     setIsPublishing(false);
