@@ -1,10 +1,5 @@
-import { Loader2 } from "lucide-react";
+import Loading from "@/components/Loading";
 
-export default function Loading() {
-  return (
-    <div className="flex flex-col gap-2 justify-center items-center w-full h-full text-gray-500 dark:text-gray-300">
-      <Loader2 className="animate-spin" size="50" />
-      <span className="text-lg">Loading...</span>
-    </div>
-  );
+export default function HomeLoading() {
+  return <Loading />;
 }

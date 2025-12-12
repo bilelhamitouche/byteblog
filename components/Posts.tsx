@@ -1,9 +1,9 @@
 import { getPublishedPosts } from "@/lib/queries";
 import NoPosts from "./NoPosts";
 import { POST_LIMIT } from "@/lib/constants";
-import PostsSkeleton from "./PostsSkeleton";
 import { Suspense } from "react";
 import PostInfiniteList from "./PostInfiniteList";
+import Loading from "./Loading";
 
 export default async function Posts() {
   const posts = await getPublishedPosts("", 0, POST_LIMIT);
@@ -12,7 +12,7 @@ export default async function Posts() {
   }
   return (
     <div className="py-24 w-full h-full">
-      <Suspense fallback={<PostsSkeleton />}>
+      <Suspense fallback={<Loading />}>
         <PostInfiniteList />
       </Suspense>
     </div>
