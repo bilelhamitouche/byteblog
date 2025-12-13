@@ -1,21 +1,16 @@
-import PostsSkeleton from "@/components/PostsSkeleton";
-import FilterPosts from "@/components/FilterPosts";
 import { Suspense } from "react";
 import { lusitana } from "@/lib/fonts";
+import SearchPostInfiniteList from "@/components/SearchPostInfiniteList";
+import Loading from "@/components/Loading";
 
-export default async function Search({
-  searchParams,
-}: {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-}) {
-  const search = (await searchParams).search as string;
+export default async function Search() {
   return (
     <div className="p-8 py-20 w-full h-full md:py-24">
       <h2 className={`text-3xl font-semibold ${lusitana.className}`}>
         Search Results
       </h2>
-      <Suspense fallback={<PostsSkeleton />}>
-        <FilterPosts search={search} />
+      <Suspense fallback={<Loading />}>
+        <SearchPostInfiniteList />
       </Suspense>
     </div>
   );

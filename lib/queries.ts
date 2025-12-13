@@ -157,6 +157,73 @@ export async function getPublishedPostsCount() {
   }
 }
 
+export async function searchPublishedPosts(
+  search: string,
+  skip: number,
+  limit: number,
+  currentUserId: string | null,
+) {
+  try {
+    const rows = await db
+      .select({
+        post: {
+          ...post,
+        },
+        author: {
+          author: user.name,
+          authorImage: user.image,
+          authorEmail: user.email,
+          authorUsername: user.username,
+        },
+        likeCount: sql<number>`CAST(count(${like.userId}) AS INT)`.as(
+          "likeCount",
+        ),
+        likedByCurrentUser: currentUserId
+          ? sql<boolean>`
+              EXISTS (
+                SELECT 1
+                FROM ${like}
+                WHERE ${like.postId} = ${post.id}
+                AND ${like.userId} = ${currentUserId}
+              )
+            `.as("likedByCurrentUser")
+          : sql<boolean>`false`.as("likedByCurrentUser"),
+      })
+      .from(post)
+      .leftJoin(user, eq(post.authorId, user.id))
+      .leftJoin(like, eq(like.postId, post.id))
+      .where(and(eq(post.published, true), ilike(post.title, `%${search}%`)))
+      .groupBy(post.id, user.id)
+      .orderBy(desc(post.createdAt))
+      .offset(skip)
+      .limit(limit);
+    const posts = rows.map((row) => ({
+      ...row.post,
+      ...row.author,
+      likeCount: row.likeCount,
+      likedByCurrentUser: row.likedByCurrentUser,
+    }));
+    return posts;
+  } catch (err) {
+    if (err instanceof DrizzleError) {
+      throw new Error("Database Error");
+    }
+    throw err;
+  }
+}
+
+export async function searchPublishedPostsCount(search: string) {
+  try {
+    const [{ count: postCount }] = await db
+      .select({ count: count() })
+      .from(post)
+      .where(and(eq(post.published, true), ilike(post.title, `%${search}%`)));
+    return postCount;
+  } catch (err) {
+    if (err instanceof DrizzleError) throw new Error("Database Error");
+  }
+}
+
 export async function getPostsByAuthorId(authorId: string) {
   await redirectUnauthenticated();
   try {
@@ -172,29 +239,6 @@ export async function getPostsByAuthorId(authorId: string) {
       .from(post)
       .leftJoin(user, eq(post.authorId, user.id))
       .where(eq(post.authorId, authorId));
-    return posts;
-  } catch (err) {
-    if (err instanceof DrizzleError) throw new Error("Database Error");
-  }
-}
-
-export async function searchPosts(search: string) {
-  try {
-    const posts = await db
-      .select({
-        id: post.id,
-        image: post.image,
-        title: post.title,
-        content: post.content,
-        author: user.name,
-        authorImage: user.image,
-        authorUsername: user.username,
-        authorEmail: user.email,
-        createdAt: post.createdAt,
-      })
-      .from(post)
-      .leftJoin(user, eq(post.authorId, user.id))
-      .where(and(eq(post.published, true), ilike(post.title, `%${search}%`)));
     return posts;
   } catch (err) {
     if (err instanceof DrizzleError) throw new Error("Database Error");
