@@ -509,13 +509,17 @@ export async function getCommentsByPostId(
   limit: number,
 ) {
   try {
-    const comments = await db
+    const rows = await db
       .select({
-        comment: comment,
-        authorName: user.name,
-        authorEmail: user.email,
-        authorUsername: user.username,
-        authorImage: user.image,
+        comment: {
+          ...comment,
+        },
+        author: {
+          author: user.name,
+          authorEmail: user.email,
+          authorUsername: user.username,
+          authorImage: user.image,
+        },
       })
       .from(comment)
       .leftJoin(user, eq(comment.authorId, user.id))
@@ -523,7 +527,25 @@ export async function getCommentsByPostId(
       .orderBy(desc(comment.createdAt))
       .limit(limit)
       .offset(skip);
+    const comments = rows.map((row) => {
+      return {
+        ...row.comment,
+        ...row.author,
+      };
+    });
     return comments;
+  } catch (err) {
+    if (err instanceof DrizzleError) throw new Error("Database Error");
+  }
+}
+
+export async function getCommentsCount(postId: string) {
+  try {
+    const [{ count: commentCount }] = await db
+      .select({ count: count() })
+      .from(comment)
+      .where(eq(comment.postId, postId));
+    return commentCount;
   } catch (err) {
     if (err instanceof DrizzleError) throw new Error("Database Error");
   }

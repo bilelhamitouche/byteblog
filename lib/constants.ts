@@ -15,4 +15,6 @@ export const TAG_LIMIT = 5;
 
 export const POST_LIMIT = 6;
 
+export const COMMENT_LIMIT = 20;
+
 export const WORDS_PER_MINUTE = 250;

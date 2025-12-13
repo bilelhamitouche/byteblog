@@ -8,34 +8,28 @@ interface CommentProps {
     authorId: string;
     createdAt: Date | null;
     updatedAt: Date | null;
+    author: string | null;
+    email: string | null;
+    username: string | null;
+    image: string | null;
   };
-  authorName: string;
-  authorEmail: string;
-  authorUsername: string | null;
-  authorImage: string | null;
 }
 
-export default function Comment({
-  comment,
-  authorImage,
-  authorEmail,
-  authorName,
-  authorUsername,
-}: CommentProps) {
+export default function Comment({ comment }: CommentProps) {
   return (
     <div className="flex flex-col gap-3 p-4" key={comment.id}>
       <Link
-        href={`/authors/@${authorUsername ? authorUsername : authorEmail.split("@")[0]}`}
+        href={`/authors/@${comment.username ? comment.username : comment.email?.split("@")[0]}`}
         className="flex gap-2 items-center text-sm group"
       >
         <Avatar>
           <AvatarImage
-            src={authorImage as string}
-            alt={`${authorName} image`}
+            src={comment.image as string}
+            alt={`${comment.author} image`}
           />
-          <AvatarFallback>{authorName?.toUpperCase()[0]}</AvatarFallback>
+          <AvatarFallback>{comment.author?.toUpperCase()[0]}</AvatarFallback>
         </Avatar>
-        <span className="group-hover:underline">{authorName}</span>
+        <span className="group-hover:underline">{comment.author}</span>
       </Link>
       <span className="pl-4">{comment.content}</span>
     </div>

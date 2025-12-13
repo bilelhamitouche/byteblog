@@ -10,9 +10,11 @@ import { createCommentAction } from "@/actions/comments";
 import { useState } from "react";
 import { Button } from "./ui/button";
 import LoadingButton from "./ui/loading-button";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 
-export default function CommentForm({ postId }: { postId: string }) {
+export default function CommentForm() {
+  const { postId } = useParams();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const form = useForm<z.infer<typeof commentSchema>>({
@@ -21,11 +23,12 @@ export default function CommentForm({ postId }: { postId: string }) {
       content: "",
     },
   });
+  const queryClient = useQueryClient();
   async function onSubmit(data: z.infer<typeof commentSchema>) {
     setIsLoading(true);
     const formData = new FormData();
     formData.append("content", data.content);
-    formData.append("postId", postId);
+    formData.append("postId", postId as string);
     try {
       const result = await createCommentAction(formData);
       if (result?.message) {
@@ -42,6 +45,10 @@ export default function CommentForm({ postId }: { postId: string }) {
       }
     } finally {
       setIsLoading(false);
+      queryClient.invalidateQueries({
+        queryKey: ["comments", postId],
+        refetchType: "all",
+      });
     }
   }
   return (
