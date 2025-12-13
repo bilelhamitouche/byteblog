@@ -8,6 +8,7 @@ import { useInView } from "react-intersection-observer";
 import { Loader2 } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import { Session } from "better-auth";
+import NoPosts from "./NoPosts";
 
 interface PostResponse {
   posts: Post[];
@@ -59,13 +60,17 @@ export default function PostInfiniteList() {
     },
   });
 
-  const posts = data?.pages.flatMap((page) => page.posts);
+  const posts = data?.pages.flatMap((page) => page.posts) ?? [];
 
   useEffect(() => {
     if (inView) {
       fetchNextPage();
     }
   }, [inView]);
+
+  if (!isPending && !(status === "pending") && posts.length === 0) {
+    return <NoPosts />;
+  }
 
   if (status === "pending" || isPending)
     return (
