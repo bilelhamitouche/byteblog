@@ -11,7 +11,7 @@ import { Session } from "better-auth";
 
 interface PostResponse {
   posts: Post[];
-  hasMore: number;
+  hasMore: boolean;
   currentPage: number;
 }
 
@@ -54,8 +54,9 @@ export default function PostInfiniteList() {
     queryKey: ["posts"],
     queryFn: ({ pageParam }) => getPosts(pageParam),
     initialPageParam: 0,
-    getNextPageParam: (lastPage) =>
-      lastPage.hasMore ? lastPage.currentPage : undefined,
+    getNextPageParam: (lastPage) => {
+      return lastPage.hasMore ? lastPage.currentPage + 1 : undefined;
+    },
   });
 
   const posts = data?.pages.flatMap((page) => page.posts);
@@ -64,7 +65,7 @@ export default function PostInfiniteList() {
     if (inView) {
       fetchNextPage();
     }
-  }, [inView, isFetchingNextPage, fetchNextPage]);
+  }, [inView]);
 
   if (status === "pending" || isPending)
     return (
@@ -74,7 +75,7 @@ export default function PostInfiniteList() {
       </div>
     );
   return (
-    <div className="grid overflow-y-auto grid-cols-1 gap-8 place-items-center px-8 w-full md:grid-cols-2 lg:grid-cols-3">
+    <div className="grid grid-cols-1 gap-8 place-items-center px-8 w-full md:grid-cols-2 lg:grid-cols-3">
       {posts?.map((post: Post) => (
         <PostCard
           key={post.id}
@@ -82,7 +83,14 @@ export default function PostInfiniteList() {
           session={session?.data?.session as Session}
         />
       ))}
-      <div ref={ref}></div>
+      <div ref={ref} className="bg-red-500 sm:col-span-2 md:col-span-3">
+        {isFetchingNextPage ? (
+          <div className="flex flex-col gap-2 justify-center items-center">
+            <Loader2 size="50" className="animate-spin" />
+            <span className="text-lg">Loading...</span>
+          </div>
+        ) : null}
+      </div>
     </div>
   );
 }

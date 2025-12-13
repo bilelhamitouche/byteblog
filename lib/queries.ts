@@ -11,8 +11,17 @@ import {
   postTag,
   comment,
 } from "./drizzle";
-import { and, count, desc, DrizzleError, eq, ilike, or } from "drizzle-orm";
-import { getUserInfo, redirectUnauthenticated } from "@/actions/auth";
+import {
+  and,
+  count,
+  desc,
+  DrizzleError,
+  eq,
+  ilike,
+  or,
+  sql,
+} from "drizzle-orm";
+import { redirectUnauthenticated } from "@/actions/auth";
 
 export async function getUserByUsername(username: string) {
   await redirectUnauthenticated();
@@ -83,42 +92,49 @@ export async function deletePost(id: string) {
 }
 
 export async function getPublishedPosts(
-  search: string,
   skip: number,
   limit: number,
+  currentUserId: string | null,
 ) {
   try {
-    const currentUser = await getUserInfo();
     const rows = await db
       .select({
         post: {
           ...post,
-          authorId: user.id,
+        },
+        author: {
           author: user.name,
           authorImage: user.image,
-          authorUsername: user.username,
           authorEmail: user.email,
-          likeCount: count(like.userId),
+          authorUsername: user.username,
         },
-        like: {
-          userId: like.userId,
-          postId: like.postId,
-        },
+        likeCount: sql<number>`CAST(count(${like.userId}) AS INT)`.as(
+          "likeCount",
+        ),
+        likedByCurrentUser: currentUserId
+          ? sql<boolean>`
+              EXISTS (
+                SELECT 1
+                FROM ${like}
+                WHERE ${like.postId} = ${post.id}
+                AND ${like.userId} = ${currentUserId}
+              )
+            `.as("likedByCurrentUser")
+          : sql<boolean>`false`.as("likedByCurrentUser"),
       })
       .from(post)
       .leftJoin(user, eq(post.authorId, user.id))
-      .leftJoin(
-        like,
-        and(eq(like.postId, post.id), eq(like.userId, currentUser?.id ?? "")),
-      )
-      .where(and(eq(post.published, true), ilike(post.title, `%${search}%`)))
-      .groupBy(post.id, user.id, like.userId, like.postId)
+      .leftJoin(like, eq(like.postId, post.id))
+      .where(eq(post.published, true))
+      .groupBy(post.id, user.id)
       .orderBy(desc(post.createdAt))
       .offset(skip)
       .limit(limit);
     const posts = rows.map((row) => ({
       ...row.post,
-      likedByCurrentUser: !!row.like?.userId,
+      ...row.author,
+      likeCount: row.likeCount,
+      likedByCurrentUser: row.likedByCurrentUser,
     }));
     return posts;
   } catch (err) {
@@ -129,11 +145,12 @@ export async function getPublishedPosts(
   }
 }
 
-export async function getPostsCount() {
+export async function getPublishedPostsCount() {
   try {
     const [{ count: postCount }] = await db
       .select({ count: count() })
-      .from(post);
+      .from(post)
+      .where(eq(post.published, true));
     return postCount;
   } catch (err) {
     if (err instanceof DrizzleError) throw new Error("Database Error");
