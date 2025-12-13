@@ -13,6 +13,6 @@ export const AVATAR_COLORS = [
 
 export const TAG_LIMIT = 5;
 
-export const POST_LIMIT = 9;
+export const POST_LIMIT = 6;
 
 export const WORDS_PER_MINUTE = 250;
