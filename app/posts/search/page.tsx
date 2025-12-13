@@ -5,8 +5,8 @@ import Loading from "@/components/Loading";
 
 export default async function Search() {
   return (
-    <div className="p-8 py-20 w-full h-full md:py-24">
-      <h2 className={`text-3xl font-semibold ${lusitana.className}`}>
+    <div className="py-20 space-y-4 w-full h-full md:py-24">
+      <h2 className={`text-3xl px-8 font-semibold ${lusitana.className}`}>
         Search Results
       </h2>
       <Suspense fallback={<Loading />}>
