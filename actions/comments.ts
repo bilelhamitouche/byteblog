@@ -7,6 +7,7 @@ import { commentSchema } from "@/lib/zod";
 export async function createCommentAction(formData: FormData) {
   const content = formData.get("content");
   const postId = formData.get("postId");
+  const parentId = formData.get("parentId");
   const user = await getUserInfo();
   const validationResult = commentSchema.safeParse({ content });
   if (!validationResult.success) {
@@ -19,6 +20,7 @@ export async function createCommentAction(formData: FormData) {
       content as string,
       user?.id as string,
       postId as string,
+      parentId,
     );
   } catch (err) {
     if (err instanceof Error) {
