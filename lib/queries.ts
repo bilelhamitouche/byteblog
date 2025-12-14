@@ -18,10 +18,12 @@ import {
   DrizzleError,
   eq,
   ilike,
+  isNull,
   or,
   sql,
 } from "drizzle-orm";
 import { redirectUnauthenticated } from "@/actions/auth";
+import { alias } from "drizzle-orm/pg-core";
 
 export async function getUserByUsername(username: string) {
   await redirectUnauthenticated();
@@ -503,6 +505,8 @@ export async function getFollowedAuthors(authorId: string) {
   }
 }
 
+const reply = alias(comment, "reply");
+
 export async function getCommentsByPostId(
   postId: string,
   skip: number,
@@ -520,10 +524,13 @@ export async function getCommentsByPostId(
           authorUsername: user.username,
           authorImage: user.image,
         },
+        replyCount: sql<number>`CAST(count(${reply.id}) AS INT)`,
       })
       .from(comment)
+      .leftJoin(reply, eq(reply.parentId, comment.id))
       .leftJoin(user, eq(comment.authorId, user.id))
-      .where(eq(comment.postId, postId))
+      .where(and(eq(comment.postId, postId), isNull(comment.parentId)))
+      .groupBy(comment.id, user.id)
       .orderBy(desc(comment.createdAt))
       .limit(limit)
       .offset(skip);
@@ -531,6 +538,7 @@ export async function getCommentsByPostId(
       return {
         ...row.comment,
         ...row.author,
+        replyCount: row.replyCount,
       };
     });
     return comments;
@@ -553,10 +561,27 @@ export async function getCommentsCount(postId: string) {
 
 export async function getCommentReplies(commentId: string) {
   try {
-    const replies = await db
-      .select()
+    const rows = await db
+      .select({
+        comment: {
+          ...comment,
+        },
+        author: {
+          author: user.name,
+          email: user.email,
+          username: user.username,
+          image: user.image,
+        },
+      })
       .from(comment)
+      .leftJoin(user, eq(comment.authorId, user.id))
       .where(eq(comment.parentId, commentId));
+    const replies = rows.map((row) => {
+      return {
+        ...row.comment,
+        ...row.author,
+      };
+    });
     return replies;
   } catch (err) {
     if (err instanceof Error) throw new Error("Database Error");
@@ -567,10 +592,11 @@ export async function createComment(
   content: string,
   authorId: string,
   postId: string,
+  parentId: string | null,
 ) {
   await redirectUnauthenticated();
   try {
-    await db.insert(comment).values({ content, postId, authorId });
+    await db.insert(comment).values({ content, postId, authorId, parentId });
   } catch (err) {
     if (err instanceof DrizzleError) throw new Error("Database Error");
   }

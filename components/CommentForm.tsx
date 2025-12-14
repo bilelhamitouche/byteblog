@@ -7,13 +7,23 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from "./ui/form";
 import { Textarea } from "./ui/textarea";
 import { toast } from "sonner";
 import { createCommentAction } from "@/actions/comments";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { Button } from "./ui/button";
 import LoadingButton from "./ui/loading-button";
 import { useParams, useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 
-export default function CommentForm() {
+interface CommentFormProps {
+  parentId?: string;
+  replying: boolean;
+  setReplying: Dispatch<SetStateAction<boolean>>;
+}
+
+export default function CommentForm({
+  parentId,
+  replying,
+  setReplying,
+}: CommentFormProps) {
   const { postId } = useParams();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -27,6 +37,9 @@ export default function CommentForm() {
   async function onSubmit(data: z.infer<typeof commentSchema>) {
     setIsLoading(true);
     const formData = new FormData();
+    if (parentId) {
+      formData.append("parentId", parentId);
+    }
     formData.append("content", data.content);
     formData.append("postId", postId as string);
     try {
@@ -44,9 +57,14 @@ export default function CommentForm() {
         toast.error(err.message);
       }
     } finally {
+      setReplying(false);
       setIsLoading(false);
       queryClient.invalidateQueries({
         queryKey: ["comments", postId],
+        refetchType: "all",
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["replies", parentId],
         refetchType: "all",
       });
     }
@@ -66,13 +84,24 @@ export default function CommentForm() {
             </FormItem>
           )}
         />
-        {isLoading ? (
-          <LoadingButton variant="default" size="default" className="" />
-        ) : (
-          <Button type="submit" variant="default">
-            Post Comment
-          </Button>
-        )}
+        <div className="flex gap-4 items-center">
+          {isLoading ? (
+            <LoadingButton variant="default" size="default" className="" />
+          ) : (
+            <Button type="submit" variant="default">
+              Post Comment
+            </Button>
+          )}
+          {parentId ? (
+            <Button
+              type="reset"
+              variant="destructive"
+              onClick={() => setReplying(!replying)}
+            >
+              Cancel
+            </Button>
+          ) : null}
+        </div>
       </form>
     </Form>
   );

@@ -1,5 +1,5 @@
 "use client";
-import { POST_LIMIT } from "@/lib/constants";
+import { COMMENT_LIMIT } from "@/lib/constants";
 import { toast } from "sonner";
 import { useEffect } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
@@ -33,7 +33,7 @@ export default function CommentInfiniteList() {
 
   async function getComments(page: number) {
     const res = await fetch(
-      `/api/posts/${postId}/comments?page=${page}&limit=${POST_LIMIT}`,
+      `/api/posts/${postId}/comments?page=${page}&limit=${COMMENT_LIMIT}`,
     );
     if (!res.ok) throw new Error("Failed to fetch comments");
     const data = (await res.json()) as CommentResponse;
@@ -75,7 +75,7 @@ export default function CommentInfiniteList() {
       {comments?.map((comment: Comment) => (
         <Comment key={comment.id} comment={comment} />
       ))}
-      <div ref={ref} className="bg-red-500">
+      <div ref={ref}>
         {isFetchingNextPage ? (
           <div className="flex flex-col gap-2 justify-center items-center">
             <Loader2 size="30" className="animate-spin" />
