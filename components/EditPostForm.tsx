@@ -145,7 +145,7 @@ export default function EditPost({ initialPost }: EditPostFormProps) {
           />
           <div className="flex gap-4 items-center">
             {isPublishing ? (
-              <LoadingButton variant="default" size="default" className="" />
+              <LoadingButton variant="default" size="default" />
             ) : initialPost.id ? (
               <Button
                 variant="default"
@@ -165,7 +165,7 @@ export default function EditPost({ initialPost }: EditPostFormProps) {
               />
             )}
             {isSaving ? (
-              <LoadingButton variant="outline" size="default" className="" />
+              <LoadingButton variant="outline" size="default" />
             ) : (
               <Button
                 variant="outline"

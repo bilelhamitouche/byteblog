@@ -1,16 +1,16 @@
 import { Loader2 } from "lucide-react";
-import { Button } from "./button";
+import { Button, ButtonProps } from "./button";
 
 interface LoadingButtonProps {
-  variant:
+  variant?:
     | "default"
     | "secondary"
     | "outline"
     | "ghost"
     | "link"
     | "destructive";
-  size: "lg" | "sm" | "default" | "icon";
-  className: string;
+  size?: "lg" | "sm" | "default" | "icon";
+  className?: string;
 }
 
 export default function LoadingButton({
