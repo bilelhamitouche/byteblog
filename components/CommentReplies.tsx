@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import Comment from "./Comment";
 import { toast } from "sonner";
 import Loading from "./Loading";
+import { useEffect } from "react";
 
 interface Reply {
   id: string;
@@ -18,8 +19,9 @@ interface Reply {
 }
 
 async function getReplies(commentId: string) {
-  const response = await fetch(`/api/comments/${commentId}/replies`);
-  const data = (await response.json()) as Reply[];
+  const res = await fetch(`/api/comments/${commentId}/replies`);
+  if (!res.ok) throw new Error("Failed to fetch replies");
+  const data = (await res.json()) as Reply[];
   return data;
 }
 
@@ -33,16 +35,18 @@ export default function CommentReplies({ commentId }: { commentId: string }) {
     queryFn: () => getReplies(commentId),
   });
 
-  if (status === "error") {
-    toast.error(error.message);
-  }
+  useEffect(() => {
+    if (status === "error") {
+      toast.error(error.message);
+    }
+  }, [status, error]);
 
   if (status === "pending") {
     return <Loading />;
   }
 
   return (
-    <ul>
+    <ul className="pl-4">
       {replies?.map((reply) => (
         <Comment key={reply.id} comment={reply} />
       ))}

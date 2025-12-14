@@ -15,8 +15,8 @@ import { useQueryClient } from "@tanstack/react-query";
 
 interface CommentFormProps {
   parentId?: string;
-  replying: boolean;
-  setReplying: Dispatch<SetStateAction<boolean>>;
+  replying?: boolean;
+  setReplying?: Dispatch<SetStateAction<boolean>>;
 }
 
 export default function CommentForm({
@@ -51,22 +51,21 @@ export default function CommentForm({
         toast.error("Invalid comment");
       }
       form.reset();
-      router.refresh();
     } catch (err) {
       if (err instanceof Error) {
         toast.error(err.message);
       }
     } finally {
-      setReplying(false);
+      setReplying && setReplying(false);
       setIsLoading(false);
       queryClient.invalidateQueries({
         queryKey: ["comments", postId],
-        refetchType: "all",
       });
-      queryClient.invalidateQueries({
-        queryKey: ["replies", parentId],
-        refetchType: "all",
-      });
+      if (parentId) {
+        queryClient.invalidateQueries({
+          queryKey: ["replies", parentId],
+        });
+      }
     }
   }
   return (
@@ -86,7 +85,7 @@ export default function CommentForm({
         />
         <div className="flex gap-4 items-center">
           {isLoading ? (
-            <LoadingButton variant="default" size="default" className="" />
+            <LoadingButton variant="default" size="default" />
           ) : (
             <Button type="submit" variant="default">
               Post Comment
@@ -96,7 +95,7 @@ export default function CommentForm({
             <Button
               type="reset"
               variant="destructive"
-              onClick={() => setReplying(!replying)}
+              onClick={() => setReplying && setReplying(!replying)}
             >
               Cancel
             </Button>

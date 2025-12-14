@@ -47,24 +47,35 @@ export default function Comment({ comment }: CommentProps) {
           setReplying={setReplying}
         />
       ) : (
-        <Button className="self-start" onClick={() => setReplying(true)}>
+        <Button
+          variant="link"
+          className="self-start"
+          onClick={() => setReplying(true)}
+        >
           Reply
         </Button>
       )}
-      {comment.replyCount > 0 && !repliesShown ? (
-        <Button variant="ghost" onClick={() => setRepliesShown(!repliesShown)}>
-          Show Replies
-        </Button>
-      ) : null}
-      {repliesShown ? (
-        <>
-          <CommentReplies commentId={comment.id} />
+      <div className="flex justify-center items-center w-full">
+        {comment.replyCount > 0 && !repliesShown ? (
           <Button
             variant="ghost"
             onClick={() => setRepliesShown(!repliesShown)}
           >
-            Hide Replies
+            Show Replies
           </Button>
+        ) : null}
+      </div>
+      {repliesShown ? (
+        <>
+          <CommentReplies commentId={comment.id} />
+          <div className="flex justify-center items-center">
+            <Button
+              variant="ghost"
+              onClick={() => setRepliesShown(!repliesShown)}
+            >
+              Hide Replies
+            </Button>
+          </div>
         </>
       ) : null}
     </div>

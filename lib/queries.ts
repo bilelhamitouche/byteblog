@@ -572,14 +572,18 @@ export async function getCommentReplies(commentId: string) {
           username: user.username,
           image: user.image,
         },
+        replyCount: sql<number>`CAST(count(${reply.id}) AS INT)`,
       })
       .from(comment)
+      .leftJoin(reply, eq(reply.parentId, comment.id))
       .leftJoin(user, eq(comment.authorId, user.id))
+      .groupBy(comment.id, user.id)
       .where(eq(comment.parentId, commentId));
     const replies = rows.map((row) => {
       return {
         ...row.comment,
         ...row.author,
+        replyCount: row.replyCount,
       };
     });
     return replies;

@@ -25,6 +25,7 @@ interface Comment {
   username: string | null;
   createdAt: Date | null;
   updatedAt: Date | null;
+  replyCount: number;
 }
 
 export default function CommentInfiniteList() {
@@ -40,28 +41,36 @@ export default function CommentInfiniteList() {
     return data;
   }
 
-  const { data, status, error, isFetchingNextPage, fetchNextPage } =
-    useInfiniteQuery({
-      queryKey: ["comments", postId],
-      queryFn: ({ pageParam }) => getComments(pageParam),
-      initialPageParam: 0,
-      getNextPageParam: (lastPage) => {
-        return lastPage.hasMore ? lastPage.currentPage + 1 : undefined;
-      },
-      enabled: !!postId,
-    });
+  const {
+    data,
+    status,
+    error,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  } = useInfiniteQuery({
+    queryKey: ["comments", postId],
+    queryFn: ({ pageParam }) => getComments(pageParam),
+    initialPageParam: 0,
+    getNextPageParam: (lastPage) => {
+      return lastPage.hasMore ? lastPage.currentPage + 1 : undefined;
+    },
+    enabled: !!postId,
+  });
 
   const comments = data?.pages.flatMap((page) => page.comments) ?? [];
 
   useEffect(() => {
-    if (inView && !isFetchingNextPage) {
+    if (inView && hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
-  }, [inView, isFetchingNextPage, fetchNextPage]);
+  }, [inView, isFetchingNextPage, hasNextPage, fetchNextPage]);
 
-  if (error) {
-    toast.error(error.message);
-  }
+  useEffect(() => {
+    if (error) {
+      toast.error(error.message);
+    }
+  }, [error]);
 
   if (status === "pending")
     return (
@@ -71,7 +80,7 @@ export default function CommentInfiniteList() {
       </div>
     );
   return (
-    <div className="flex flex-col gap-8 px-8 w-full">
+    <div className="flex flex-col gap-2 w-full">
       {comments?.map((comment: Comment) => (
         <Comment key={comment.id} comment={comment} />
       ))}
