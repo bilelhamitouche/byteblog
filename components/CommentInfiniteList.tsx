@@ -76,7 +76,6 @@ export default function CommentInfiniteList() {
     return (
       <div className="flex flex-col gap-2 justify-center items-center w-full h-full text-gray-500 dark:text-gray-300">
         <Loader2 size="30" className="animate-spin" />
-        <span className="text-base">Loading...</span>
       </div>
     );
   return (
@@ -88,7 +87,6 @@ export default function CommentInfiniteList() {
         {isFetchingNextPage ? (
           <div className="flex flex-col gap-2 justify-center items-center">
             <Loader2 size="30" className="animate-spin" />
-            <span className="text-base">Loading...</span>
           </div>
         ) : null}
       </div>

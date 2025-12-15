@@ -2,8 +2,8 @@
 import { useQuery } from "@tanstack/react-query";
 import Comment from "./Comment";
 import { toast } from "sonner";
-import Loading from "./Loading";
 import { useEffect } from "react";
+import { Loader2 } from "lucide-react";
 
 interface Reply {
   id: string;
@@ -42,7 +42,11 @@ export default function CommentReplies({ commentId }: { commentId: string }) {
   }, [status, error]);
 
   if (status === "pending") {
-    return <Loading />;
+    return (
+      <div className="flex justify-center items-center w-full text-gray-500 dark:text-gray-300">
+        <Loader2 className="animate-spin" size="30" />
+      </div>
+    );
   }
 
   return (
