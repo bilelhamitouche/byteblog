@@ -33,11 +33,13 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <NuqsAdapter>
-            <Navbar />
-            <QueryClientProvider>{children}</QueryClientProvider>
-            <Toaster />
-          </NuqsAdapter>
+          <QueryClientProvider>
+            <NuqsAdapter>
+              <Navbar />
+              {children}
+              <Toaster />
+            </NuqsAdapter>
+          </QueryClientProvider>
         </ThemeProvider>
       </body>
     </html>

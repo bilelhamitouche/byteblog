@@ -9,14 +9,12 @@ export default function SignOutButton() {
   const router = useRouter();
   const queryClient = useQueryClient();
   async function signOut() {
-    await authClient.signOut({
+    authClient.signOut({
       fetchOptions: {
         onSuccess: () => {
-          queryClient.invalidateQueries({
-            queryKey: ["session"],
-          });
           router.push("/");
           router.refresh();
+          queryClient.setQueryData(["session"], null);
         },
       },
     });
