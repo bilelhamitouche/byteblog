@@ -1,4 +1,4 @@
-import { getAuthorBio, getFollowedAuthors } from "@/lib/queries";
+import { getAuthorBio } from "@/lib/queries";
 import { Users } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -20,10 +20,6 @@ export default async function ProfileSidebar({
   authorImage,
   authorUsername,
 }: ProfileSidebarProps) {
-  const followedAuthors = await getFollowedAuthors(authorId);
-  if (!followedAuthors) {
-    return null;
-  }
   const user = await getUserInfo();
   const authorProfile = await getAuthorBio(authorId);
   return (
