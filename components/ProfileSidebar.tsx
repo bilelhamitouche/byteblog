@@ -47,28 +47,6 @@ export default async function ProfileSidebar({
           </Link>
         )}
       </div>
-      <div className="p-4">
-        <h3 className="flex gap-2 items-center text-lg font-medium">
-          <Users size="17" />
-          <span>Following</span>
-        </h3>
-        <ul className="flex flex-col gap-2 p-2">
-          {followedAuthors.map((followed) => (
-            <li key={followed.id} className="flex gap-2 items-center">
-              <Avatar>
-                <AvatarImage
-                  src={followed.image as string}
-                  alt={`${followed.name} avatar image`}
-                />
-              </Avatar>
-              <span key={followed.id}>{followed.name}</span>
-            </li>
-          ))}
-          <Button variant="link" size="sm" className="flex-start" asChild>
-            <Link href={`/authors/@${authorUsername}/following`}>See All</Link>
-          </Button>
-        </ul>
-      </div>
     </aside>
   );
 }
