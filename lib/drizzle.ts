@@ -160,8 +160,8 @@ export const postTag = pgTable(
   (table) => [primaryKey({ columns: [table.postId, table.tagId] })],
 );
 
-export const like = pgTable(
-  "like",
+export const postLike = pgTable(
+  "post_like",
   {
     userId: text("user_id")
       .notNull()
@@ -190,5 +190,23 @@ export const comment = pgTable("comment", {
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
 });
+
+export const commentLike = pgTable(
+  "comment_like",
+  {
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade", onUpdate: "cascade" }),
+    commentId: text("comment_id")
+      .notNull()
+      .references(() => comment.id, {
+        onDelete: "cascade",
+        onUpdate: "cascade",
+      }),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
+  },
+  (table) => [primaryKey({ columns: [table.userId, table.commentId] })],
+);
 
 export const schema = { user, session, account, verification };

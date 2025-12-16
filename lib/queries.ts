@@ -2,7 +2,7 @@ import "server-only";
 import {
   db,
   follow,
-  like,
+  postLike,
   post,
   profile,
   tag,
@@ -110,23 +110,23 @@ export async function getPublishedPosts(
           authorEmail: user.email,
           authorUsername: user.username,
         },
-        likeCount: sql<number>`CAST(count(${like.userId}) AS INT)`.as(
+        likeCount: sql<number>`CAST(count(${postLike.userId}) AS INT)`.as(
           "likeCount",
         ),
         likedByCurrentUser: currentUserId
           ? sql<boolean>`
               EXISTS (
                 SELECT 1
-                FROM ${like}
-                WHERE ${like.postId} = ${post.id}
-                AND ${like.userId} = ${currentUserId}
+                FROM ${postLike}
+                WHERE ${postLike.postId} = ${post.id}
+                AND ${postLike.userId} = ${currentUserId}
               )
             `.as("likedByCurrentUser")
           : sql<boolean>`false`.as("likedByCurrentUser"),
       })
       .from(post)
       .leftJoin(user, eq(post.authorId, user.id))
-      .leftJoin(like, eq(like.postId, post.id))
+      .leftJoin(postLike, eq(postLike.postId, post.id))
       .where(eq(post.published, true))
       .groupBy(post.id, user.id)
       .orderBy(desc(post.createdAt))
@@ -177,23 +177,23 @@ export async function searchPublishedPosts(
           authorEmail: user.email,
           authorUsername: user.username,
         },
-        likeCount: sql<number>`CAST(count(${like.userId}) AS INT)`.as(
+        likeCount: sql<number>`CAST(count(${postLike.userId}) AS INT)`.as(
           "likeCount",
         ),
         likedByCurrentUser: currentUserId
           ? sql<boolean>`
               EXISTS (
                 SELECT 1
-                FROM ${like}
-                WHERE ${like.postId} = ${post.id}
-                AND ${like.userId} = ${currentUserId}
+                FROM ${postLike}
+                WHERE ${postLike.postId} = ${post.id}
+                AND ${postLike.userId} = ${currentUserId}
               )
             `.as("likedByCurrentUser")
           : sql<boolean>`false`.as("likedByCurrentUser"),
       })
       .from(post)
       .leftJoin(user, eq(post.authorId, user.id))
-      .leftJoin(like, eq(like.postId, post.id))
+      .leftJoin(postLike, eq(postLike.postId, post.id))
       .where(and(eq(post.published, true), ilike(post.title, `%${search}%`)))
       .groupBy(post.id, user.id)
       .orderBy(desc(post.createdAt))
@@ -258,16 +258,16 @@ export async function getPost(id: string) {
         published: post.published,
         createdAt: post.createdAt,
         updatedAt: post.updatedAt,
-        likesCount: count(like.userId),
+        likesCount: count(postLike.userId),
         authorId: user.id,
         author: user.name,
         authorImage: user.image,
       })
       .from(post)
       .leftJoin(user, eq(user.id, post.authorId))
-      .leftJoin(like, eq(post.id, like.postId))
+      .leftJoin(postLike, eq(post.id, postLike.postId))
       .where(eq(post.id, id))
-      .groupBy(like.postId, post.id, user.id, user.name, user.image);
+      .groupBy(postLike.postId, post.id, user.id, user.name, user.image);
     return currentPost[0];
   } catch (err) {
     if (err instanceof DrizzleError) throw new Error("Database Error");
@@ -278,8 +278,8 @@ export async function hasUserLikedPost(postId: string, userId: string) {
   try {
     const likes = await db
       .select()
-      .from(like)
-      .where(and(eq(like.postId, postId), eq(like.userId, userId)));
+      .from(postLike)
+      .where(and(eq(postLike.postId, postId), eq(postLike.userId, userId)));
     return likes.length > 0;
   } catch (err) {
     if (err instanceof DrizzleError) throw new Error("Database Error");
@@ -291,7 +291,7 @@ export async function hasUserSavedPost(postId: string, userId: string) {
     const savedPosts = await db
       .select()
       .from(userSavesPost)
-      .where(and(eq(like.postId, postId), eq(like.userId, userId)));
+      .where(and(eq(postLike.postId, postId), eq(postLike.userId, userId)));
     return savedPosts.length > 0;
   } catch (err) {
     if (err instanceof DrizzleError) throw new Error("Database Error");
@@ -304,10 +304,10 @@ export async function toggleLikePost(postId: string, userId: string) {
     const hasUserLiked = await hasUserLikedPost(postId, userId);
     if (hasUserLiked) {
       await db
-        .delete(like)
-        .where(and(eq(like.userId, userId), eq(like.postId, postId)));
+        .delete(postLike)
+        .where(and(eq(postLike.userId, userId), eq(postLike.postId, postId)));
     } else {
-      await db.insert(like).values({ userId, postId });
+      await db.insert(postLike).values({ userId, postId });
     }
   } catch (err) {
     if (err instanceof DrizzleError) throw new Error("Database Error");
@@ -321,7 +321,7 @@ export async function toggleSavePost(postId: string, userId: string) {
     if (hasUserSaved) {
       await db
         .delete(userSavesPost)
-        .where(and(eq(like.userId, userId), eq(like.postId, postId)));
+        .where(and(eq(postLike.userId, userId), eq(postLike.postId, postId)));
     } else {
       await db.insert(userSavesPost).values({ postId, userId });
     }
@@ -333,9 +333,9 @@ export async function toggleSavePost(postId: string, userId: string) {
 export async function getLikeCount(postId: string) {
   try {
     const [{ likeCount }] = await db
-      .select({ likeCount: count(like.userId) })
-      .from(like)
-      .where(eq(like.postId, postId));
+      .select({ likeCount: count(postLike.userId) })
+      .from(postLike)
+      .where(eq(postLike.postId, postId));
     return likeCount;
   } catch (err) {
     if (err instanceof DrizzleError) throw new Error("Database Error");
