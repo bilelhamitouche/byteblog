@@ -1,4 +1,4 @@
-import { getFollowedAuthors } from "@/lib/queries";
+import { getAuthorBio, getFollowedAuthors } from "@/lib/queries";
 import { Users } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -25,6 +25,7 @@ export default async function ProfileSidebar({
     return null;
   }
   const user = await getUserInfo();
+  const authorProfile = await getAuthorBio(authorId);
   return (
     <aside className="hidden flex-col gap-6 items-start py-28 border-r md:flex min-w-xs">
       <div className="flex flex-col gap-2 justify-center items-center mx-auto">
@@ -38,6 +39,9 @@ export default async function ProfileSidebar({
         <span className={`text-lg font-medium ${lusitana.className}`}>
           {authorName}
         </span>
+        <p className={`text-base text-gray-500 dark:text-gray-300`}>
+          {authorProfile?.bio}
+        </p>
         {user?.id === authorId && (
           <Link
             href={`/authors/${authorUsername}/edit`}
