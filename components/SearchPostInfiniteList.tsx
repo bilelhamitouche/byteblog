@@ -104,7 +104,7 @@ export default function PostInfiniteList() {
           session={session?.data?.session as Session}
         />
       ))}
-      <div ref={ref} className="bg-red-500 sm:col-span-2 md:col-span-3">
+      <div ref={ref} className="sm:col-span-2 md:col-span-3">
         {isFetchingNextPage ? (
           <div className="flex flex-col gap-2 justify-center items-center">
             <Loader2 size="50" className="animate-spin" />
