@@ -5,8 +5,8 @@ import Link from "next/link";
 import SafeImage from "./SafeImage";
 import { Button } from "./ui/button";
 import PreviewContent from "./PreviewContent";
-import LikeButton from "./LikeButton";
 import { Session } from "better-auth";
+import PostLikeButton from "./PostLikeButton";
 
 interface PostCardProps {
   id: string;
@@ -65,7 +65,7 @@ export default function PostCard({
         </Button>
         <div className="flex gap-1 items-center">
           <span>{post.likeCount}</span>
-          <LikeButton
+          <PostLikeButton
             hasUserLiked={post.likedByCurrentUser}
             postId={post.id}
             isDisabled={post.authorId === session?.userId}

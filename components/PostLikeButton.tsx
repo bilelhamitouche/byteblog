@@ -15,7 +15,7 @@ interface LikeButtonProps extends ButtonProps {
   isDisabled: boolean;
 }
 
-export default function LikeButton({
+export default function PostLikeButton({
   postId,
   hasUserLiked,
   loggedIn,
