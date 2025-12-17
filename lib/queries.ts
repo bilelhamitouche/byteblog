@@ -10,6 +10,7 @@ import {
   userSavesPost,
   postTag,
   comment,
+  commentLike,
 } from "./drizzle";
 import {
   and,
@@ -511,6 +512,7 @@ export async function getCommentsByPostId(
   postId: string,
   skip: number,
   limit: number,
+  currentUserId: string | null,
 ) {
   try {
     const rows = await db
@@ -524,10 +526,25 @@ export async function getCommentsByPostId(
           authorUsername: user.username,
           authorImage: user.image,
         },
-        replyCount: sql<number>`CAST(count(${reply.id}) AS INT)`,
+        replyCount: sql<number>`CAST(count(DISTINCT ${reply.id}) AS INT)`,
+        likeCount:
+          sql<number>`CAST(count(DISTINCT ${commentLike.userId}) AS INT)`.as(
+            "likeCount",
+          ),
+        likedByCurrentUser: currentUserId
+          ? sql<boolean>`
+              EXISTS (
+                SELECT 1
+                FROM ${commentLike}
+                WHERE ${commentLike.commentId} = ${comment.id}
+                AND ${commentLike.userId} = ${currentUserId}
+              )
+            `.as("likedByCurrentUser")
+          : sql<boolean>`false`.as("likedByCurrentUser"),
       })
       .from(comment)
       .leftJoin(reply, eq(reply.parentId, comment.id))
+      .leftJoin(commentLike, eq(commentLike.commentId, comment.id))
       .leftJoin(user, eq(comment.authorId, user.id))
       .where(and(eq(comment.postId, postId), isNull(comment.parentId)))
       .groupBy(comment.id, user.id)
@@ -539,6 +556,8 @@ export async function getCommentsByPostId(
         ...row.comment,
         ...row.author,
         replyCount: row.replyCount,
+        likeCount: row.likeCount,
+        likedByCurrentUser: row.likedByCurrentUser,
       };
     });
     return comments;
@@ -559,7 +578,10 @@ export async function getCommentsCount(postId: string) {
   }
 }
 
-export async function getCommentReplies(commentId: string) {
+export async function getCommentReplies(
+  commentId: string,
+  currentUserId: string | null,
+) {
   try {
     const rows = await db
       .select({
@@ -572,10 +594,25 @@ export async function getCommentReplies(commentId: string) {
           username: user.username,
           image: user.image,
         },
-        replyCount: sql<number>`CAST(count(${reply.id}) AS INT)`,
+        replyCount: sql<number>`CAST(count(DISTINCT ${reply.id}) AS INT)`,
+        likeCount:
+          sql<number>`CAST(count(DISTINCT ${commentLike.userId}) AS INT)`.as(
+            "likeCount",
+          ),
+        likedByCurrentUser: currentUserId
+          ? sql<boolean>`
+              EXISTS (
+                SELECT 1
+                FROM ${commentLike}
+                WHERE ${commentLike.commentId} = ${comment.id}
+                AND ${commentLike.userId} = ${currentUserId}
+              )
+            `.as("likedByCurrentUser")
+          : sql<boolean>`false`.as("likedByCurrentUser"),
       })
       .from(comment)
       .leftJoin(reply, eq(reply.parentId, comment.id))
+      .leftJoin(commentLike, eq(commentLike.commentId, comment.id))
       .leftJoin(user, eq(comment.authorId, user.id))
       .groupBy(comment.id, user.id)
       .where(eq(comment.parentId, commentId));
@@ -584,11 +621,51 @@ export async function getCommentReplies(commentId: string) {
         ...row.comment,
         ...row.author,
         replyCount: row.replyCount,
+        likeCount: row.likeCount,
+        likedByCurrentUser: row.likedByCurrentUser,
       };
     });
     return replies;
   } catch (err) {
     if (err instanceof Error) throw new Error("Database Error");
+  }
+}
+
+export async function hasUserLikedComment(commentId: string, userId: string) {
+  try {
+    const likes = await db
+      .select()
+      .from(commentLike)
+      .where(
+        and(
+          eq(commentLike.commentId, commentId),
+          eq(commentLike.userId, userId),
+        ),
+      );
+    return likes.length > 0;
+  } catch (err) {
+    if (err instanceof DrizzleError) throw new Error("Database Error");
+  }
+}
+
+export async function toggleLikeComment(commentId: string, userId: string) {
+  await redirectUnauthenticated();
+  try {
+    const hasUserLiked = await hasUserLikedComment(commentId, userId);
+    if (hasUserLiked) {
+      await db
+        .delete(commentLike)
+        .where(
+          and(
+            eq(commentLike.userId, userId),
+            eq(commentLike.commentId, commentId),
+          ),
+        );
+    } else {
+      await db.insert(commentLike).values({ userId, commentId });
+    }
+  } catch (err) {
+    if (err instanceof DrizzleError) throw new Error("Database Error");
   }
 }
 

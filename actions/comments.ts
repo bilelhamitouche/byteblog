@@ -1,13 +1,13 @@
 "use server";
 
-import { createComment, deleteComment } from "@/lib/queries";
+import { createComment, deleteComment, toggleLikeComment } from "@/lib/queries";
 import { getUserInfo } from "./auth";
 import { commentSchema } from "@/lib/zod";
 
 export async function createCommentAction(formData: FormData) {
   const content = formData.get("content");
   const postId = formData.get("postId");
-  const parentId = formData.get("parentId");
+  const parentId = formData.get("parentId") as string | null;
   const user = await getUserInfo();
   const validationResult = commentSchema.safeParse({ content });
   if (!validationResult.success) {
@@ -22,6 +22,19 @@ export async function createCommentAction(formData: FormData) {
       postId as string,
       parentId,
     );
+  } catch (err) {
+    if (err instanceof Error) {
+      return {
+        message: err.message,
+      };
+    }
+  }
+}
+
+export async function toggleLikeCommentAction(commentId: string) {
+  const user = await getUserInfo();
+  try {
+    await toggleLikeComment(commentId, user?.id as string);
   } catch (err) {
     if (err instanceof Error) {
       return {

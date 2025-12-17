@@ -4,6 +4,8 @@ import Comment from "./Comment";
 import { toast } from "sonner";
 import { useEffect } from "react";
 import { Loader2 } from "lucide-react";
+import { authClient } from "@/lib/auth-client";
+import { Session } from "better-auth";
 
 interface Reply {
   id: string;
@@ -16,6 +18,13 @@ interface Reply {
   createdAt: Date | null;
   updatedAt: Date | null;
   replyCount: number;
+  likeCount: number;
+  likedByCurrentUser: boolean;
+}
+
+async function getSession() {
+  const session = await authClient.getSession();
+  return session;
 }
 
 async function getReplies(commentId: string) {
@@ -26,6 +35,10 @@ async function getReplies(commentId: string) {
 }
 
 export default function CommentReplies({ commentId }: { commentId: string }) {
+  const { data: session, isPending } = useQuery({
+    queryKey: ["session"],
+    queryFn: () => getSession(),
+  });
   const {
     data: replies,
     error,
@@ -41,7 +54,7 @@ export default function CommentReplies({ commentId }: { commentId: string }) {
     }
   }, [status, error]);
 
-  if (status === "pending") {
+  if (status === "pending" || isPending) {
     return (
       <div className="flex justify-center items-center w-full text-gray-500 dark:text-gray-300">
         <Loader2 className="animate-spin" size="30" />
@@ -52,7 +65,11 @@ export default function CommentReplies({ commentId }: { commentId: string }) {
   return (
     <ul className="pl-4">
       {replies?.map((reply) => (
-        <Comment key={reply.id} comment={reply} />
+        <Comment
+          key={reply.id}
+          comment={reply}
+          session={session?.data?.session as Session}
+        />
       ))}
     </ul>
   );

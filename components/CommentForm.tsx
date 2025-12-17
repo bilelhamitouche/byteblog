@@ -10,22 +10,23 @@ import { createCommentAction } from "@/actions/comments";
 import { Dispatch, SetStateAction, useState } from "react";
 import { Button } from "./ui/button";
 import LoadingButton from "./ui/loading-button";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 
 interface CommentFormProps {
   parentId?: string;
   replying?: boolean;
   setReplying?: Dispatch<SetStateAction<boolean>>;
+  setRepliesShown?: Dispatch<SetStateAction<boolean>>;
 }
 
 export default function CommentForm({
   parentId,
   replying,
   setReplying,
+  setRepliesShown,
 }: CommentFormProps) {
   const { postId } = useParams();
-  const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const form = useForm<z.infer<typeof commentSchema>>({
     resolver: zodResolver(commentSchema),
@@ -51,13 +52,7 @@ export default function CommentForm({
         toast.error("Invalid comment");
       }
       form.reset();
-    } catch (err) {
-      if (err instanceof Error) {
-        toast.error(err.message);
-      }
-    } finally {
       setReplying && setReplying(false);
-      setIsLoading(false);
       queryClient.invalidateQueries({
         queryKey: ["comments", postId],
       });
@@ -66,18 +61,29 @@ export default function CommentForm({
           queryKey: ["replies", parentId],
         });
       }
+      setRepliesShown && setRepliesShown(true);
+    } catch (err) {
+      if (err instanceof Error) {
+        toast.error(err.message);
+      }
+    } finally {
+      setIsLoading(false);
     }
   }
   return (
     <Form {...form}>
-      <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
+      <form className="space-y-4 w-full" onSubmit={form.handleSubmit(onSubmit)}>
         <FormField
           name="content"
           control={form.control}
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Textarea {...field} placeholder="Add a comment" />
+                <Textarea
+                  {...field}
+                  placeholder="Add a comment"
+                  className="w-full"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

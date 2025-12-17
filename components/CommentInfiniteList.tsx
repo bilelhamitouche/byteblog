@@ -2,11 +2,13 @@
 import { COMMENT_LIMIT } from "@/lib/constants";
 import { toast } from "sonner";
 import { useEffect } from "react";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { useInView } from "react-intersection-observer";
 import { Loader2 } from "lucide-react";
 import { useParams } from "next/navigation";
 import Comment from "./Comment";
+import { authClient } from "@/lib/auth-client";
+import { Session } from "better-auth";
 
 interface CommentResponse {
   comments: Comment[];
@@ -26,11 +28,18 @@ interface Comment {
   createdAt: Date | null;
   updatedAt: Date | null;
   replyCount: number;
+  likeCount: number;
+  likedByCurrentUser: boolean;
 }
 
 export default function CommentInfiniteList() {
   const { inView, ref } = useInView();
   const { postId } = useParams();
+
+  async function getSession() {
+    const session = await authClient.getSession();
+    return session;
+  }
 
   async function getComments(page: number) {
     const res = await fetch(
@@ -40,6 +49,11 @@ export default function CommentInfiniteList() {
     const data = (await res.json()) as CommentResponse;
     return data;
   }
+
+  const { data: session, isPending } = useQuery({
+    queryKey: ["session"],
+    queryFn: () => getSession(),
+  });
 
   const {
     data,
@@ -67,12 +81,12 @@ export default function CommentInfiniteList() {
   }, [inView, isFetchingNextPage, hasNextPage, fetchNextPage]);
 
   useEffect(() => {
-    if (error) {
-      toast.error(error.message);
+    if (error || !comments) {
+      toast.error(error?.message || "Failed to fetch comments");
     }
   }, [error]);
 
-  if (status === "pending")
+  if (status === "pending" || isPending)
     return (
       <div className="flex flex-col gap-2 justify-center items-center w-full h-full text-gray-500 dark:text-gray-300">
         <Loader2 size="30" className="animate-spin" />
@@ -81,7 +95,11 @@ export default function CommentInfiniteList() {
   return (
     <div className="flex flex-col gap-2 w-full">
       {comments?.map((comment: Comment) => (
-        <Comment key={comment.id} comment={comment} />
+        <Comment
+          key={comment.id}
+          comment={comment}
+          session={session?.data?.session as Session}
+        />
       ))}
       <div ref={ref}>
         {isFetchingNextPage ? (

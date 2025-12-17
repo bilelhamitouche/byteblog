@@ -1,9 +1,9 @@
 import { getUserInfo } from "@/actions/auth";
 import CommentsSection from "@/components/CommentsSection";
 import FollowButton from "@/components/FollowButton";
-import LikeButton from "@/components/LikeButton";
 import PostActionsDropdown from "@/components/PostActionsDropdown";
 import PostContent from "@/components/PostContent";
+import PostLikeButton from "@/components/PostLikeButton";
 import SavePostButton from "@/components/SavePostButton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -72,7 +72,7 @@ export default async function Post({
       <div className="flex gap-4 justify-between items-center p-2 w-full">
         <div className="flex gap-1 items-center">
           <span>{post.likesCount}</span>
-          <LikeButton
+          <PostLikeButton
             postId={postId}
             hasUserLiked={hasUserLiked as boolean}
             loggedIn={!!user?.id}
