@@ -1,11 +1,11 @@
 import { Suspense } from "react";
 import PostInfiniteList from "./PostInfiniteList";
-import Loading from "./Loading";
+import { PostListSkeleton } from "./PostListSkeleton";
 
-export default async function Posts() {
+export default function Posts() {
   return (
     <div className="py-24 w-full h-full">
-      <Suspense fallback={<Loading />}>
+      <Suspense fallback={<PostListSkeleton />}>
         <PostInfiniteList />
       </Suspense>
     </div>

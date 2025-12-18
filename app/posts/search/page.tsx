@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { lusitana } from "@/lib/fonts";
 import SearchPostInfiniteList from "@/components/SearchPostInfiniteList";
-import Loading from "@/components/Loading";
+import { PostListSkeleton } from "@/components/PostListSkeleton";
 
 export default async function Search() {
   return (
@@ -9,7 +9,7 @@ export default async function Search() {
       <h2 className={`text-3xl px-8 font-semibold ${lusitana.className}`}>
         Search Results
       </h2>
-      <Suspense fallback={<Loading />}>
+      <Suspense fallback={<PostListSkeleton />}>
         <SearchPostInfiniteList />
       </Suspense>
     </div>
