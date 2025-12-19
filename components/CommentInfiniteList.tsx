@@ -9,6 +9,7 @@ import { useParams } from "next/navigation";
 import Comment from "./Comment";
 import { authClient } from "@/lib/auth-client";
 import { Session } from "better-auth";
+import CommentsListSkeleton from "./CommentsListSkeleton";
 
 interface CommentResponse {
   comments: Comment[];
@@ -86,12 +87,7 @@ export default function CommentInfiniteList() {
     }
   }, [error]);
 
-  if (status === "pending" || isPending)
-    return (
-      <div className="flex flex-col gap-2 justify-center items-center w-full h-full text-gray-500 dark:text-gray-300">
-        <Loader2 size="30" className="animate-spin" />
-      </div>
-    );
+  if (status === "pending" || isPending) return <CommentsListSkeleton />;
   return (
     <div className="flex flex-col gap-2 w-full">
       {comments?.map((comment: Comment) => (
@@ -101,13 +97,7 @@ export default function CommentInfiniteList() {
           session={session?.data?.session as Session}
         />
       ))}
-      <div ref={ref}>
-        {isFetchingNextPage ? (
-          <div className="flex flex-col gap-2 justify-center items-center">
-            <Loader2 size="30" className="animate-spin" />
-          </div>
-        ) : null}
-      </div>
+      <div ref={ref}></div>
     </div>
   );
 }
