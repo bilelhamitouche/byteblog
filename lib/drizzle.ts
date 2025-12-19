@@ -6,6 +6,7 @@ import {
   primaryKey,
   text,
   timestamp,
+  uniqueIndex,
 } from "drizzle-orm/pg-core";
 
 export const db = drizzle(process.env.DATABASE_URL as string);
@@ -71,17 +72,21 @@ export const verification = pgTable("verification", {
   updatedAt: timestamp("updated_at", { withTimezone: true }),
 });
 
-export const profile = pgTable("profile", {
-  id: text("id")
-    .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
-  bio: text("bio"),
-  userId: text("user_id")
-    .notNull()
-    .references(() => user.id, { onDelete: "cascade" }),
-  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
-  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
-});
+export const profile = pgTable(
+  "profile",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    bio: text("bio"),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
+  },
+  (table) => [uniqueIndex("profile_user_id_unique").on(table.userId)],
+);
 
 export const follow = pgTable(
   "follow",

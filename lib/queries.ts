@@ -420,11 +420,14 @@ export async function getPostTags(postId: string) {
 export async function createOrEditProfile(userId: string, bio: string) {
   await redirectUnauthenticated();
   try {
-    await db
+    const newBio = await db
       .insert(profile)
       .values({ userId, bio })
-      .onConflictDoUpdate({ target: profile.userId, set: { bio } });
+      .onConflictDoUpdate({ target: profile.userId, set: { bio } })
+      .returning({ bio: profile.bio });
+    console.log(newBio);
   } catch (err) {
+    console.log(err);
     if (err instanceof DrizzleError) throw new Error("Database Error");
   }
 }
@@ -445,11 +448,15 @@ export async function getAuthorBio(authorId: string) {
   try {
     const hasProfile = await hasUserProfile(authorId);
     if (hasProfile) {
-      const bio = await db
+      const [{ bio }] = await db
         .select({ bio: profile.bio })
         .from(profile)
         .where(eq(profile.userId, authorId as string));
-      return bio[0];
+      console.log("User has a bio");
+      return bio;
+    } else {
+      console.log("User doesn't have a bio");
+      return "";
     }
   } catch (err) {
     if (err instanceof DrizzleError) throw new Error("Database Error");
@@ -496,11 +503,29 @@ export async function toggleFollowAuthor(
 export async function getFollowedAuthors(authorId: string) {
   try {
     const followedAuthors = await db
-      .select({ id: user.id, name: user.name, image: user.image })
+      .select({
+        id: follow.followedId,
+        name: user.name,
+        email: user.email,
+        username: user.username,
+        image: user.image,
+      })
       .from(follow)
-      .leftJoin(user, eq(user.id, follow.followedId))
-      .where(eq(follow.followerId, authorId));
+      .leftJoin(user, eq(follow.followerId, user.id))
+      .where(eq(follow.followedId, authorId));
     return followedAuthors;
+  } catch (err) {
+    if (err instanceof DrizzleError) throw new Error("Database Error");
+  }
+}
+
+export async function getFollowersCountByAuthorId(authorId: string) {
+  try {
+    const [{ followersCount }] = await db
+      .select({ followersCount: count(follow.followerId) })
+      .from(follow)
+      .where(eq(follow.followedId, authorId));
+    return followersCount;
   } catch (err) {
     if (err instanceof DrizzleError) throw new Error("Database Error");
   }

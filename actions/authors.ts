@@ -1,8 +1,8 @@
 "use server";
 
-import { toggleFollowAuthor } from "@/lib/queries";
+import { createOrEditProfile, toggleFollowAuthor } from "@/lib/queries";
 import { getUserInfo } from "./auth";
-import { revalidatePath } from "next/cache";
+import { refresh, revalidatePath } from "next/cache";
 
 export async function toggleFollowAuthorAction(
   authorId: string,
@@ -19,4 +19,19 @@ export async function toggleFollowAuthorAction(
     }
   }
   revalidatePath(`/posts/${postId}`);
+}
+
+export async function createOrEditAuthorProfileAction(formData: FormData) {
+  const authorId = formData.get("authorId");
+  const bio = formData.get("bio");
+  try {
+    await createOrEditProfile(authorId as string, bio as string);
+  } catch (err) {
+    if (err instanceof Error) {
+      return {
+        message: err.message,
+      };
+    }
+  }
+  refresh();
 }
