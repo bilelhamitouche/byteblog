@@ -18,7 +18,6 @@ export default async function Author({
           authorId={user.id}
           authorName={user.name}
           authorImage={user.image}
-          authorUsername={authorUsername}
         />
       </Suspense>
     </div>
