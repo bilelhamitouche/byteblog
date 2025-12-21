@@ -23,13 +23,16 @@ export default function Hero() {
           </Button>
         </div>
       </div>
-      <Image
-        src="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?q=80&w=872&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-        alt="hero image"
-        width="600"
-        height="400"
-        className="rounded-lg drop-shadow-xl"
-      />
+      <div className="relative w-full lg:w-1/2 min-h-[400px]">
+        <Image
+          src="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?q=80&w=872&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+          alt="hero image"
+          // width="600"
+          //height="400"
+          fill
+          className="object-cover rounded-lg drop-shadow-xl"
+        />
+      </div>
     </section>
   );
 }
