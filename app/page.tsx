@@ -1,11 +1,5 @@
-import { getUserInfo } from "@/actions/auth";
-import { redirect } from "next/navigation";
+import LandingPage from "@/components/landing-page";
 
-export default async function Home() {
-  const user = await getUserInfo();
-  if (!user) {
-    redirect("/landing");
-  } else {
-    redirect("/posts");
-  }
+export default function Home() {
+  return <LandingPage />;
 }
