@@ -7,10 +7,16 @@ import { useQueryState } from "nuqs";
 import { FormEvent } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
+function testPathname(pathname: string) {
+  return /^\/(login|register)(\/|$)/.test(pathname);
+}
+
 export default function SearchPosts({
   isAuthenticated,
+  isMobile,
 }: {
   isAuthenticated: boolean;
+  isMobile?: boolean;
 }) {
   const [search, setSearch] = useQueryState("search", { defaultValue: "" });
   const router = useRouter();
@@ -19,13 +25,13 @@ export default function SearchPosts({
     e.preventDefault();
     router.push(`/posts/search?search=${encodeURIComponent(search as string)}`);
   }
-  if (!isAuthenticated && pathname === "/") return null;
+  if (!isAuthenticated && testPathname(pathname)) return null;
   return (
-    <form onSubmit={onSubmit}>
-      <ButtonGroup>
+    <form onSubmit={onSubmit} className="w-full">
+      <ButtonGroup className="w-full">
         <Input
           placeholder="Search Posts"
-          className="max-w-48"
+          className={`${isMobile ? "min-w-fit" : ""} max-w-48`}
           onChange={(e) => {
             setSearch(e.target.value);
           }}

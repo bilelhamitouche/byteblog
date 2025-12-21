@@ -8,6 +8,7 @@ import {
   SheetTrigger,
 } from "./ui/sheet";
 import { Menu } from "lucide-react";
+import SearchPosts from "./SearchPosts";
 
 export default function MobileMenu({
   authenticated,
@@ -21,11 +22,15 @@ export default function MobileMenu({
           <Menu />
         </Button>
       </SheetTrigger>
-      <SheetContent side="top" className="overflow-auto space-y-4 max-h-screen">
+      <SheetContent
+        side="right"
+        className="overflow-auto space-y-4 max-h-screen"
+      >
         <SheetHeader>
           <SheetTitle>ByteBlog</SheetTitle>
         </SheetHeader>
         <nav className="flex flex-col gap-2 px-4">
+          <SearchPosts isAuthenticated={authenticated} isMobile={true} />
           <Link
             href="/authors"
             className="p-2 transition-colors hover:text-primary"
