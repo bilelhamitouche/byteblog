@@ -43,9 +43,6 @@ export default function EditProfileDialog({
       setIsEditing(false);
     }
   }
-  useEffect(() => {
-    console.log("newBio updated:", newBio);
-  }, [newBio]);
   return (
     <Dialog>
       <DialogTrigger asChild>
