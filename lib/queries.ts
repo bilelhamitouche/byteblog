@@ -425,9 +425,7 @@ export async function createOrEditProfile(userId: string, bio: string) {
       .values({ userId, bio })
       .onConflictDoUpdate({ target: profile.userId, set: { bio } })
       .returning({ bio: profile.bio });
-    console.log(newBio);
   } catch (err) {
-    console.log(err);
     if (err instanceof DrizzleError) throw new Error("Database Error");
   }
 }
@@ -452,10 +450,8 @@ export async function getAuthorBio(authorId: string) {
         .select({ bio: profile.bio })
         .from(profile)
         .where(eq(profile.userId, authorId as string));
-      console.log("User has a bio");
       return bio;
     } else {
-      console.log("User doesn't have a bio");
       return "";
     }
   } catch (err) {
