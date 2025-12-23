@@ -103,13 +103,6 @@ export async function signOutAction() {
   redirect("/login");
 }
 
-export async function isAuthenticated() {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-  return !!session;
-}
-
 export async function getUserInfo() {
   const session = await auth.api.getSession({
     headers: await headers(),
