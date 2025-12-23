@@ -29,20 +29,16 @@ export default function MobileMenu({
         <SheetHeader>
           <SheetTitle>ByteBlog</SheetTitle>
         </SheetHeader>
-        <nav className="flex flex-col gap-2 px-4">
+        <nav className="flex flex-col gap-4 px-4 w-full">
           <SearchPosts isAuthenticated={authenticated} isMobile={true} />
-          <Link
-            href="/authors"
-            className="p-2 transition-colors hover:text-primary"
-          >
-            Authors
-          </Link>
-          <Link
-            href="/tags"
-            className="p-2 transition-colors hover:text-primary"
-          >
-            Tags
-          </Link>
+          <div className="flex flex-col gap-2">
+            <Button variant="ghost" className="w-full" asChild>
+              <Link href="/authors">Authors</Link>
+            </Button>
+            <Button variant="ghost" className="w-full" asChild>
+              <Link href="/tags">Tags</Link>
+            </Button>
+          </div>
         </nav>
         {authenticated ? null : (
           <div className="flex flex-col gap-2 px-4">

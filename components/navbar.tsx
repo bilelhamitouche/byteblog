@@ -3,13 +3,18 @@ import Link from "next/link";
 import { Button } from "./ui/button";
 import MobileMenu from "./mobile-menu";
 import { ModeToggle } from "./mode-toggle";
-import { getUserInfo, isAuthenticated } from "@/actions/auth";
+import { getUserInfo } from "@/actions/auth";
 import AvatarDropdown from "./avatar-dropdown";
 import { lusitana } from "@/lib/fonts";
 import SearchPosts from "./SearchPosts";
+import {
+  NavigationMenu,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+} from "./ui/navigation-menu";
 
 export default async function Navbar() {
-  const authenticated = await isAuthenticated();
   const user = await getUserInfo();
   return (
     <header className="flex fixed z-10 gap-8 justify-between items-center p-4 px-8 mx-auto w-full border-b backdrop-blur-lg bg-background/60">
@@ -19,22 +24,28 @@ export default async function Navbar() {
           ByteBlog
         </span>
       </Link>
-      <nav className="hidden gap-4 items-center md:flex">
-        <SearchPosts isAuthenticated={authenticated} />
-        <Link href="/tags" className="hover:text-primary">
-          Tags
-        </Link>
-        <Link href="/authors" className="hover:text-primary">
-          Authors
-        </Link>
-      </nav>
+      <NavigationMenu className="hidden gap-4 md:flex">
+        <SearchPosts isAuthenticated={!!user} />
+        <NavigationMenuList>
+          <NavigationMenuItem>
+            <NavigationMenuLink asChild>
+              <Link href="/tags">Tags</Link>
+            </NavigationMenuLink>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
+            <NavigationMenuLink asChild>
+              <Link href="/authors">Authors</Link>
+            </NavigationMenuLink>
+          </NavigationMenuItem>
+        </NavigationMenuList>
+      </NavigationMenu>
       <Button className="ml-auto -mr-4 rounded-full sm:mr-0" asChild>
         <Link href="/write">
           <Edit />
           <span>Write</span>
         </Link>
       </Button>
-      {authenticated ? (
+      {user ? (
         <div className="hidden gap-4 items-center md:flex">
           <ModeToggle />
           <AvatarDropdown
@@ -55,7 +66,7 @@ export default async function Navbar() {
           <ModeToggle />
         </div>
       )}
-      <MobileMenu authenticated={authenticated} />
+      <MobileMenu authenticated={!!user} />
     </header>
   );
 }
