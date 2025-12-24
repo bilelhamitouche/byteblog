@@ -105,9 +105,7 @@ export default async function Post({
             </Badge>
           ))
         ) : (
-          <div className="text-gray-500 dark:text-gray-300">
-            Error fetching tags
-          </div>
+          <div className="text-red-600">Error fetching tags</div>
         )}
       </ul>
       <CommentsSection />
