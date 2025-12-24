@@ -5,7 +5,6 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import Navbar from "@/components/navbar";
 import QueryClientProvider from "@/components/QueryClientProvider";
-import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 const outfit = Outfit({
   variable: "--font-outfit-sans",
@@ -34,11 +33,9 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <QueryClientProvider>
-            <NuqsAdapter>
-              <Navbar />
-              {children}
-              <Toaster />
-            </NuqsAdapter>
+            <Navbar />
+            {children}
+            <Toaster />
           </QueryClientProvider>
         </ThemeProvider>
       </body>

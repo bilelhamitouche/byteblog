@@ -3,8 +3,7 @@ import { Search } from "lucide-react";
 import { Button } from "./ui/button";
 import { ButtonGroup } from "./ui/button-group";
 import { Input } from "./ui/input";
-import { useQueryState } from "nuqs";
-import { FormEvent } from "react";
+import { FormEvent, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
 function testPathname(pathname: string) {
@@ -18,7 +17,7 @@ export default function SearchPosts({
   isAuthenticated: boolean;
   isMobile?: boolean;
 }) {
-  const [search, setSearch] = useQueryState("search", { defaultValue: "" });
+  const [search, setSearch] = useState("");
   const router = useRouter();
   const pathname = usePathname();
   function onSubmit(e: FormEvent<HTMLFormElement>) {
