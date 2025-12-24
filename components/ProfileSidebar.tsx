@@ -40,10 +40,10 @@ export default async function ProfileSidebar({
         <span className={`text-lg font-medium ${lusitana.className}`}>
           {authorName}
         </span>
-        <span className="text-base text-gray-500 dark:text-gray-300">
+        <span className="text-base text-gray-500 dark:text-gray-400">
           {followersCount ? followersCount + " Followers" : null}
         </span>
-        <p className={`text-sm text-gray-500 dark:text-gray-300`}>
+        <p className={`text-sm text-gray-500 dark:text-gray-400`}>
           {authorBio ?? ""}
         </p>
         {user?.id === authorId && (

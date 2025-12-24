@@ -55,7 +55,7 @@ export default function PostCard({
         <CardTitle className="text-xl font-bold">{post.title}</CardTitle>
       </div>
       <div className="flex flex-col gap-2 items-start">
-        <p className="overflow-hidden text-sm text-gray-500 dark:text-gray-300 text-ellipsis [display:-webkit-box] [-webkit-line-clamp:3] [-webkit-box-orient:vertical]">
+        <p className="overflow-hidden text-sm text-gray-500 dark:text-gray-400 text-ellipsis [display:-webkit-box] [-webkit-line-clamp:3] [-webkit-box-orient:vertical]">
           <PreviewContent content={JSON.parse(post.content).content} />
         </p>
       </div>

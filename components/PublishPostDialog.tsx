@@ -118,7 +118,7 @@ export default function PublishPostDialog(postData: PublishPostDialogProps) {
             }
             emptyIndicator={
               <div className="p-4">
-                <span className="text-gray-500 dark:text-gray-300">
+                <span className="text-gray-500 dark:text-gray-400">
                   No results
                 </span>
               </div>

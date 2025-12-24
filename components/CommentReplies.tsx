@@ -56,7 +56,7 @@ export default function CommentReplies({ commentId }: { commentId: string }) {
 
   if (status === "pending" || isPending) {
     return (
-      <div className="flex justify-center items-center w-full text-gray-500 dark:text-gray-300">
+      <div className="flex justify-center items-center w-full text-gray-500 dark:text-gray-400">
         <Loader2 className="animate-spin" size="30" />
       </div>
     );
