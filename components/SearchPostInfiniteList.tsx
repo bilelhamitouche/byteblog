@@ -42,7 +42,7 @@ export default function PostInfiniteList() {
     return session;
   }
 
-  async function getPosts(page: number) {
+  async function getPosts(search: string, page: number) {
     const res = await fetch(
       `/api/posts?search=${search}&page=${page}&limit=${POST_LIMIT}`,
     );
@@ -58,7 +58,7 @@ export default function PostInfiniteList() {
 
   const { data, status, error, fetchNextPage } = useInfiniteQuery({
     queryKey: ["search", "posts", search],
-    queryFn: ({ pageParam }) => getPosts(pageParam),
+    queryFn: ({ pageParam }) => getPosts(search, pageParam),
     initialPageParam: 0,
     getNextPageParam: (lastPage) => {
       return lastPage.hasMore ? lastPage.currentPage + 1 : undefined;
