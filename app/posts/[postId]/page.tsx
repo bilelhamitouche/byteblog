@@ -58,7 +58,7 @@ export default async function Post({
               loggedIn={!!user}
             />
           )}
-          <div className="flex gap-1 items-center text-gray-500 dark:text-gray-300">
+          <div className="flex gap-1 items-center text-gray-500 dark:text-gray-400">
             <p>
               {getContentReadTime(extractAllText(JSON.parse(post.content)))} min
               read
