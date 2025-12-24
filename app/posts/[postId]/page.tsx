@@ -110,7 +110,7 @@ export default async function Post({
           </div>
         )}
       </ul>
-      <CommentsSection postId={post.id} />
+      <CommentsSection />
     </div>
   );
 }
