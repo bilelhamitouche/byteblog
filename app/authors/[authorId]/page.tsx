@@ -1,4 +1,5 @@
 import AuthorPostInfiniteList from "@/components/AuthorPostInfiniteList";
+import { AuthorPostListSkeleton } from "@/components/AuthorPostListSkeleton";
 import ProfileSidebar from "@/components/ProfileSidebar";
 import ProfileSidebarSkeleton from "@/components/ProfileSidebarSkeleton";
 import { getUserByUsernameOrEmail } from "@/lib/queries";
@@ -21,7 +22,7 @@ export default async function Author({
           authorImage={user.image}
         />
       </Suspense>
-      <Suspense>
+      <Suspense fallback={<AuthorPostListSkeleton />}>
         <AuthorPostInfiniteList authorId={user.id} />
       </Suspense>
     </div>
