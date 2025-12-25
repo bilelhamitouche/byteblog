@@ -108,6 +108,7 @@ export default async function Post({
           <div className="text-red-600">Error fetching tags</div>
         )}
       </ul>
+      <hr className="mb-12" />
       <CommentsSection />
     </div>
   );
