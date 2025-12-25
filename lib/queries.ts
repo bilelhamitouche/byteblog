@@ -98,6 +98,8 @@ export async function getPublishedPosts(
   skip: number,
   limit: number,
   currentUserId: string | null,
+  search?: string,
+  authorId?: string,
 ) {
   try {
     const rows = await db
@@ -128,7 +130,19 @@ export async function getPublishedPosts(
       .from(post)
       .leftJoin(user, eq(post.authorId, user.id))
       .leftJoin(postLike, eq(postLike.postId, post.id))
-      .where(eq(post.published, true))
+      .where(
+        authorId
+          ? search
+            ? and(
+                eq(post.published, true),
+                ilike(post.title, `%${search}%`),
+                eq(post.authorId, authorId ?? ""),
+              )
+            : and(eq(post.published, true), eq(post.authorId, authorId))
+          : search
+            ? and(eq(post.published, true), ilike(post.title, `%${search}%`))
+            : eq(post.published, true),
+      )
       .groupBy(post.id, user.id)
       .orderBy(desc(post.createdAt))
       .offset(skip)
@@ -148,101 +162,28 @@ export async function getPublishedPosts(
   }
 }
 
-export async function getPublishedPostsCount() {
-  try {
-    const [{ count: postCount }] = await db
-      .select({ count: count() })
-      .from(post)
-      .where(eq(post.published, true));
-    return postCount;
-  } catch (err) {
-    if (err instanceof DrizzleError) throw new Error("Database Error");
-  }
-}
-
-export async function searchPublishedPosts(
-  search: string,
-  skip: number,
-  limit: number,
-  currentUserId: string | null,
+export async function getPublishedPostsCount(
+  search?: string,
+  authorId?: string,
 ) {
   try {
-    const rows = await db
-      .select({
-        post: {
-          ...post,
-        },
-        author: {
-          author: user.name,
-          authorImage: user.image,
-          authorEmail: user.email,
-          authorUsername: user.username,
-        },
-        likeCount: sql<number>`CAST(count(${postLike.userId}) AS INT)`.as(
-          "likeCount",
-        ),
-        likedByCurrentUser: currentUserId
-          ? sql<boolean>`
-              EXISTS (
-                SELECT 1
-                FROM ${postLike}
-                WHERE ${postLike.postId} = ${post.id}
-                AND ${postLike.userId} = ${currentUserId}
-              )
-            `.as("likedByCurrentUser")
-          : sql<boolean>`false`.as("likedByCurrentUser"),
-      })
-      .from(post)
-      .leftJoin(user, eq(post.authorId, user.id))
-      .leftJoin(postLike, eq(postLike.postId, post.id))
-      .where(and(eq(post.published, true), ilike(post.title, `%${search}%`)))
-      .groupBy(post.id, user.id)
-      .orderBy(desc(post.createdAt))
-      .offset(skip)
-      .limit(limit);
-    const posts = rows.map((row) => ({
-      ...row.post,
-      ...row.author,
-      likeCount: row.likeCount,
-      likedByCurrentUser: row.likedByCurrentUser,
-    }));
-    return posts;
-  } catch (err) {
-    if (err instanceof DrizzleError) {
-      throw new Error("Database Error");
-    }
-    throw err;
-  }
-}
-
-export async function searchPublishedPostsCount(search: string) {
-  try {
     const [{ count: postCount }] = await db
       .select({ count: count() })
       .from(post)
-      .where(and(eq(post.published, true), ilike(post.title, `%${search}%`)));
+      .where(
+        authorId
+          ? search
+            ? and(
+                eq(post.published, true),
+                eq(post.authorId, authorId ?? ""),
+                ilike(post.title, `%${search}%`),
+              )
+            : and(eq(post.published, true), eq(post.authorId, authorId))
+          : search
+            ? and(eq(post.published, true), ilike(post.title, `%${search}%`))
+            : eq(post.published, true),
+      );
     return postCount;
-  } catch (err) {
-    if (err instanceof DrizzleError) throw new Error("Database Error");
-  }
-}
-
-export async function getPostsByAuthorId(authorId: string) {
-  await redirectUnauthenticated();
-  try {
-    const posts = await db
-      .select({
-        id: post.id,
-        image: post.image,
-        title: post.title,
-        content: post.content,
-        published: post.published,
-        createdAt: post.createdAt,
-      })
-      .from(post)
-      .leftJoin(user, eq(post.authorId, user.id))
-      .where(eq(post.authorId, authorId));
-    return posts;
   } catch (err) {
     if (err instanceof DrizzleError) throw new Error("Database Error");
   }
