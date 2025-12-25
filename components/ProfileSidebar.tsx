@@ -28,7 +28,7 @@ export default async function ProfileSidebar({
     getFollowedAuthors(authorId),
   ]);
   return (
-    <aside className="hidden flex-col items-start py-28 border-r md:flex min-w-xs">
+    <aside className="hidden flex-col items-start py-28 px-8 border-r md:flex min-w-xs">
       <div className="flex flex-col gap-2 justify-center items-center mx-auto">
         <Image
           src={authorImage as string}
