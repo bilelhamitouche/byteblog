@@ -19,7 +19,7 @@ export default function Newsletter() {
         <Input
           placeholder="Enter your email address"
           type="email"
-          className="text-black bg-white dark:bg-white"
+          className="text-gray-100 bg-gray-800 dark:text-gray-800 dark:bg-gray-100 placeholder:text-gray-500"
         />
         <Button variant="default">Subscribe Now</Button>
       </div>
