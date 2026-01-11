@@ -8,8 +8,8 @@ export const auth = betterAuth({
   session: {
     cookieCache: {
       enabled: true,
-      maxAge: 60 * 5
-    }
+      maxAge: 60 * 5,
+    },
   },
   database: drizzleAdapter(db, {
     provider: "pg",
@@ -31,5 +31,8 @@ export const auth = betterAuth({
       clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
     },
   },
-  plugins: [nextCookies(), admin(), username()],
+  emailVerification: {
+    sendVerificationEmail: async function () {},
+  },
+  plugins: [admin(), username(), nextCookies()],
 });
