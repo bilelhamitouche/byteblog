@@ -15,7 +15,7 @@ export async function accountChangeAction(formData: FormData) {
     });
     if (!accountChangeValidation.success) {
       return {
-        errors: accountChangeValidation.error.flatten().fieldErrors,
+        errors: accountChangeValidation.error,
       };
     }
     await auth.api.updateUser({
