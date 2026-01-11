@@ -17,7 +17,7 @@ export async function changePasswordAction(formData: FormData) {
     });
     if (!passwordChangeSchemaValidation.success) {
       return {
-        errors: passwordChangeSchemaValidation.error.flatten().fieldErrors,
+        errors: passwordChangeSchemaValidation.error,
       };
     }
     await auth.api.changePassword({

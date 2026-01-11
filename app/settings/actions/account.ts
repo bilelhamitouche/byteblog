@@ -38,3 +38,20 @@ export async function accountChangeAction(formData: FormData) {
     }
   }
 }
+
+export async function deleteAccountAction(formData: FormData) {
+  const password = formData.get("password") as string;
+  try {
+    await auth.api.deleteUser({
+      body: {
+        password,
+      },
+    });
+  } catch (err) {
+    if (err instanceof APIError) {
+      return {
+        message: err.message,
+      };
+    }
+  }
+}
