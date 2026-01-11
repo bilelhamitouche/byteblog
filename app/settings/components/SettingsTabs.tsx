@@ -9,7 +9,9 @@ const SettingsTabs = ({ children }: { children: React.ReactNode }) => {
 
   const activeTab = pathname.includes("/settings/account")
     ? "account"
-    : "password";
+    : pathname.includes("/settings/password")
+      ? "password"
+      : "appearance";
 
   return (
     <Tabs value={activeTab} className="w-full">
@@ -20,9 +22,13 @@ const SettingsTabs = ({ children }: { children: React.ReactNode }) => {
         <TabsTrigger asChild value="password">
           <Link href="/settings/password">Password</Link>
         </TabsTrigger>
+        <TabsTrigger asChild value="appearance">
+          <Link href="/settings/appearance">Appearance</Link>
+        </TabsTrigger>
       </TabsList>
       <TabsContent value="account">{children}</TabsContent>
       <TabsContent value="password">{children}</TabsContent>
+      <TabsContent value="appearance">{children}</TabsContent>
     </Tabs>
   );
 };
