@@ -4,6 +4,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -25,6 +26,8 @@ import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
+import DeleteAccountDialog from "../components/DeleteAccountDialog";
+import { ExclamationCircleIcon } from "@heroicons/react/20/solid";
 
 function Account() {
   const [isPending, setIsPending] = useState<boolean>(false);
@@ -32,11 +35,12 @@ function Account() {
     resolver: zodResolver(accountChangeSchema),
     defaultValues: {
       name: "",
+      username: "",
       email: "",
     },
   });
   return (
-    <Card>
+    <Card className="space-y-4">
       <CardHeader>
         <CardTitle>Account Settings</CardTitle>
         <CardDescription>
@@ -80,6 +84,19 @@ function Account() {
               )}
             />
             <FormField
+              name="username"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Username</FormLabel>
+                  <FormControl>
+                    <Input placeholder="" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
               name="email"
               control={form.control}
               render={({ field }) => (
@@ -105,6 +122,24 @@ function Account() {
           </form>
         </Form>
       </CardContent>
+      <CardFooter className="flex flex-col gap-4 items-start">
+        <CardTitle>Delete account</CardTitle>
+        <CardDescription>
+          Delete your account and all it's resources
+        </CardDescription>
+        <div className="p-4 space-y-4 w-full text-red-500 rounded-lg border-2 dark:text-red-500 bg-destructive/10 border-destructive/50 dark:border-destructive dark:bg-destructive/20">
+          <div className="space-y-1">
+            <h3 className="flex gap-1 items-center text-base font-semibold">
+              <ExclamationCircleIcon className="size-6" />
+              <span>Warning</span>
+            </h3>
+            <p className="text-sm">
+              Please proceed with caution this cannot be undone.
+            </p>
+          </div>
+          <DeleteAccountDialog />
+        </div>
+      </CardFooter>
     </Card>
   );
 }
