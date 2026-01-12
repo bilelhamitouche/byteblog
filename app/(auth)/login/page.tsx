@@ -52,9 +52,11 @@ export default function Login() {
               className="flex-1"
               disabled={isPending}
               onClick={async () => {
+                setIsPending(true);
                 await authClient.signIn.social({
                   provider: "google",
                 });
+                setIsPending(false);
               }}
             >
               <svg
@@ -89,9 +91,11 @@ export default function Login() {
               className="flex-1"
               disabled={isPending}
               onClick={async () => {
+                setIsPending(true);
                 await authClient.signIn.social({
                   provider: "github",
                 });
+                setIsPending(false);
               }}
             >
               <svg
@@ -128,6 +132,7 @@ export default function Login() {
                     if (!result?.message && !result?.errors) {
                       toast.success("Logged In successfully");
                       router.push("/");
+                      router.refresh();
                     }
                   } catch (err) {
                     if (err instanceof Error) {
