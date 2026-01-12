@@ -7,10 +7,12 @@ import { headers } from "next/headers";
 
 export async function accountChangeAction(formData: FormData) {
   const name = formData.get("name");
+  const username = formData.get("username");
   const email = formData.get("email");
   try {
     const accountChangeValidation = accountChangeSchema.safeParse({
       name,
+      username,
       email,
     });
     if (!accountChangeValidation.success) {
@@ -21,6 +23,7 @@ export async function accountChangeAction(formData: FormData) {
     await auth.api.updateUser({
       body: {
         name: accountChangeValidation.data.name,
+        username: accountChangeValidation.data.username,
       },
       headers: await headers(),
     });

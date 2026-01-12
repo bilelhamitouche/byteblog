@@ -11,12 +11,19 @@ export const auth = betterAuth({
       maxAge: 60 * 5,
     },
   },
+  user: {
+    changeEmail: {
+      enabled: true,
+      updateEmailWithoutVerification: true,
+    },
+  },
   database: drizzleAdapter(db, {
     provider: "pg",
     schema: schema,
   }),
   emailAndPassword: {
     enabled: true,
+    autoSignIn: true,
   },
   socialProviders: {
     google: {
@@ -30,9 +37,6 @@ export const auth = betterAuth({
       clientId: process.env.GITHUB_CLIENT_ID as string,
       clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
     },
-  },
-  emailVerification: {
-    sendVerificationEmail: async function () {},
   },
   plugins: [admin(), username(), nextCookies()],
 });

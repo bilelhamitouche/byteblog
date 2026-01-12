@@ -59,5 +59,6 @@ export const passwordChangeSchema = z.object({
 
 export const accountChangeSchema = z.object({
   name: z.string().trim().min(1, { error: "Name is required" }),
+  username: z.string().trim(),
   email: z.email({ error: "Must be a valid Email address" }),
 });
