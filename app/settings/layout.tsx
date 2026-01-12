@@ -12,7 +12,12 @@ function Layout({ children }: { children: React.ReactNode }) {
           <span>Back to Home</span>
         </Link>
       </Button>
-      <h1 className="text-2xl font-bold">Settings</h1>
+      <div className="space-y-2">
+        <h1 className="text-2xl font-bold">Settings</h1>
+        <p className="text-sm">
+          Update your account, password and appearance settings
+        </p>
+      </div>
       <SettingsTabs>{children}</SettingsTabs>
     </div>
   );
