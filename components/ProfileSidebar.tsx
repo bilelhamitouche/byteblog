@@ -30,13 +30,19 @@ export default async function ProfileSidebar({
   return (
     <aside className="hidden flex-col items-start py-28 px-8 border-r md:flex min-w-xs">
       <div className="flex flex-col gap-2 justify-center items-center mx-auto">
-        <Image
-          src={authorImage as string}
-          alt={`${authorName} image`}
-          width="100"
-          height="100"
-          className="rounded-full"
-        />
+        {authorImage ? (
+          <Image
+            src={authorImage as string}
+            alt={`${authorName} image`}
+            width="100"
+            height="100"
+            className="rounded-full"
+          />
+        ) : (
+          <div className="flex justify-center items-center bg-gray-100 rounded-full size-20">
+            <span className="text-3xl">{authorName.toUpperCase()[0]}</span>
+          </div>
+        )}
         <span className={`text-lg font-medium ${lusitana.className}`}>
           {authorName}
         </span>
