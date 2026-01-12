@@ -28,17 +28,33 @@ import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import DeleteAccountDialog from "../components/DeleteAccountDialog";
 import { ExclamationCircleIcon } from "@heroicons/react/20/solid";
+import { useRouter } from "next/navigation";
+import { authClient } from "@/lib/auth-client";
+import { useQuery } from "@tanstack/react-query";
+import AccountSettingsSkeleton from "./components/AccountSettingsSkeleton";
 
-function Account() {
+export default function Account() {
   const [isPending, setIsPending] = useState<boolean>(false);
+  async function getSession() {
+    const session = await authClient.getSession();
+    return session;
+  }
+  const { data: session, isPending: isSessionPending } = useQuery({
+    queryKey: ["session"],
+    queryFn: () => getSession(),
+  });
+  const router = useRouter();
   const form = useForm<z.infer<typeof accountChangeSchema>>({
     resolver: zodResolver(accountChangeSchema),
     defaultValues: {
-      name: "",
-      username: "",
-      email: "",
+      name: session?.data?.user.name ?? "",
+      username: session?.data?.user.username ?? "",
+      email: session?.data?.user.email ?? "",
     },
   });
+  if (isSessionPending) {
+    return <AccountSettingsSkeleton />;
+  }
   return (
     <Card className="space-y-4">
       <CardHeader>
@@ -55,12 +71,15 @@ function Account() {
                 setIsPending(true);
                 const formData = new FormData();
                 formData.append("name", data.name);
+                formData.append("username", data.username);
                 formData.append("email", data.email);
                 try {
                   const result = await accountChangeAction(formData);
                   if (result?.message) toast.error(result.message);
-                  if (!result?.errors && !result?.message)
+                  if (!result?.errors && !result?.message) {
                     toast.success("Account settings changed successfully");
+                  }
+                  router.refresh();
                 } catch (err) {
                   toast.success("Cannot change account settings");
                 } finally {
@@ -123,10 +142,12 @@ function Account() {
         </Form>
       </CardContent>
       <CardFooter className="flex flex-col gap-4 items-start">
-        <CardTitle>Delete account</CardTitle>
-        <CardDescription>
-          Delete your account and all it's resources
-        </CardDescription>
+        <div className="space-y-2">
+          <CardTitle>Delete account</CardTitle>
+          <CardDescription>
+            Delete your account and all it&apos;s resources
+          </CardDescription>
+        </div>
         <div className="p-4 space-y-4 w-full text-red-500 rounded-lg border-2 dark:text-red-500 bg-destructive/10 border-destructive/50 dark:border-destructive dark:bg-destructive/20">
           <div className="space-y-1">
             <h3 className="flex gap-1 items-center text-base font-semibold">
@@ -143,5 +164,3 @@ function Account() {
     </Card>
   );
 }
-
-export default Account;

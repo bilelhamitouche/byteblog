@@ -20,19 +20,25 @@ export async function accountChangeAction(formData: FormData) {
         errors: accountChangeValidation.error,
       };
     }
+    let updatedUser: { name?: string; username?: string } = {};
+    if (name) {
+      updatedUser.name = accountChangeValidation.data.name;
+    }
+    if (username) {
+      updatedUser.username = accountChangeValidation.data.username;
+    }
     await auth.api.updateUser({
-      body: {
-        name: accountChangeValidation.data.name,
-        username: accountChangeValidation.data.username,
-      },
+      body: updatedUser,
       headers: await headers(),
     });
-    await auth.api.changeEmail({
-      body: {
-        newEmail: accountChangeValidation.data.email,
-      },
-      headers: await headers(),
-    });
+    if (email) {
+      await auth.api.changeEmail({
+        body: {
+          newEmail: accountChangeValidation.data.email,
+        },
+        headers: await headers(),
+      });
+    }
   } catch (err) {
     if (err instanceof APIError) {
       return {

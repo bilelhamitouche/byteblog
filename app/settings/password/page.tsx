@@ -25,9 +25,11 @@ import { changePasswordAction } from "../actions/password";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
-function Password() {
+export default function Password() {
   const [isPending, setIsPending] = useState<boolean>(false);
+  const router = useRouter();
   const form = useForm<z.infer<typeof passwordChangeSchema>>({
     resolver: zodResolver(passwordChangeSchema),
     defaultValues: {
@@ -60,8 +62,10 @@ function Password() {
                 try {
                   const result = await changePasswordAction(formData);
                   if (result?.message) toast.error(result.message);
-                  if (!result?.errors && !result?.message)
+                  if (!result?.errors && !result?.message) {
                     toast.success("Password changed successfully");
+                  }
+                  router.refresh();
                 } catch (err) {
                   toast.success("Cannot change password");
                 } finally {
@@ -126,5 +130,3 @@ function Password() {
     </Card>
   );
 }
-
-export default Password;
