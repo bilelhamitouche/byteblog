@@ -1,9 +1,9 @@
 "use server";
 
 import {
-  addTagsToPost,
+  addTopicsToPost,
   createPost,
-  createTags,
+  createTopics,
   deletePost,
   editPost,
   toggleLikePost,
@@ -20,10 +20,10 @@ export async function createPostAction(formData: FormData) {
   const image = formData.get("image");
   const content = formData.get("content");
   const published = formData.get("published");
-  const tags = JSON.parse(formData.get("tags") as string) as Option[];
-  const existingTags = tags
-    .filter((tag) => tag.value !== tag.label)
-    .map((tag) => tag.value);
+  const topics = JSON.parse(formData.get("topics") as string) as Option[];
+  const existingTopics = topics
+    .filter((topic) => topic.value !== topic.label)
+    .map((topic) => topic.value);
   const validationResult = writePostSchema.safeParse({ title, image, content });
   if (!validationResult.success)
     return {
@@ -38,16 +38,19 @@ export async function createPostAction(formData: FormData) {
       userId as string,
     );
     if (newPost) {
-      const newTags = tags
-        .filter((tag: Option) => tag.value === tag.label)
-        .map((tag) => tag.value);
-      const createdTags = await createTags(newTags);
-      let allTags: string[] = [];
-      if (createdTags) {
-        allTags = [...createdTags.map((tag) => tag.id), ...existingTags];
+      const newTopics = topics
+        .filter((topic: Option) => topic.value === topic.label)
+        .map((topic) => topic.value);
+      const createdTopics = await createTopics(newTopics);
+      let allTopics: string[] = [];
+      if (createdTopics) {
+        allTopics = [
+          ...createdTopics.map((topic) => topic.id),
+          ...existingTopics,
+        ];
       }
-      if (tags.length > 0) {
-        await addTagsToPost(existingTags, newPost?.id);
+      if (topics.length > 0) {
+        await addTopicsToPost(existingTopics, newPost?.id);
       }
     }
     return {

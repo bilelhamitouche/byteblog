@@ -16,6 +16,7 @@ import { useCallback, useRef, useState } from "react";
 import MultipleSelector, { Option } from "./ui/multiple-selector";
 import { useQueryClient } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
+import { TOPIC_LIMIT } from "@/lib/constants";
 
 interface PublishPostDialogProps {
   id?: string;
@@ -24,9 +25,9 @@ interface PublishPostDialogProps {
   content: string;
 }
 
-interface Tag {
+interface Topic {
   id: string;
-  tagName: string;
+  topicName: string;
   topicId: string;
   createdAt: Date;
   updatedAt: Date;
@@ -37,9 +38,9 @@ export default function PublishPostDialog(postData: PublishPostDialogProps) {
   const selectedRef = useRef<Option[]>([]);
   const queryClient = useQueryClient();
   const router = useRouter();
-  async function getTags(value: string) {
-    const res = await fetch(`/api/tags?search=${value}&limit=5`);
-    if (!res.ok) toast.error("Failed to fetch tags");
+  async function getTopics(value: string) {
+    const res = await fetch(`/api/topics?search=${value}&limit=5`);
+    if (!res.ok) toast.error("Failed to fetch topics");
     return res.json();
   }
   function onChange(options: Option[]) {
@@ -49,13 +50,13 @@ export default function PublishPostDialog(postData: PublishPostDialogProps) {
     async function (value: string) {
       const data = await queryClient.fetchQuery({
         queryKey: ["autocomplete", value],
-        queryFn: () => getTags(value),
+        queryFn: () => getTopics(value),
         staleTime: 5 * 60 * 1000,
       });
       if (data) {
         const newData: Option[] = [];
-        data.forEach((item: Tag) => {
-          newData.push({ value: item.id, label: item.tagName });
+        data.forEach((item: Topic) => {
+          newData.push({ value: item.id, label: item.topicName });
         });
         return newData;
       }
@@ -72,7 +73,7 @@ export default function PublishPostDialog(postData: PublishPostDialogProps) {
     formData.append("image", postData.image as string);
     formData.append("content", postData.content);
     formData.append("published", JSON.stringify(true));
-    formData.append("tags", JSON.stringify(selectedRef.current));
+    formData.append("topics", JSON.stringify(selectedRef.current));
     setIsPublishing(true);
     try {
       if (postData.id) {
@@ -107,7 +108,7 @@ export default function PublishPostDialog(postData: PublishPostDialogProps) {
         <form className="space-y-4">
           <MultipleSelector
             placeholder="Select topics"
-            maxSelected={5}
+            maxSelected={TOPIC_LIMIT}
             hidePlaceholderWhenSelected
             delay={500}
             creatable

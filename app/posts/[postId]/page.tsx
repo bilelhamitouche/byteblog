@@ -9,7 +9,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import {
   getPost,
-  getPostTags,
+  getPostTopics,
   hasUserFollowedAuthor,
   hasUserLikedPost,
   hasUserSavedPost,
@@ -27,14 +27,13 @@ export default async function Post({
   const postId = (await params).postId;
   const [post, user] = await Promise.all([getPost(postId), getUserInfo()]);
   if (!post) notFound();
-  const [hasUserLiked, hasUserSaved, hasUserFollowed, tags] = await Promise.all(
-    [
+  const [hasUserLiked, hasUserSaved, hasUserFollowed, topics] =
+    await Promise.all([
       hasUserLikedPost(postId, user?.id as string),
       hasUserSavedPost(postId, user?.id as string),
       hasUserFollowedAuthor(post.authorId as string, user?.id as string),
-      getPostTags(postId),
-    ],
-  );
+      getPostTopics(postId),
+    ]);
   return (
     <div className="py-28 px-8 mx-auto max-w-3xl h-full post">
       <div className="flex flex-col gap-4 items-start p-4 w-full">
@@ -94,18 +93,18 @@ export default async function Post({
       <hr />
       <PostContent content={JSON.parse(post.content) as JSONContent} />
       <ul className="flex gap-4 items-center">
-        {tags ? (
-          tags?.map((tag) => (
+        {topics ? (
+          topics?.map((topic) => (
             <Badge
-              key={tag.id}
+              key={topic.id}
               variant="secondary"
               className="py-2 px-3 text-base rounded-full"
             >
-              {tag.name}
+              {topic.name}
             </Badge>
           ))
         ) : (
-          <div className="text-red-600">Error fetching tags</div>
+          <div className="text-red-600">Error fetching topics</div>
         )}
       </ul>
       <hr className="mb-12" />

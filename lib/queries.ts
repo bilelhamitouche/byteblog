@@ -5,10 +5,10 @@ import {
   postLike,
   post,
   profile,
-  tag,
+  topic,
   user,
   userSavesPost,
-  postTag,
+  postTopic,
   comment,
   commentLike,
 } from "./drizzle";
@@ -189,6 +189,19 @@ export async function getPublishedPostsCount(
   }
 }
 
+export async function getPostsByTopicId(topicId: string) {
+  try {
+    const posts = await db
+      .select()
+      .from(post)
+      .leftJoin(postTopic, eq(post.id, postTopic.postId))
+      .where(eq(postTopic.topicId, topicId));
+    return posts;
+  } catch (err) {
+    if (err instanceof DrizzleError) throw new Error("Database Error");
+  }
+}
+
 export async function getPost(id: string) {
   try {
     const currentPost = await db
@@ -284,75 +297,84 @@ export async function getLikeCount(postId: string) {
   }
 }
 
-export async function searchTags(search: string, limit: number) {
+export async function getTopics() {
+  try {
+    const topics = await db.select().from(topic);
+    return topics;
+  } catch (err) {
+    if (err instanceof DrizzleError) throw new Error("Database Error");
+  }
+}
+
+export async function searchTopics(search: string, limit: number) {
   await redirectUnauthenticated();
   try {
-    const tags = await db
+    const topics = await db
       .select()
-      .from(tag)
-      .where(ilike(tag.tagName, `%${search}%`))
+      .from(topic)
+      .where(ilike(topic.topicName, `%${search}%`))
       .limit(limit);
-    return tags;
+    return topics;
   } catch (err) {
     if (err instanceof DrizzleError) throw new Error("Database Error");
   }
 }
 
-export async function createTag(tagName: string) {
+export async function createTopic(topicName: string) {
   await redirectUnauthenticated();
   try {
-    const newTag = await db.insert(tag).values({ tagName }).returning();
-    return newTag[0];
+    const newTopic = await db.insert(topic).values({ topicName }).returning();
+    return newTopic[0];
   } catch (err) {
     if (err instanceof DrizzleError) throw new Error("Database Error");
   }
 }
 
-export async function createTags(tags: string[]) {
+export async function createTopics(topics: string[]) {
   await redirectUnauthenticated();
   try {
-    const createdTags = tags.map((tag) => {
+    const createdTopics = topics.map((topic) => {
       return {
-        tagName: tag,
+        topicName: topic,
       };
     });
-    const newTags = await db.insert(tag).values(createdTags).returning();
-    return newTags || [];
+    const newTopics = await db.insert(topic).values(createdTopics).returning();
+    return newTopics || [];
   } catch (err) {
     if (err instanceof DrizzleError) throw new Error("Database Error");
   }
 }
 
-export async function deleteTag(id: string) {
+export async function deleteTopics(id: string) {
   await redirectUnauthenticated();
   try {
-    await db.delete(tag).where(eq(tag.id, id));
+    await db.delete(topic).where(eq(topic.id, id));
   } catch (err) {
     if (err instanceof DrizzleError) throw new Error("Database Error");
   }
 }
 
-export async function addTagsToPost(tags: string[], postId: string) {
+export async function addTopicsToPost(topics: string[], postId: string) {
   await redirectUnauthenticated();
-  const postTags: { postId: string; tagId: string }[] = [];
-  tags.forEach((tag) => {
-    postTags.push({ postId, tagId: tag });
+  const postTopics: { postId: string; topicId: string }[] = [];
+  topics.forEach((topic) => {
+    postTopics.push({ postId, topicId: topic });
   });
   try {
-    await db.insert(postTag).values(postTags);
+    await db.insert(postTopic).values(postTopics);
   } catch (err) {
     if (err instanceof DrizzleError) throw new Error("Database Error");
   }
 }
 
-export async function getPostTags(postId: string) {
+export async function getPostTopics(postId: string) {
   try {
-    const tags = await db
-      .select({ id: tag.id, name: tag.tagName })
-      .from(tag)
-      .leftJoin(postTag, eq(postTag.tagId, tag.id))
-      .where(eq(postTag.postId, postId));
-    return tags;
+    const topics = await db
+      .select({ id: topic.id, name: topic.topicName })
+      .from(topic)
+      .leftJoin(postTopic, eq(postTopic.topicId, topic.id))
+      .where(eq(postTopic.postId, postId));
+    return topics;
   } catch (err) {
     if (err instanceof DrizzleError) throw new Error("Database Error");
   }
@@ -361,7 +383,7 @@ export async function getPostTags(postId: string) {
 export async function createOrEditProfile(userId: string, bio: string) {
   await redirectUnauthenticated();
   try {
-    const newBio = await db
+    await db
       .insert(profile)
       .values({ userId, bio })
       .onConflictDoUpdate({ target: profile.userId, set: { bio } })

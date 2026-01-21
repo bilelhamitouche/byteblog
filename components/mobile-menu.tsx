@@ -36,7 +36,7 @@ export default function MobileMenu({
               <Link href="/authors">Authors</Link>
             </Button>
             <Button variant="ghost" className="w-full" asChild>
-              <Link href="/tags">Tags</Link>
+              <Link href="/topics">Topics</Link>
             </Button>
           </div>
         </nav>

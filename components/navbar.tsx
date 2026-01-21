@@ -29,7 +29,7 @@ export default async function Navbar() {
         <NavigationMenuList>
           <NavigationMenuItem>
             <NavigationMenuLink asChild>
-              <Link href="/tags">Tags</Link>
+              <Link href="/topics">Topics</Link>
             </NavigationMenuLink>
           </NavigationMenuItem>
           <NavigationMenuItem>

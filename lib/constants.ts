@@ -11,7 +11,7 @@ export const AVATAR_COLORS = [
   "bg-gray-200 text-black",
 ];
 
-export const TAG_LIMIT = 5;
+export const TOPIC_LIMIT = 5;
 
 export const POST_LIMIT = 6;
 

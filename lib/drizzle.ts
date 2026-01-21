@@ -138,31 +138,31 @@ export const userSavesPost = pgTable(
   (table) => [primaryKey({ columns: [table.userId, table.postId] })],
 );
 
-export const tag = pgTable("tag", {
+export const topic = pgTable("topic", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
-  tagName: text("tag_name").notNull().unique(),
+  topicName: text("topicName").notNull().unique(),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
 });
 
-export const postTag = pgTable(
-  "post_tag",
+export const postTopic = pgTable(
+  "post_topic",
   {
     postId: text("post_id")
       .notNull()
       .references(() => post.id, { onDelete: "cascade", onUpdate: "cascade" }),
-    tagId: text("tag_id")
+    topicId: text("topic_id")
       .notNull()
-      .references(() => tag.id, {
+      .references(() => topic.id, {
         onDelete: "cascade",
         onUpdate: "cascade",
       }),
     createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
   },
-  (table) => [primaryKey({ columns: [table.postId, table.tagId] })],
+  (table) => [primaryKey({ columns: [table.postId, table.topicId] })],
 );
 
 export const postLike = pgTable(
