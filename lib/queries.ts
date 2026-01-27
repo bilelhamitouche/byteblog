@@ -306,14 +306,17 @@ export async function getTopics() {
   }
 }
 
-export async function searchTopics(search: string, limit: number) {
-  await redirectUnauthenticated();
+export async function searchTopics(search: string, limit?: number) {
   try {
-    const topics = await db
+    let query = db
       .select()
       .from(topic)
       .where(ilike(topic.topicName, `%${search}%`))
-      .limit(limit);
+      .$dynamic();
+    if (limit) {
+      query = query.limit(limit);
+    }
+    const topics = await query;
     return topics;
   } catch (err) {
     if (err instanceof DrizzleError) throw new Error("Database Error");
