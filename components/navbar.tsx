@@ -32,11 +32,6 @@ export default async function Navbar() {
               <Link href="/topics">Topics</Link>
             </NavigationMenuLink>
           </NavigationMenuItem>
-          <NavigationMenuItem>
-            <NavigationMenuLink asChild>
-              <Link href="/authors">Authors</Link>
-            </NavigationMenuLink>
-          </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>
       <Button className="ml-auto -mr-4 rounded-full sm:mr-0" asChild>
@@ -46,7 +41,7 @@ export default async function Navbar() {
         </Link>
       </Button>
       {user ? (
-        <div className="hidden gap-4 items-center md:flex">
+        <div className="flex gap-4 items-center">
           <ModeToggle />
           <AvatarDropdown
             name={user?.name as string}
@@ -66,7 +61,6 @@ export default async function Navbar() {
           <ModeToggle />
         </div>
       )}
-      <MobileMenu authenticated={!!user} />
     </header>
   );
 }
