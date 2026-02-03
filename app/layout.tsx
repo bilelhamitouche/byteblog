@@ -3,7 +3,6 @@ import { Outfit } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
-import Navbar from "@/components/navbar";
 import QueryClientProvider from "@/components/QueryClientProvider";
 
 const outfit = Outfit({
@@ -15,6 +14,9 @@ const outfit = Outfit({
 export const metadata: Metadata = {
   title: "ByteBlog",
   description: "Unlock your voice, one byte at a time. ByteBlog.",
+  icons: {
+    icon: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({
@@ -24,7 +26,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="h-full" suppressHydrationWarning>
-      <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
       <body className={`${outfit.className} h-full antialiased`}>
         <ThemeProvider
           attribute="class"
@@ -33,7 +34,6 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <QueryClientProvider>
-            <Navbar />
             {children}
             <Toaster />
           </QueryClientProvider>
