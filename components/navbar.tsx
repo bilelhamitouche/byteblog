@@ -1,7 +1,6 @@
 import { BookOpen, Edit } from "lucide-react";
 import Link from "next/link";
 import { Button } from "./ui/button";
-import MobileMenu from "./mobile-menu";
 import { ModeToggle } from "./mode-toggle";
 import { getUserInfo } from "@/actions/auth";
 import AvatarDropdown from "./avatar-dropdown";
