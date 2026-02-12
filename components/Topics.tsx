@@ -13,22 +13,22 @@ export default function Topics() {
       </p>
       <div className="flex flex-wrap gap-4 items-center">
         <Badge variant="default" className="p-2 text-base rounded-full">
-          Technology
+          Software Development
         </Badge>
         <Badge variant="default" className="p-2 text-base rounded-full">
-          Productivity
+          Cyber Security
         </Badge>
         <Badge variant="default" className="p-2 text-base rounded-full">
-          Lifestyle
+          DevOps
         </Badge>
         <Badge variant="default" className="p-2 text-base rounded-full">
-          Travel
+          Data Science
         </Badge>
         <Badge variant="default" className="p-2 text-base rounded-full">
-          Health
+          Machine Learning
         </Badge>
         <Badge variant="default" className="p-2 text-base rounded-full">
-          Design
+          UI/UX Design
         </Badge>
       </div>
       <p className="text-sm text-gray-600 dark:text-gray-400">
