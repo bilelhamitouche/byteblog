@@ -47,7 +47,7 @@ export default async function ProfileSidebar({
           {authorName}
         </span>
         <span className="text-base text-gray-500 dark:text-gray-400">
-          {followersCount ? followersCount + " Followers" : null}
+          {followersCount} Followers
         </span>
         <p className={`text-sm text-gray-500 dark:text-gray-400`}>
           {authorBio ?? ""}
