@@ -133,7 +133,7 @@ export default function Login() {
                     if (result?.message) toast.error(result.message);
                     if (!result?.message && !result?.errors) {
                       toast.success("Logged In successfully");
-                      router.push("/");
+                      router.push("/posts");
                       router.refresh();
                     }
                   } catch (err) {
