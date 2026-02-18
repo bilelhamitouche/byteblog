@@ -64,7 +64,6 @@ export default function Register() {
                     if (result?.message) toast.error(result.message);
                     if (!result?.message && !result?.errors) {
                       toast.success("Registered Successfully");
-                      router.push("/login");
                     }
                   } catch (err) {
                     if (err instanceof Error) {

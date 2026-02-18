@@ -55,6 +55,7 @@ export default function Login() {
                 setIsPending(true);
                 await authClient.signIn.social({
                   provider: "google",
+                  callbackURL: "/posts",
                 });
                 setIsPending(false);
               }}
@@ -94,6 +95,7 @@ export default function Login() {
                 setIsPending(true);
                 await authClient.signIn.social({
                   provider: "github",
+                  callbackURL: "/posts",
                 });
                 setIsPending(false);
               }}
