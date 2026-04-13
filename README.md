@@ -207,4 +207,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [Better Auth](https://www.better-auth.com) - Authentication framework
 - [Radix UI](https://www.radix-ui.com) - Accessible UI primitives
 - [Shadcn/ui](https://ui.shadcn.com) - Beautifully designed components
-- [React Query](https://tanstack.com/query) - Data fetching and state management
+- [Tanstack Query](https://tanstack.com/query) - Data fetching and state management
