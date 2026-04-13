@@ -1,36 +1,214 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ByteBlog
+
+A modern blogging platform built with Next.js where you can share your thoughts, one byte at a time.
+
+## Features
+
+- 🔐 User authentication (login/register)
+- ✍️ Create, read, update, and delete blog posts
+- 💬 Comment system with replies and reactions
+- 🎨 Rich text editing with Tiptap
+- 🌓 Light/dark mode support
+- 📱 Responsive design
+- 🔍 Search functionality
+- 📝 Markdown/code syntax highlighting
+- 🔔 Toast notifications
+- ⚡ Optimized performance with React Query and Turbopack
+
+## Tech Stack
+
+- **Framework**: Next.js 16 (App Router)
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **State Management**: React Query
+- **Forms**: React Hook Form with Zod validation
+- **Authentication**: Better Auth
+- **Database**: PostgreSQL with Drizzle ORM
+- **Rich Text Editor**: Tiptap
+- **Icons**: Lucide React & Heroicons
+- **UI Components**: Radix UI primitives
+- **Notifications**: Sonner
+- **Date Utilities**: Date-fns
+- **Deployment**: Vercel
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 18+
+- PostgreSQL database
+- Package manager (pnpm, npm, yarn, or bun)
+
+### Installation
+
+1. Clone the repository:
 
 ```bash
+git clone https://github.com/yourusername/byteblog.git
+cd byteblog
+```
+
+2. Install dependencies:
+
+```bash
+pnpm install
+# or
+npm install
+# or
+yarn
+# or
+bun install
+```
+
+3. Set up environment variables:
+   Create a `.env` file based on `.env.example`:
+
+```bash
+cp .env.example .env
+```
+
+4. Configure your database in `.env`:
+
+```env
+POSTGRES_URL=your_postgres_connection_string
+BETTER_AUTH_SECRET=your_secret_key
+BETTER_AUTH_URL=http://localhost:3000
+```
+
+5. Run database migrations:
+
+```bash
+pnpm dlx drizzle-kit push
+# or
+npx drizzle-kit push
+```
+
+6. Start the development server:
+
+```bash
+pnpm dev
+# or
 npm run dev
 # or
 yarn dev
 # or
-pnpm dev
-# or
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to view the application.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+byteblog/
+├── app/                    # Next.js app directory
+│   ├── (auth)/            # Authentication routes (login, register)
+│   ├── (main)/            # Main application routes
+│   ├── api/               # API routes
+│   ├── layout.tsx         # Root layout with providers
+│   └── globals.css        # Global styles
+├── components/            # Reusable UI components
+│   ├── ui/                # Shadcn/ui components
+│   ├── AuthorPost*.tsx    # Post listing components
+│   ├── Comment*.tsx       # Comment system components
+│   └── CodeBlock.tsx      # Syntax highlighting component
+├── lib/                   # Utility functions and configurations
+├── public/                # Static assets
+├── hooks/                 # Custom React hooks
+└── actions/               # Server actions
+```
 
-## Learn More
+## Key Components
 
-To learn more about Next.js, take a look at the following resources:
+### Authentication
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Secure user registration and login
+- Protected routes for authenticated users
+- Session management with Better Auth
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Blog Posts
 
-## Deploy on Vercel
+- Create posts with rich text editor
+- View posts with syntax highlighting
+- Author attribution and timestamps
+- Paginated post listings
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Comment System
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Nested comments with replies
+- Comment liking functionality
+- Real-time updates
+- Comment forms with validation
+
+### Rich Text Editor
+
+- Built with Tiptap
+- Supports headings, lists, code blocks
+- Syntax highlighting via Highlight.js
+- Bullet points, ordered lists, and more
+
+## Development
+
+### Available Scripts
+
+```bash
+# Development server with Turbopack
+pnpm dev
+
+# Production build
+pnpm build
+
+# Start production server
+pnpm start
+
+# Lint code
+pnpm lint
+
+# Database migrations
+pnpm dlx drizzle-kit push
+pnpm dlx drizzle-kit studio
+```
+
+### Code Quality
+
+- ESLint configured with Next.js rules
+- TypeScript for type safety
+- Prettier formatting (via editor configuration)
+
+## Deployment
+
+The easiest way to deploy ByteBlog is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme).
+
+### Vercel Deployment Steps
+
+1. Push your code to a GitHub repository
+2. Import the project in Vercel
+3. Configure environment variables:
+   - `POSTGRES_URL`
+   - `BETTER_AUTH_SECRET`
+   - `BETTER_AUTH_URL`
+4. Deploy!
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Acknowledgments
+
+- [Next.js](https://nextjs.org) - The React framework for production
+- [Tiptap](https://tiptap.dev) - Rich text editor for web
+- [Better Auth](https://www.better-auth.com) - Authentication framework
+- [Radix UI](https://www.radix-ui.com) - Accessible UI primitives
+- [Shadcn/ui](https://ui.shadcn.com) - Beautifully designed components
+- [React Query](https://tanstack.com/query) - Data fetching and state management
+
