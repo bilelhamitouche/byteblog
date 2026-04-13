@@ -6,28 +6,26 @@ A modern blogging platform built with Next.js where you can share your thoughts,
 
 - 🔐 User authentication (login/register)
 - ✍️ Create, read, update, and delete blog posts
-- 💬 Comment system with replies and reactions
+- 💬 Comment system with replies and likes
 - 🎨 Rich text editing with Tiptap
 - 🌓 Light/dark mode support
 - 📱 Responsive design
 - 🔍 Search functionality
 - 📝 Markdown/code syntax highlighting
-- 🔔 Toast notifications
-- ⚡ Optimized performance with React Query and Turbopack
+- ⚡ Optimized performance with Tanstack Query and Turbopack
 
 ## Tech Stack
 
 - **Framework**: Next.js 16 (App Router)
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS
-- **State Management**: React Query
+- **State Management**: Tanstack Query
 - **Forms**: React Hook Form with Zod validation
 - **Authentication**: Better Auth
 - **Database**: PostgreSQL with Drizzle ORM
 - **Rich Text Editor**: Tiptap
 - **Icons**: Lucide React & Heroicons
-- **UI Components**: Radix UI primitives
-- **Notifications**: Sonner
+- **UI Components**: Shadcn UI
 - **Date Utilities**: Date-fns
 - **Deployment**: Vercel
 
@@ -131,13 +129,12 @@ byteblog/
 - Create posts with rich text editor
 - View posts with syntax highlighting
 - Author attribution and timestamps
-- Paginated post listings
+- Infinite scroll for post listings
 
 ### Comment System
 
 - Nested comments with replies
 - Comment liking functionality
-- Real-time updates
 - Comment forms with validation
 
 ### Rich Text Editor
@@ -211,4 +208,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [Radix UI](https://www.radix-ui.com) - Accessible UI primitives
 - [Shadcn/ui](https://ui.shadcn.com) - Beautifully designed components
 - [React Query](https://tanstack.com/query) - Data fetching and state management
-
